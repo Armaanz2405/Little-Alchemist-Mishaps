@@ -18,12 +18,17 @@ public class PlayerMovement : MonoBehaviour
     private bool isJumping = false;
     private float jumpHoldTimer = 0f;
     private bool isGrounded;
+    
+    [SerializeField] private Transform holdPoint;         
+    [SerializeField] private float grabRadius = 0.6f;
+    [SerializeField] private LayerMask grabbableLayer;
+    private float facing = 1f;
+    
+    private Rigidbody2D heldItem;
 
     [SerializeField] private float climbSpeed = 0.2f;
     private bool isClimbing = false;
     [SerializeField] private bool canClimb= false;
-    
-    private bool isGrabbing = false;
     
     private void Awake()
     {
@@ -50,6 +55,14 @@ public class PlayerMovement : MonoBehaviour
         {
             StartClimbing();
         }
+        
+        if (Mathf.Abs(moveInput.x) > 0.1f)
+        {
+            facing = Mathf.Sign(moveInput.x);
+            Vector3 p = holdPoint.localPosition;
+            p.x = Mathf.Abs(p.x) * facing;
+            holdPoint.localPosition = p;
+        }
     }
     
 
@@ -70,11 +83,7 @@ public class PlayerMovement : MonoBehaviour
             isJumping = false;
         }
     }
-
-    public void GrabInput(InputAction.CallbackContext context)
-    {
-        
-    }
+    
 
     private void Jump()
     {
@@ -115,7 +124,51 @@ public class PlayerMovement : MonoBehaviour
         isClimbing = false;
         rb.gravityScale = 1f;
     }
+    
+    public void GrabInput(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            if (heldItem == null)
+            {
+                TryGrab();
+            }
+            else if (heldItem != null)
+            {
+                Release();
+            }
+        }
+    }
+    private void TryGrab()
+    {
+        Collider2D hit = Physics2D.OverlapCircle(holdPoint.position, grabRadius, grabbableLayer);
 
+        if (hit != null && hit.attachedRigidbody != null)
+        {
+            Debug.Log("Grabbed: " + hit.name);
+            Debug.Log("HoldPoint world pos: " + holdPoint.position + " | parent: " + (holdPoint.parent ? holdPoint.parent.name : "none"));
+            heldItem = hit.attachedRigidbody;
+
+            heldItem.bodyType = RigidbodyType2D.Kinematic;
+            heldItem.linearVelocity = Vector2.zero;
+            heldItem.angularVelocity = 0f;
+            heldItem.simulated = false;          
+            heldItem.transform.SetParent(holdPoint);
+            heldItem.freezeRotation = true;
+            heldItem.transform.localPosition = Vector2.zero;
+        }
+    }
+
+    private void Release()
+    {
+        heldItem.transform.SetParent(null);
+
+        heldItem.simulated = true;                
+        heldItem.bodyType = RigidbodyType2D.Dynamic;
+        heldItem.linearVelocity = rb.linearVelocity;
+
+        heldItem = null;
+    }
     private void OnTriggerEnter2D(Collider2D trigger)
     {
         if (IsClimbable(trigger))
@@ -153,6 +206,11 @@ public class PlayerMovement : MonoBehaviour
     private bool IsClimbable(Collider2D trigger)
     {
         return trigger.gameObject.CompareTag("Climbable");
+    }
+
+    private bool isGrabbable(Collider2D trigger)
+    {
+        return trigger.gameObject.CompareTag("Grabbable");
     }
     
 }
