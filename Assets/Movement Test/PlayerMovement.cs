@@ -51,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
             jumpHoldTimer += Time.deltaTime;
         }
         
-        if (!isClimbing && canClimb && moveInput.y > 0.1f)
+        if (!isClimbing && canClimb && moveInput.y > 0.1f && heldItem == null) 
         {
             StartClimbing();
         }
