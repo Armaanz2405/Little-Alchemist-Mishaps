@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06ec9fa1d774f4d4fbd45313af43ef55, type: 3}
+  m_Name: RecipeBook
+  m_EditorClassIdentifier: PotionMaking::PotionRecipeBook
+  recipes:
+  - first: {fileID: 11400000, guid: 550808c8e9ae5454ca58412d29ba58c8, type: 2}
+    second: {fileID: 11400000, guid: b381faa33767f47d9a0407c1b406a23c, type: 2}
+    result: {fileID: 11400000, guid: 1ba2678d575114f71bb05142c030f625, type: 2}
+  failedPotion: {fileID: 11400000, guid: 144a61e9a7abd407887b304d0f298316, type: 2}
