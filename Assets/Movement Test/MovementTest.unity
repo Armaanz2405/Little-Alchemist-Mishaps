@@ -302,6 +302,7 @@ GameObject:
   - component: {fileID: 426136626}
   - component: {fileID: 426136627}
   - component: {fileID: 426136628}
+  - component: {fileID: 426136630}
   - component: {fileID: 426136629}
   m_Layer: 6
   m_Name: Player
@@ -473,8 +474,8 @@ MonoBehaviour:
     m_ActionName: 'Movement/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 426136628}
-        m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
+      - m_Target: {fileID: 426136630}
+        m_TargetAssemblyTypeName: GrabAndThrow, Assembly-CSharp
         m_MethodName: GrabInput
         m_Mode: 0
         m_Arguments:
@@ -488,7 +489,19 @@ MonoBehaviour:
     m_ActionId: 6dc32517-8222-415d-a915-2e59cdcf12b1
     m_ActionName: 'Movement/Grab/Drop[/Keyboard/shift]'
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 426136630}
+        m_TargetAssemblyTypeName: GrabAndThrow, Assembly-CSharp
+        m_MethodName: Throw
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 2f6338fd-bd55-436e-a786-8aa37820909d
     m_ActionName: 'Movement/Throw[/Keyboard/f]'
   m_NeverAutoSwitchControlSchemes: 0
@@ -509,15 +522,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   moveSpeed: 5
-  jumpForce: 2
-  jumpHoldForce: 4
-  maxJumpHoldTime: 0.2
+  jumpForce: 5
+  jumpHoldForce: 17
+  maxJumpHoldTime: 0.3
   coyoteTime: 0.15
-  holdPoint: {fileID: 1286787246}
-  grabRadius: 0.6
-  grabbableLayer:
-    serializedVersion: 2
-    m_Bits: 8
   climbSpeed: 2
   canClimb: 0
 --- !u!61 &426136629
@@ -566,6 +574,25 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &426136630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 426136622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23910e7d8fe9744b482055ff244a0f9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GrabAndThrow
+  holdPoint: {fileID: 1286787246}
+  grabRadius: 0.6
+  grabbableLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  throwForce: 5
+  throwHieght: 0.5
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
