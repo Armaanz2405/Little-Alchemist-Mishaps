@@ -6,15 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Book & Shop Scenes.unity
+    guid: d684ade158c54b94793a1a3ba5727d31
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/NPCBook.unity
     guid: b222292699b0740868f8f89dea28d6e7
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/IngredientBook.unity
     guid: e1f529a9d09884596ae30a818ff453e6
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/PotionBook.unity
     guid: 8ea701c3937364f98a7b619d2afd2d7a
   m_configObjects:

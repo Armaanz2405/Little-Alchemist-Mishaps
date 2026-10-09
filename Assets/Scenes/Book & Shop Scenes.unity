@@ -1252,11 +1252,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   moveSpeed: 5
-  jumpForce: 4.5
+  jumpForce: 12
   jumpHoldForce: 14
   maxJumpHoldTime: 0.2
   coyoteTime: 0.15
-  climbSpeed: 2
+  climbSpeed: 3
   canClimb: 0
 --- !u!114 &1195681934
 MonoBehaviour:
@@ -1383,7 +1383,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 4
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2

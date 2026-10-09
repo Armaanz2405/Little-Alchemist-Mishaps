@@ -13,5 +13,10 @@ MonoBehaviour:
   m_Name: Featherfern
   m_EditorClassIdentifier: PotionMaking::IngredientData
   displayName: Featherfern
+  ingredientEffects:
+  - tag_effect: 1
+    tag_value: 2
+  - tag_effect: 0
+    tag_value: 0
   color: {r: 0.49803922, g: 0.6509804, b: 0.4509804, a: 1}
   sprite: {fileID: 0}

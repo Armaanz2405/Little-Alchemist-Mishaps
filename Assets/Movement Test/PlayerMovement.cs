@@ -109,7 +109,7 @@ public class PlayerMovement : MonoBehaviour
     private void StopClimbing()
     {
         isClimbing = false;
-        rb.gravityScale = 1f;
+        rb.gravityScale = 4f;
     }
     
     private void OnTriggerEnter2D(Collider2D trigger)

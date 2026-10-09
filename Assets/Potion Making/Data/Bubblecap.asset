@@ -14,9 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: PotionMaking::IngredientData
   displayName: Bubblecap
   ingredientEffects:
-  - tag_effect: 2
+  - tag_effect: 4
     tag_value: 2
-  - tag_effect: 0
-    tag_value: 1
   color: {r: 0.43529412, g: 0.6627451, b: 0.7490196, a: 1}
   sprite: {fileID: 0}
