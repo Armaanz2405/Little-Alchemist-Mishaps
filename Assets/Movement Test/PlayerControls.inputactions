@@ -183,7 +183,7 @@
                 {
                     "name": "",
                     "id": "ab75bfe0-1aaa-4b79-957f-354c6ecb05a0",
-                    "path": "<Keyboard>/shift",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": ";KeyBoard",
@@ -205,7 +205,7 @@
                 {
                     "name": "",
                     "id": "1ce27b55-ac4a-411a-b79d-cb18c30aa88e",
-                    "path": "<Keyboard>/f",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": ";KeyBoard",
