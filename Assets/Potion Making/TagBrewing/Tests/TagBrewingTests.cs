@@ -20,7 +20,7 @@ public class TagBrewingTests
     public void SetUp()
     {
         rules = ScriptableObject.CreateInstance<TagRules>();
-        rules.opposing.Add(new TagRules.OpposingPair { a = E.SLEEPY, b = E.STRENGTH });
+        rules.opposing.Add(new TagRules.OpposingPair { a = E.CHILLING, b = E.STRENGTHENING });
         rules.safeIngredientCount = 4;
         rules.overflowChancePerExtra = 0.25f;
     }
@@ -28,32 +28,32 @@ public class TagBrewingTests
     [Test]
     public void TagsAddUp()
     {
-        var tags = TagMath.Combine(new[] { Make("A", (E.BUBBLY, 2)), Make("B", (E.BUBBLY, 1), (E.POISON, 1)) }, rules);
-        Assert.AreEqual(3, tags[E.BUBBLY]);
+        var tags = TagMath.Combine(new[] { Make("A", (E.BUBBLING, 2)), Make("B", (E.BUBBLING, 1), (E.POISON, 1)) }, rules);
+        Assert.AreEqual(3, tags[E.BUBBLING]);
         Assert.AreEqual(1, tags[E.POISON]);
     }
 
     [Test]
     public void OpposingTagsCancelPointForPoint()
     {
-        var tags = TagMath.Combine(new[] { Make("Sleepy", (E.SLEEPY, 3)), Make("Strong", (E.STRENGTH, 2)) }, rules);
-        Assert.AreEqual(1, tags[E.SLEEPY]);
-        Assert.IsFalse(tags.ContainsKey(E.STRENGTH));
+        var tags = TagMath.Combine(new[] { Make("Sleepy", (E.CHILLING, 3)), Make("Strong", (E.STRENGTHENING, 2)) }, rules);
+        Assert.AreEqual(1, tags[E.CHILLING]);
+        Assert.IsFalse(tags.ContainsKey(E.STRENGTHENING));
     }
 
     [Test]
     public void ZeroValueTagsAreIgnored()
     {
-        var tags = TagMath.Combine(new[] { Make("Fern", (E.SLEEPY, 2), (E.POISON, 0)) }, rules);
+        var tags = TagMath.Combine(new[] { Make("Fern", (E.CHILLING, 2), (E.POISON, 0)) }, rules);
         Assert.AreEqual(1, tags.Count);
     }
 
     [Test]
     public void DominantTag_IsTheBiggest()
     {
-        var tags = new Dictionary<E, int> { { E.POISON, 1 }, { E.BUBBLY, 3 } };
-        Assert.AreEqual(E.BUBBLY, TagMath.Dominant(tags));
-        Assert.AreEqual("Bubbly 3  ·  Poison 1", TagMath.Describe(tags));
+        var tags = new Dictionary<E, int> { { E.POISON, 1 }, { E.BUBBLING, 3 } };
+        Assert.AreEqual(E.BUBBLING, TagMath.Dominant(tags));
+        Assert.AreEqual("Bubbling 3  ·  Poison 1", TagMath.Describe(tags));
     }
 
     [Test]
@@ -71,10 +71,10 @@ public class TagBrewingTests
         var cauldron = go.AddComponent<TagCauldron>();
         typeof(TagCauldron).GetField("rules", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(cauldron, rules);
         cauldron.roll = () => 0.99f;
-        cauldron.AddIngredient(Make("A", (E.BUBBLY, 2)));
-        cauldron.AddIngredient(Make("B", (E.SLEEPY, 1)));
+        cauldron.AddIngredient(Make("A", (E.BUBBLING, 2)));
+        cauldron.AddIngredient(Make("B", (E.CHILLING, 1)));
         var potion = cauldron.Bottle();
-        Assert.AreEqual("Bubbly Potion", potion.displayName);
+        Assert.AreEqual("Bubbling Potion", potion.displayName);
         Assert.AreEqual(0, cauldron.Contents.Count);
         Object.DestroyImmediate(go);
     }
@@ -88,8 +88,8 @@ public class TagBrewingTests
         int lost = -1;
         cauldron.onBubbledOver.AddListener(n => lost = n);
         cauldron.roll = () => 0.1f;
-        for (int i = 0; i < 4; i++) Assert.IsTrue(cauldron.AddIngredient(Make("X", (E.BUBBLY, 1))));
-        Assert.IsFalse(cauldron.AddIngredient(Make("X", (E.BUBBLY, 1))));
+        for (int i = 0; i < 4; i++) Assert.IsTrue(cauldron.AddIngredient(Make("X", (E.BUBBLING, 1))));
+        Assert.IsFalse(cauldron.AddIngredient(Make("X", (E.BUBBLING, 1))));
         Assert.AreEqual(5, lost);
         Assert.AreEqual(0, cauldron.Contents.Count);
         Object.DestroyImmediate(go);

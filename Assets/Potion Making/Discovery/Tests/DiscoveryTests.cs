@@ -14,9 +14,9 @@ public class DiscoveryTests
         go = new GameObject("Log");
         log = go.AddComponent<DiscoveryLog>();
         bubblecap = ScriptableObject.CreateInstance<IngredientData>(); bubblecap.displayName = "Bubblecap";
-        bubblecap.ingredientEffects.Add(new IngredientTags { tag_effect = IngredientTags.Effects.BUBBLY, tag_value = 2 });
+        bubblecap.ingredientEffects.Add(new IngredientTags { tag_effect = IngredientTags.Effects.BUBBLING, tag_value = 2 });
         featherfern = ScriptableObject.CreateInstance<IngredientData>(); featherfern.displayName = "Featherfern";
-        featherfern.ingredientEffects.Add(new IngredientTags { tag_effect = IngredientTags.Effects.SLEEPY, tag_value = 2 });
+        featherfern.ingredientEffects.Add(new IngredientTags { tag_effect = IngredientTags.Effects.HEALING, tag_value = 2 });
         featherfern.ingredientEffects.Add(new IngredientTags { tag_effect = IngredientTags.Effects.POISON, tag_value = 0 });
     }
 
@@ -53,7 +53,7 @@ public class DiscoveryTests
     [Test]
     public void Tags_AreDescribedWithoutZeroValues()
     {
-        Assert.AreEqual("Bubbly 2", IngredientCatalog.DescribeTags(bubblecap));
-        Assert.AreEqual("Sleepy 2", IngredientCatalog.DescribeTags(featherfern));
+        Assert.AreEqual("Bubbling 2", IngredientCatalog.DescribeTags(bubblecap));
+        Assert.AreEqual("Healing 2", IngredientCatalog.DescribeTags(featherfern));
     }
 }
