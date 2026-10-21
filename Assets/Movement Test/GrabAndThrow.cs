@@ -79,6 +79,7 @@ public class GrabAndThrow : MonoBehaviour
                 //right now the book ui is hard coded bc that's the only interactable so far
                 var interactableObj = hit.gameObject;
                 bookUI.SetActive(true);
+                InputManager.instanceInput.EnableUI();
             }
         }
     }
