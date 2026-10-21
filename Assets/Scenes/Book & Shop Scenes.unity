@@ -1251,13 +1251,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7ad90d8ba8e14510bdb6127016d4da3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  moveSpeed: 5
+  walkSpeed: 5
+  runSpeed: 10
+  dashPower: 24
+  dashTime: 0.2
+  dashCooldown: 1
   jumpForce: 12
   jumpHoldForce: 14
   maxJumpHoldTime: 0.2
   coyoteTime: 0.15
   climbSpeed: 3
   canClimb: 0
+  holdDownDelay: 0.2
 --- !u!114 &1195681934
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1319,11 +1324,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1195681939}
         m_TargetAssemblyTypeName: GrabAndThrow, Assembly-CSharp
-        m_MethodName: GrabInput
+        m_MethodName: InteractInput
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1349,9 +1354,9 @@ MonoBehaviour:
     m_ActionName: 'Movement/Throw[/Keyboard/f]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1195681939}
-        m_TargetAssemblyTypeName: GrabAndThrow, Assembly-CSharp
-        m_MethodName: InteractInput
+      - m_Target: {fileID: 1195681933}
+        m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
+        m_MethodName: DashInput
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1361,8 +1366,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: f976bbf5-4ec4-4078-93f8-319c164ab31b
-    m_ActionName: 'Movement/Interact[/Keyboard/e]'
+    m_ActionId: a519fa13-c395-4d7d-b606-1c73f8057709
+    m_ActionName: Movement/Dash
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: d405742f-2ca8-4586-864f-678ff768417b
+    m_ActionName: Movement/Pause
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard
   m_DefaultActionMap: Movement

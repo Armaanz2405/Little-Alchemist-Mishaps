@@ -27,7 +27,7 @@
                     "priority": 0
                 },
                 {
-                    "name": "Grab/Drop",
+                    "name": "Interact",
                     "type": "Button",
                     "id": "6dc32517-8222-415d-a915-2e59cdcf12b1",
                     "expectedControlType": "",
@@ -60,9 +60,6 @@
                     "name": "Pause",
                     "type": "Button",
                     "id": "d405742f-2ca8-4586-864f-678ff768417b",
-                    "name": "Interact",
-                    "type": "Button",
-                    "id": "f976bbf5-4ec4-4078-93f8-319c164ab31b",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -320,7 +317,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";KeyBoard",
-                    "action": "Grab/Drop",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -331,7 +328,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Controller",
-                    "action": "Grab/Drop",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -342,7 +339,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";KeyBoard",
-                    "action": "Grab/Drop",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -370,23 +367,23 @@
                 },
                 {
                     "name": "",
-                    "id": "7f601c53-c166-46ab-94ea-75c6ffcd3eda",
-                    "path": "<Gamepad>/buttonEast",
+                    "id": "2e576f79-e6ef-4980-a283-54e4f00b2c3b",
+                    "path": "<Keyboard>/leftShift",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "Interact",
+                    "groups": ";KeyBoard",
+                    "action": "Dash",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "649ecb68-e512-4e8a-be3a-d4c34b65867d",
-                    "path": "<Keyboard>/e",
+                    "id": "43f52613-1fda-4c69-baf4-9d7bf638c3e9",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "Interact",
+                    "groups": ";Controller",
+                    "action": "Dash",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

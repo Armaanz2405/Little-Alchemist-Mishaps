@@ -40,21 +40,6 @@ public class GrabAndThrow : MonoBehaviour
         }
         
     }
-    
-    public void GrabInput(InputAction.CallbackContext context)
-    {
-        if (context.started)
-        {
-            if (heldItem == null)
-            {
-                TryGrab();
-            }
-            else if (heldItem != null)
-            {
-                Release();
-            }
-        }
-    }
     private void TryGrab()
     {
         Collider2D hit = Physics2D.OverlapCircle(holdPoint.position, grabRadius, grabbableLayer);
@@ -76,6 +61,16 @@ public class GrabAndThrow : MonoBehaviour
 
     public void InteractInput(InputAction.CallbackContext context) {
         if (context.started) {
+            
+            if (heldItem == null)
+            {
+                TryGrab();
+            }
+            else if (heldItem != null)
+            {
+                Release();
+            }
+            
             Collider2D hit = Physics2D.OverlapCircle(transform.position, grabRadius, interactableLayer);
 
             if (hit != null)
