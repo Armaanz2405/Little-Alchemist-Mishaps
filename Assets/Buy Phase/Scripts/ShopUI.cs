@@ -12,19 +12,24 @@ public class ShopUI : MonoBehaviour
     [SerializeField] private GameObject[] tabPages;
     [SerializeField] private Color tabColor = new Color(0.25f, 0.21f, 0.29f);
     [SerializeField] private Color selectedTabColor = new Color(0.55f, 0.42f, 0.62f);
+    [SerializeField] private ShopItemEntry entryPrefab;
 
     [SerializeField] private ShopCatalog ingredientCatalog;
     [SerializeField] private Transform ingredientGrid;
-    [SerializeField] private ShopItemEntry entryPrefab;
+    [SerializeField] private IngredientDelivery delivery;
+
+    [SerializeField] private FamiliarData[] familiars;
+    [SerializeField] private Transform familiarGrid;
+    [SerializeField] private FamiliarPerch familiarPerch;
 
     [SerializeField] private Wallet wallet;
-    [SerializeField] private IngredientDelivery delivery;
     [SerializeField] private TMP_Text goldText;
     [SerializeField] private PlayerInput playerInput;
 
     [SerializeField] private InputAction toggleAction = DefaultToggleAction();
 
-    private readonly List<ShopItemEntry> entries = new List<ShopItemEntry>();
+    private readonly List<ShopItemEntry> ingredientEntries = new List<ShopItemEntry>();
+    private readonly List<ShopItemEntry> familiarEntries = new List<ShopItemEntry>();
     private int currentTab;
 
     public bool IsOpen => window.activeSelf;
@@ -46,21 +51,37 @@ public class ShopUI : MonoBehaviour
             tabButtons[i].onClick.AddListener(() => ShowTab(tab));
         }
 
-        if (ingredientCatalog == null)
+        if (ingredientCatalog != null)
+        {
+            foreach (ShopCatalog.Item item in ingredientCatalog.items)
+            {
+                if (item.ingredient == null)
+                {
+                    continue;
+                }
+                ShopItemEntry entry = Instantiate(entryPrefab, ingredientGrid);
+                IngredientData ingredient = item.ingredient;
+                entry.Show(ingredient.displayName, ingredient.sprite, ingredient.color, item.price, () => BuyIngredient(item));
+                ingredientEntries.Add(entry);
+            }
+        }
+        else
         {
             Debug.LogWarning("[Shop] No ingredient catalog assigned, so the Ingredients tab is empty.", this);
-            return;
         }
 
-        foreach (ShopCatalog.Item item in ingredientCatalog.items)
+        if (familiarGrid != null)
         {
-            if (item.ingredient == null)
+            foreach (FamiliarData familiar in familiars)
             {
-                continue;
+                if (familiar == null)
+                {
+                    continue;
+                }
+                ShopItemEntry entry = Instantiate(entryPrefab, familiarGrid);
+                entry.Show(familiar.displayName, familiar.sprite, Color.white, familiar.price, () => BuyFamiliar(familiar, entry));
+                familiarEntries.Add(entry);
             }
-            ShopItemEntry entry = Instantiate(entryPrefab, ingredientGrid);
-            entry.Show(item, Buy);
-            entries.Add(entry);
         }
     }
 
@@ -123,14 +144,16 @@ public class ShopUI : MonoBehaviour
         }
 
         // give controllers something selected to start from
-        GameObject first = tab == 0 && entries.Count > 0 ? entries[0].BuyButton.gameObject : tabButtons[tab].gameObject;
+        List<ShopItemEntry> entries = tab == 0 ? ingredientEntries : tab == 1 ? familiarEntries : null;
+        ShopItemEntry first = entries?.Find(entry => !entry.Owned);
+        GameObject selected = first != null ? first.BuyButton.gameObject : tabButtons[tab].gameObject;
         if (EventSystem.current != null)
         {
-            EventSystem.current.SetSelectedGameObject(first);
+            EventSystem.current.SetSelectedGameObject(selected);
         }
     }
 
-    private void Buy(ShopCatalog.Item item)
+    private void BuyIngredient(ShopCatalog.Item item)
     {
         if (!wallet.TrySpend(item.price))
         {
@@ -140,12 +163,28 @@ public class ShopUI : MonoBehaviour
         Refresh();
     }
 
+    private void BuyFamiliar(FamiliarData familiar, ShopItemEntry entry)
+    {
+        if (familiarPerch.Owns(familiar) || !wallet.TrySpend(familiar.price))
+        {
+            return;
+        }
+        familiarPerch.Add(familiar);
+        entry.MarkOwned();
+        Refresh();
+        ShowTab(currentTab);
+    }
+
     private void Refresh()
     {
         goldText.text = wallet.Unlimited ? "Gold: Unlimited" : "Gold: " + wallet.Gold;
-        foreach (ShopItemEntry entry in entries)
+        foreach (ShopItemEntry entry in ingredientEntries)
         {
-            entry.SetAffordable(wallet.CanAfford(entry.Item.price));
+            entry.SetAffordable(wallet.CanAfford(entry.Price));
+        }
+        foreach (ShopItemEntry entry in familiarEntries)
+        {
+            entry.SetAffordable(wallet.CanAfford(entry.Price));
         }
     }
 }
