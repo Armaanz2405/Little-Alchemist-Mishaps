@@ -120,4 +120,9 @@ public class GrabAndThrow : MonoBehaviour
         }
         else return false;
     }
+
+    public float getFacing()
+    {
+        return facing;
+    }
 }
