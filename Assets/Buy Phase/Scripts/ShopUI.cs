@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -33,6 +34,7 @@ public class ShopUI : MonoBehaviour
     private int currentTab;
 
     public bool IsOpen => window.activeSelf;
+    public event Action<bool> OpenChanged;
 
     private static InputAction DefaultToggleAction()
     {
@@ -132,6 +134,8 @@ public class ShopUI : MonoBehaviour
             ShowTab(currentTab);
             Refresh();
         }
+
+        OpenChanged?.Invoke(open);
     }
 
     public void ShowTab(int tab)
