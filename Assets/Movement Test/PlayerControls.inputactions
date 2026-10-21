@@ -60,6 +60,9 @@
                     "name": "Pause",
                     "type": "Button",
                     "id": "d405742f-2ca8-4586-864f-678ff768417b",
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "f976bbf5-4ec4-4078-93f8-319c164ab31b",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -367,85 +370,23 @@
                 },
                 {
                     "name": "",
-                    "id": "57c8eb80-28a9-4838-bef9-9409b41e25d6",
-                    "path": "<Keyboard>/x",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyBoard",
-                    "action": "Throw",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "d7435817-801e-432e-90bd-0ea521490f19",
-                    "path": "<Keyboard>/leftShift",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyBoard",
-                    "action": "Dash",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "cdbee357-a896-49e1-baf8-f2d152c0440d",
-                    "path": "<Gamepad>/buttonWest",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Controller",
-                    "action": "Dash",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "37b27d09-b497-4144-bec4-bb87b58c7131",
-                    "path": "<Keyboard>/escape",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyBoard",
-                    "action": "Pause",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "4d573c06-9d68-4cd3-b615-bf71c8bfe3dd",
-                    "path": "<Gamepad>/start",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Controller",
-                    "action": "Pause",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "UI",
-            "id": "a21de548-f1d1-4a36-b5a4-62522342c9f2",
-            "actions": [
-                {
-                    "name": "New action",
-                    "type": "Button",
-                    "id": "86bf9478-fc49-4621-b868-ecf43a7ba4de",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false,
-                    "priority": 0
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "9514aedd-3402-4756-b73f-3301907ba124",
-                    "path": "",
+                    "id": "7f601c53-c166-46ab-94ea-75c6ffcd3eda",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "649ecb68-e512-4e8a-be3a-d4c34b65867d",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

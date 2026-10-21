@@ -5,11 +5,16 @@ public class GrabAndThrow : MonoBehaviour
 {
     private Rigidbody2D rb;
     
-    [SerializeField] private Transform holdPoint;         
+    [SerializeField] private Transform holdPoint; 
+    private SpriteRenderer characterSprite;
+
     [SerializeField] private float grabRadius = 0.6f;
     [SerializeField] private LayerMask grabbableLayer;
+    [SerializeField] private LayerMask interactableLayer;
     [SerializeField] private float throwForce = 15f;
     [SerializeField] private float throwHieght = 4f;
+
+    [SerializeField] private GameObject bookUI;
     private float facing = 1f;
     
     private Rigidbody2D heldItem;
@@ -19,6 +24,7 @@ public class GrabAndThrow : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         playerMovement = GetComponent<PlayerMovement>();
+        characterSprite = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -29,6 +35,7 @@ public class GrabAndThrow : MonoBehaviour
             facing = Mathf.Sign(playerMovement.getMoveInput().x);
             Vector3 p = holdPoint.localPosition;
             p.x = Mathf.Abs(p.x) * facing;
+            characterSprite.flipX = (facing > 0) ? true : false;
             holdPoint.localPosition = p;
         }
         
@@ -64,6 +71,20 @@ public class GrabAndThrow : MonoBehaviour
             heldItem.transform.SetParent(holdPoint);
             heldItem.freezeRotation = true;
             heldItem.transform.localPosition = Vector2.zero;
+        }
+    }
+
+    public void InteractInput(InputAction.CallbackContext context) {
+        if (context.started) {
+            Collider2D hit = Physics2D.OverlapCircle(transform.position, grabRadius, interactableLayer);
+
+            if (hit != null)
+            {
+                //in theory we would want to access this object's interact method for different uses
+                //right now the book ui is hard coded bc that's the only interactable so far
+                var interactableObj = hit.gameObject;
+                bookUI.SetActive(true);
+            }
         }
     }
 

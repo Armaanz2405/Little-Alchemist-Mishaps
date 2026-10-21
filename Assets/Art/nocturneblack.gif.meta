@@ -1,0 +1,574 @@
+fileFormatVersion: 2
+guid: cdd470eeac22ca54eb72bb00f85b63cd
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3719866508787596351
+    second: nocturneblack_0
+  - first:
+      213: -1039093463331631345
+    second: nocturneblack_1
+  - first:
+      213: -2865067437894848775
+    second: nocturneblack_2
+  - first:
+      213: -2212932949713550107
+    second: nocturneblack_3
+  - first:
+      213: 6476375136218024526
+    second: nocturneblack_4
+  - first:
+      213: -6897836596956890743
+    second: nocturneblack_5
+  - first:
+      213: -5170060487585919845
+    second: nocturneblack_6
+  - first:
+      213: -5653196714599861875
+    second: nocturneblack_7
+  - first:
+      213: 880639275511332547
+    second: nocturneblack_8
+  - first:
+      213: 6459956642800849281
+    second: nocturneblack_9
+  - first:
+      213: 760184965142121727
+    second: nocturneblack_10
+  - first:
+      213: -1929433202166614994
+    second: nocturneblack_11
+  - first:
+      213: -1379468077840190950
+    second: nocturneblack_12
+  - first:
+      213: 5629040109465689678
+    second: nocturneblack_13
+  - first:
+      213: 1523547929167233991
+    second: nocturneblack_14
+  - first:
+      213: -4852005328474239983
+    second: nocturneblack_15
+  - first:
+      213: -9047728403898313030
+    second: nocturneblack_16
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: nocturneblack_0
+      rect:
+        serializedVersion: 2
+        x: 348
+        y: 456
+        width: 125
+        height: 126
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c3c7d37e11606cc0800000000000000
+      internalID: -3719866508787596351
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nocturneblack_1
+      rect:
+        serializedVersion: 2
+        x: 482
+        y: 451
+        width: 137
+        height: 138
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f0f00bd10066491f0800000000000000
+      internalID: -1039093463331631345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nocturneblack_2
+      rect:
+        serializedVersion: 2
+        x: 636
+        y: 455
+        width: 107
+        height: 127
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fe2db2585c3d38d0800000000000000
+      internalID: -2865067437894848775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nocturneblack_3
+      rect:
+        serializedVersion: 2
+        x: 752
+        y: 458
+        width: 107
+        height: 125
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e40194f4351a41e0800000000000000
+      internalID: -2212932949713550107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nocturneblack_4
+      rect:
+        serializedVersion: 2
+        x: 870
+        y: 455
+        width: 114
+        height: 124
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4a82728fd4b0e950800000000000000
+      internalID: 6476375136218024526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nocturneblack_5
+      rect:
+        serializedVersion: 2
+        x: 999
+        y: 458
+        width: 114
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 989f1bf4926f540a0800000000000000
+      internalID: -6897836596956890743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nocturneblack_6
+      rect:
+        serializedVersion: 2
+        x: 1119
+        y: 458
+        width: 119
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b9c8822f0614048b0800000000000000
+      internalID: -5170060487585919845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nocturneblack_7
+      rect:
+        serializedVersion: 2
+        x: 1253
+        y: 455
+        width: 97
+        height: 128
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d81bedc3a8fcb81b0800000000000000
+      internalID: -5653196714599861875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nocturneblack_8
+      rect:
+        serializedVersion: 2
+        x: 383
+        y: 351
+        width: 53
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ce3c1851c8a83c00800000000000000
+      internalID: 880639275511332547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nocturneblack_9
+      rect:
+        serializedVersion: 2
+        x: 483
+        y: 340
+        width: 53
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 181d19e175066a950800000000000000
+      internalID: 6459956642800849281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nocturneblack_10
+      rect:
+        serializedVersion: 2
+        x: 592
+        y: 341
+        width: 56
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ffc83eab238bc8a00800000000000000
+      internalID: 760184965142121727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nocturneblack_11
+      rect:
+        serializedVersion: 2
+        x: 707
+        y: 340
+        width: 55
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e24b307a9b64935e0800000000000000
+      internalID: -1929433202166614994
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nocturneblack_12
+      rect:
+        serializedVersion: 2
+        x: 828
+        y: 341
+        width: 60
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a12385987152bdce0800000000000000
+      internalID: -1379468077840190950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nocturneblack_13
+      rect:
+        serializedVersion: 2
+        x: 950
+        y: 341
+        width: 11
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4ed027d72e5e1e40800000000000000
+      internalID: 5629040109465689678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nocturneblack_14
+      rect:
+        serializedVersion: 2
+        x: 1023
+        y: 340
+        width: 73
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c38b4cf4cab42510800000000000000
+      internalID: 1523547929167233991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nocturneblack_15
+      rect:
+        serializedVersion: 2
+        x: 1154
+        y: 340
+        width: 53
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11c8dfb5cd63aacb0800000000000000
+      internalID: -4852005328474239983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: nocturneblack_16
+      rect:
+        serializedVersion: 2
+        x: 1251
+        y: 352
+        width: 53
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab6dd6d14f2007280800000000000000
+      internalID: -9047728403898313030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      nocturneblack_0: -3719866508787596351
+      nocturneblack_1: -1039093463331631345
+      nocturneblack_10: 760184965142121727
+      nocturneblack_11: -1929433202166614994
+      nocturneblack_12: -1379468077840190950
+      nocturneblack_13: 5629040109465689678
+      nocturneblack_14: 1523547929167233991
+      nocturneblack_15: -4852005328474239983
+      nocturneblack_16: -9047728403898313030
+      nocturneblack_2: -2865067437894848775
+      nocturneblack_3: -2212932949713550107
+      nocturneblack_4: 6476375136218024526
+      nocturneblack_5: -6897836596956890743
+      nocturneblack_6: -5170060487585919845
+      nocturneblack_7: -5653196714599861875
+      nocturneblack_8: 880639275511332547
+      nocturneblack_9: 6459956642800849281
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
