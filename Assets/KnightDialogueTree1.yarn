@@ -1,0 +1,82 @@
+title: KnightDialogueBranch1
+tags:
+---
+Ferdinand: "Well met, young apothecary!"
+Ferdinand: "You may call me Ferdinand, a knight of renown."
+
+<<jump KnightHub>>
+===
+
+title: KnightHub
+---
+
+Ferdinand: "I heard that this was the finest procurer of potions in all the land. I require a concoction that will allow me to maintain my flame. Can you conjure such a spell for me?"
+
+-> [What happened to your body?]
+    <<jump KnightBody>>
+-> [What can you tell me about Emberseed?]
+    <<jump KnightEmberseed>>
+-> [Have you heard anything about my mentor?]
+    <<jump KnightMentor>>
+-> [You've heard of this shop before?]
+    <<jump KnightShop>>
+-> [Small talk]
+    <<jump KnightSmallTalk>>
+===
+
+title: KnightBody
+---
+Ferdinand: "Alas, I was slain in the midst of battle."
+Ferdinand: "A traveling necromancer was able to return my soul, but not my body."
+Ferdinand: "Now this flame of mine, my undying will, shall burn forevermore."
+-> [I see. Thank you.]
+    <<jump KnightHub>>
+===
+
+title: KnightEmberseed
+---
+Ferdinand: "Ah, Emberseed, you say?"
+Ferdinand: "I couldn't tell you much about the seeds themselves, unfortunately."
+Ferdinand: "But I do distinctly remember coming across the Ember Flower on one of my travels."
+Ferdinand: "Had a very pungent smell. We could hardly fall asleep at night because the stench would keep us all awake!"
+-> [Can you tell me more about your travels?]
+    <<jump KnightTravels>>
+-> [I see. Thank you.]
+    <<jump KnightHub>>
+===
+
+title: KnightTravels
+---
+Ferdinand: "Well, if you'll allow me to regale you with some tales, then regale you I shall!"
+Ferdinand: "Allow me to tell you the tale of the time a group of brigands and I came across a griffin."
+Ferdinand: "The beast was ferocious, and we lost a few good men."
+Ferdinand: "But alas, we managed to fell the beast, and take its claws."
+Ferdinand: "I still keep the claw in my vault as a memory of our victory, and to honor my fallen comrades."
+-> [I see. Thank you.]
+    <<jump KnightHub>>
+===
+
+title: KnightMentor
+---
+Ferdinand: "Unfortunately not, my friend."
+Ferdinand: "I have yet to hear the name throughout my travels."
+-> [Do you know where they may have gone?]
+    Ferdinand: "Any answer I could give you at this time would be mere speculation, young apothecary."
+    Ferdinand: "My apologies."
+    <<jump KnightHub>>
+===
+
+title: KnightShop
+---
+Ferdinand: "But of course! From land to land, people tell the tale of this very shop."
+Ferdinand: "I have known you for exactly 3 minutes, and already I trust you with my life!"
+-> [I see. Thank you.]
+    <<jump KnightHub>>
+===
+
+title: KnightSmallTalk
+---
+Ferdinand: "My goodness! Is it just me, or is it growing quite warm in here?"
+Ferdinand: "Only kidding, of course."
+<<jump KnightHub>>
+===
