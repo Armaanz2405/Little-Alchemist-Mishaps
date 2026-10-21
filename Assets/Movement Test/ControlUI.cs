@@ -1,14 +1,17 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ControlUI : MonoBehaviour
 {
     [SerializeField] private GameObject keyboardScreen;
     [SerializeField] private GameObject controllerScreen;
     [SerializeField] private GameObject chooseScreen;
-
+    [SerializeField] private EventSystem eventSystem;
     void Awake()
     {
         Time.timeScale = 0f;
+        eventSystem.SetSelectedGameObject(GameObject.Find("KeyboardButton"));
     }
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -26,10 +29,12 @@ public class ControlUI : MonoBehaviour
     public void openKey()
     {
         keyboardScreen.SetActive(true);
+        eventSystem.SetSelectedGameObject(GameObject.Find("startKey"));
     }
     public void openCon()
     {
         controllerScreen.SetActive(true);
+        eventSystem.SetSelectedGameObject(GameObject.Find("startCon"));
     }
     public void closeKey()
     {
