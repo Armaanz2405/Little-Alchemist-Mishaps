@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class CuttingBoard : MonoBehaviour
 {
-    [SerializeField] private Ingredient igredientPrefab;
+    [SerializeField] private Ingredient ingredientPrefab;
     [Tooltip("Where the packed ingredient pops out. Defaults to just above the mortar.")]
     [SerializeField] private Transform ingredientSpawnPoint;
 
@@ -55,10 +55,10 @@ public class CuttingBoard : MonoBehaviour
         choppedIngredient.color = content.color;
         content = null;
 
-        if (igredientPrefab != null)
+        if (ingredientPrefab != null)
         {
             Vector3 at = ingredientSpawnPoint != null ? ingredientSpawnPoint.position : transform.position + Vector3.up;
-            Ingredient ingredient = Instantiate(igredientPrefab, at, Quaternion.identity);
+            Ingredient ingredient = Instantiate(ingredientPrefab, at, Quaternion.identity);
             ingredient.data = choppedIngredient;
             ingredient.ApplyLook();
         }

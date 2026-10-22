@@ -242,6 +242,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2098892810994306635, guid: 74412f5c838544b44986283917ad4406, type: 3}
       insertIndex: -1
       addedObject: {fileID: 710059922}
+    - targetCorrespondingSourceObject: {fileID: 2098892810994306635, guid: 74412f5c838544b44986283917ad4406, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 710059924}
   m_SourcePrefab: {fileID: 100100000, guid: 74412f5c838544b44986283917ad4406, type: 3}
 --- !u!4 &58521207 stripped
 Transform:
@@ -1957,6 +1960,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f08f74ff8071694188793fd3e008a8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cauldron
+--- !u!114 &710059924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 162906184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b892ec3f5a7f074398999ee8dcb26ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PuzzleLogic_Cauldron
   recipeBook: {fileID: 11400000, guid: 9fe859d2b9fe24a87b03b8d335561f44, type: 2}
   potionPrefab: {fileID: 3411548334474998657, guid: fa73dbeade6ac4c7cb6e030505baf02c, type: 3}
   potionSpawnPoint: {fileID: 929876874}
@@ -2055,8 +2070,8 @@ MonoBehaviour:
   onFinished:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 710059922}
-        m_TargetAssemblyTypeName: Cauldron, Assembly-CSharp
+      - m_Target: {fileID: 710059924}
+        m_TargetAssemblyTypeName: PuzzleLogic_Cauldron, Assembly-CSharp
         m_MethodName: Brew_Trigger
         m_Mode: 1
         m_Arguments:
@@ -2811,7 +2826,7 @@ Transform:
   m_GameObject: {fileID: 948636489}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.90929985, y: -1.4695599, z: -10}
+  m_LocalPosition: {x: -0.9137347, y: -1.4695599, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5230,7 +5245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b676281ac5cb96d47970abf2fda78ad9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MortarNPestle
-  igredientPrefab: {fileID: 7667439634201628183, guid: daef4117b831d4d18b76b31fbc940fcd, type: 3}
+  ingredientPrefab: {fileID: 0}
   ingredientSpawnPoint: {fileID: 1115385094}
   fillAmntText: {fileID: 1921734911}
   onIngredientsCrushed:
@@ -5342,7 +5357,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e99d6bfded318f04f90cbb4710ded4fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CuttingBoard
-  igredientPrefab: {fileID: 7667439634201628183, guid: daef4117b831d4d18b76b31fbc940fcd, type: 3}
+  ingredientPrefab: {fileID: 0}
   ingredientSpawnPoint: {fileID: 687740791}
   chopMinigameStation: {fileID: 1818179060}
 --- !u!61 &1376598487

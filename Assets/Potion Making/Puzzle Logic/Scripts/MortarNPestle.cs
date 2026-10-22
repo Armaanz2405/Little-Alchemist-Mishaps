@@ -9,7 +9,7 @@ public class MortarNPestle : MonoBehaviour
 {
     public const int MaxIngredientsPerCrush = 3;
 
-    [SerializeField] private Ingredient igredientPrefab;
+    [SerializeField] private Ingredient ingredientPrefab;
     [Tooltip("Where the packed ingredient pops out. Defaults to just above the mortar.")]
     [SerializeField] private Transform ingredientSpawnPoint;
 
@@ -59,10 +59,10 @@ public class MortarNPestle : MonoBehaviour
 
         Debug.Log($"[Cauldron] Brewed {packedIngredients.displayName}" + "\n" + ListContents(packedIngredients.ingredientEffects));
         
-        if (igredientPrefab != null)
+        if (ingredientPrefab != null)
         {
             Vector3 at = ingredientSpawnPoint != null ? ingredientSpawnPoint.position : transform.position + Vector3.up;
-            Ingredient ingredient = Instantiate(igredientPrefab, at, Quaternion.identity);
+            Ingredient ingredient = Instantiate(ingredientPrefab, at, Quaternion.identity);
             ingredient.data = packedIngredients;
             ingredient.ApplyLook();
         }

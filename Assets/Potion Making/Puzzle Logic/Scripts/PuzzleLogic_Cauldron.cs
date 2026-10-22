@@ -8,7 +8,7 @@ using TMPro;
 // The collider must be a trigger. Held items have their Rigidbody2D un-simulated by PlayerMovement,
 // so ingredients only count once they're dropped (or released) inside the cauldron.
 [RequireComponent(typeof(Collider2D))]
-public class Cauldron : MonoBehaviour
+public class PuzzleLogic_Cauldron : MonoBehaviour
 {
     public const int IngredientsPerPotion = 2;
 
