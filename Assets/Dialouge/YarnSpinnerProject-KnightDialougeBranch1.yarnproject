@@ -1,0 +1,15 @@
+{
+  "projectFileVersion": 4,
+  "sourceFiles": [
+    "KnightDialogueBranch1.yarn"
+  ],
+  "excludeFiles": [
+    "**/*~/*",
+    "./Samples/Yarn Spinner*/*"
+  ],
+  "localisation": {},
+  "baseLanguage": "en",
+  "compilerOptions": {
+    "diagnosticsSeverity": {}
+  }
+}
