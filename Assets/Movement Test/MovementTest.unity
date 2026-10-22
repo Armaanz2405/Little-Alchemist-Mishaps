@@ -602,8 +602,12 @@ MonoBehaviour:
   grabbableLayer:
     serializedVersion: 2
     m_Bits: 8
+  interactableLayer:
+    serializedVersion: 2
+    m_Bits: 0
   throwForce: 10
   throwHieght: 0.5
+  bookUI: {fileID: 0}
 --- !u!114 &426136631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -616,8 +620,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84a7fd8eb08ea46a7a168190b4d3885e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ControlsChanger
-  playerInput: {fileID: 426136627}
-  controls: []
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1975,17 +1977,17 @@ MonoBehaviour:
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
   m_XRTrackingOrigin: {fileID: 0}
-  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_CancelAction: {fileID: 7727032971491509709, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_LeftClickAction: {fileID: 3001919216989983466, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_MiddleClickAction: {fileID: -2185481485913320682, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_RightClickAction: {fileID: -4090225696740746782, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
-  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: fff6606a2d15e4b1b8b63b62e49756e6, type: 3}
+  m_PointAction: {fileID: -7769310697308519465, guid: fff6606a2d15e4b1b8b63b62e49756e6, type: 3}
+  m_MoveAction: {fileID: -8041834756739644614, guid: fff6606a2d15e4b1b8b63b62e49756e6, type: 3}
+  m_SubmitAction: {fileID: -8652139676147174298, guid: fff6606a2d15e4b1b8b63b62e49756e6, type: 3}
+  m_CancelAction: {fileID: 1463661590294410366, guid: fff6606a2d15e4b1b8b63b62e49756e6, type: 3}
+  m_LeftClickAction: {fileID: 1015937782677247320, guid: fff6606a2d15e4b1b8b63b62e49756e6, type: 3}
+  m_MiddleClickAction: {fileID: 0}
+  m_RightClickAction: {fileID: 0}
+  m_ScrollWheelAction: {fileID: 0}
+  m_TrackedDevicePositionAction: {fileID: 0}
+  m_TrackedDeviceOrientationAction: {fileID: 0}
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
@@ -2219,6 +2221,54 @@ PrefabInstance:
       propertyPath: m_Name
       value: Control Screen
       objectReference: {fileID: 0}
+    - target: {fileID: 5959256931817780220, guid: f1263edf6c6f54736bb38e904142d49d, type: 3}
+      propertyPath: eventSystem
+      value: 
+      objectReference: {fileID: 2116883155}
+    - target: {fileID: 6321471594536410118, guid: f1263edf6c6f54736bb38e904142d49d, type: 3}
+      propertyPath: m_Name
+      value: KeyboardButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 6529330175420932100, guid: f1263edf6c6f54736bb38e904142d49d, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.b
+      value: 0.75800997
+      objectReference: {fileID: 0}
+    - target: {fileID: 6529330175420932100, guid: f1263edf6c6f54736bb38e904142d49d, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.g
+      value: 0.75800997
+      objectReference: {fileID: 0}
+    - target: {fileID: 6529330175420932100, guid: f1263edf6c6f54736bb38e904142d49d, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.r
+      value: 0.9622642
+      objectReference: {fileID: 0}
+    - target: {fileID: 7143170626286298629, guid: f1263edf6c6f54736bb38e904142d49d, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.b
+      value: 0.5188679
+      objectReference: {fileID: 0}
+    - target: {fileID: 7143170626286298629, guid: f1263edf6c6f54736bb38e904142d49d, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.g
+      value: 0.5188679
+      objectReference: {fileID: 0}
+    - target: {fileID: 7143170626286298629, guid: f1263edf6c6f54736bb38e904142d49d, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.r
+      value: 0.5188679
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204320060124700051, guid: f1263edf6c6f54736bb38e904142d49d, type: 3}
+      propertyPath: m_Name
+      value: ControllerButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 8080747435820142089, guid: f1263edf6c6f54736bb38e904142d49d, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.b
+      value: 0.7075472
+      objectReference: {fileID: 0}
+    - target: {fileID: 8080747435820142089, guid: f1263edf6c6f54736bb38e904142d49d, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.g
+      value: 0.7075472
+      objectReference: {fileID: 0}
+    - target: {fileID: 8080747435820142089, guid: f1263edf6c6f54736bb38e904142d49d, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.r
+      value: 0.9433962
+      objectReference: {fileID: 0}
     - target: {fileID: 8174271765571184343, guid: f1263edf6c6f54736bb38e904142d49d, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -2302,6 +2352,18 @@ PrefabInstance:
     - target: {fileID: 8525820020193117843, guid: f1263edf6c6f54736bb38e904142d49d, type: 3}
       propertyPath: m_text
       value: Controller
+      objectReference: {fileID: 0}
+    - target: {fileID: 8713649615723995139, guid: f1263edf6c6f54736bb38e904142d49d, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.b
+      value: 0.507031
+      objectReference: {fileID: 0}
+    - target: {fileID: 8713649615723995139, guid: f1263edf6c6f54736bb38e904142d49d, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.g
+      value: 0.507031
+      objectReference: {fileID: 0}
+    - target: {fileID: 8713649615723995139, guid: f1263edf6c6f54736bb38e904142d49d, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.r
+      value: 0.509434
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

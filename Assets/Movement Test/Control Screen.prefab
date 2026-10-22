@@ -752,6 +752,7 @@ MonoBehaviour:
   keyboardScreen: {fileID: 2605929511471839600}
   controllerScreen: {fileID: 7644580718859759094}
   chooseScreen: {fileID: 8423161947310513839}
+  eventSystem: {fileID: 0}
 --- !u!1 &5227319020227925233
 GameObject:
   m_ObjectHideFlags: 0
@@ -1313,7 +1314,7 @@ GameObject:
   - component: {fileID: 4836798304348480843}
   - component: {fileID: 7143170626286298629}
   m_Layer: 5
-  m_Name: Button
+  m_Name: startCon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1583,7 +1584,7 @@ GameObject:
   - component: {fileID: 4159425456075236498}
   - component: {fileID: 8080747435820142089}
   m_Layer: 5
-  m_Name: Button
+  m_Name: KeyboardButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2139,7 +2140,7 @@ GameObject:
   - component: {fileID: 2690990378631674941}
   - component: {fileID: 6529330175420932100}
   m_Layer: 5
-  m_Name: Button
+  m_Name: ControllerButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2502,7 +2503,7 @@ GameObject:
   - component: {fileID: 1098181201129160608}
   - component: {fileID: 8713649615723995139}
   m_Layer: 5
-  m_Name: Button
+  m_Name: startKey
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
