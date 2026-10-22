@@ -15,6 +15,8 @@ namespace Nocturne.PotionMaking.Minigames
         [SerializeField] private Key key = Key.E;
         [SerializeField] private string prompt = "E: play";
 
+        public bool isReadyToPlay = false; 
+
         public UnityEvent<float> onPlayed = new UnityEvent<float>();
         public UnityEvent<IngredientData, float> onPlayedWithIngredient = new UnityEvent<IngredientData, float>();
 
@@ -34,7 +36,7 @@ namespace Nocturne.PotionMaking.Minigames
 
         private void Update()
         {
-            if (minigame == null || player == null) return;
+            if (minigame == null || player == null || !isReadyToPlay) return;
             bool near = !minigame.Running && Vector2.Distance(player.position, transform.position) <= range;
             label.gameObject.SetActive(near);
             var kb = Keyboard.current;
@@ -43,6 +45,9 @@ namespace Nocturne.PotionMaking.Minigames
 
         public void Play()
         {
+            isReadyToPlay = false;
+            label.gameObject.SetActive(false);
+
             var held = holdPoint != null ? holdPoint.GetComponentInChildren<Ingredient>() : null;
             var data = held != null ? held.data : null;
             if (data != null && minigame is KnifeSliceMinigame knife) knife.SetIngredientColor(data.color);
