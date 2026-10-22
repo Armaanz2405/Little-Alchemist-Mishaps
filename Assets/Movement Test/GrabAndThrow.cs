@@ -55,7 +55,7 @@ public class GrabAndThrow : MonoBehaviour
             heldItem.simulated = false;          
             heldItem.transform.SetParent(transform);
             heldItem.freezeRotation = true;
-            heldItem.transform.localPosition = new Vector2(0f, 0.78f); // changed for holding above head
+            heldItem.transform.localPosition = new Vector2(0f, 0.82f); // changed for holding above head
         }
     }
 

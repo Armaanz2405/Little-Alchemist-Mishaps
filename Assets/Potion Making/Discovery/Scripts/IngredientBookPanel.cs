@@ -21,6 +21,8 @@ namespace Nocturne.PotionMaking.Discovery
         private Coroutine toastRoutine;
 
         private static readonly Color Silhouette = new Color(0.12f, 0.1f, 0.14f);
+        private static readonly Color SilhouetteGrey = new Color(0.45f, 0.45f, 0.48f);
+        private readonly Dictionary<Sprite, Sprite> greyedCache = new Dictionary<Sprite, Sprite>();
 
         private void Awake()
         {
@@ -82,15 +84,48 @@ namespace Nocturne.PotionMaking.Discovery
 
             var swatch = new GameObject("Swatch", typeof(RectTransform), typeof(Image), typeof(LayoutElement));
             swatch.transform.SetParent(row.transform, false);
-            swatch.GetComponent<Image>().color = known ? entry.ingredient.color : Silhouette;
+            var image = swatch.GetComponent<Image>();
+            Sprite art = entry.ingredient.sprite;
+            if (art != null)
+            {
+                Sprite greyed = known ? null : Greyed(art);
+                image.sprite = known ? art : greyed != null ? greyed : art;
+                image.color = known || greyed != null ? Color.white : Silhouette;
+                image.preserveAspect = true;
+            }
+            else
+            {
+                image.color = known ? entry.ingredient.color : Silhouette;
+            }
             var le = swatch.GetComponent<LayoutElement>();
-            le.preferredWidth = le.preferredHeight = 56;
+            le.preferredWidth = le.preferredHeight = art != null ? 80 : 56;
 
             string title = known ? $"<b>{entry.ingredient.displayName}</b>" : "<b>???</b>";
             string detail = known ? IngredientCatalog.DescribeTags(entry.ingredient) : $"<i>{entry.hint}</i>";
             var text = MakeText(row.transform, $"{title}\n<size=70%>{detail}</size>", 30, known ? Color.white : new Color(1f, 1f, 1f, 0.55f));
             text.GetComponent<LayoutElement>().preferredWidth = 520;
             return row;
+        }
+
+        // flat grey silhouette of the art for undiscovered entries
+        private Sprite Greyed(Sprite art)
+        {
+            if (greyedCache.TryGetValue(art, out var cached)) return cached;
+            Sprite greyed = null;
+            if (art.texture.isReadable)
+            {
+                int x = Mathf.FloorToInt(art.rect.x), y = Mathf.FloorToInt(art.rect.y);
+                int w = Mathf.FloorToInt(art.rect.width), h = Mathf.FloorToInt(art.rect.height);
+                var pixels = art.texture.GetPixels(x, y, w, h);
+                for (int i = 0; i < pixels.Length; i++)
+                    pixels[i] = new Color(SilhouetteGrey.r, SilhouetteGrey.g, SilhouetteGrey.b, pixels[i].a);
+                var tex = new Texture2D(w, h, TextureFormat.RGBA32, false);
+                tex.SetPixels(pixels);
+                tex.Apply();
+                greyed = Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(0.5f, 0.5f), art.pixelsPerUnit);
+            }
+            greyedCache[art] = greyed;
+            return greyed;
         }
 
         private void Build()
