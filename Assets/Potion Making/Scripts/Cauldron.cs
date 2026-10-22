@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using TMPro;
 
 // Drop two ingredients in and it brews a potion: ingredient 1 + ingredient 2 = potion.
 // The collider must be a trigger. Held items have their Rigidbody2D un-simulated by PlayerMovement,
@@ -17,12 +19,14 @@ public class Cauldron : MonoBehaviour
     [Tooltip("Optional: tinted with the latest ingredient so you can see what's inside.")]
     [SerializeField] private SpriteRenderer liquid;
     [SerializeField] private Color emptyLiquidColor = new Color(0.24f, 0.2f, 0.27f);
+    [SerializeField] private TextMeshProUGUI potionContentsText;
 
     // Hooks for sound/VFX/UI without touching this script.
     public UnityEvent<IngredientData> onIngredientAdded = new UnityEvent<IngredientData>();
     public UnityEvent<PotionData> onPotionBrewed = new UnityEvent<PotionData>();
 
     private readonly List<IngredientData> contents = new List<IngredientData>();
+    private readonly List<IngredientTags.Effects> contentsEffects = new List<IngredientTags.Effects>();
     public IReadOnlyList<IngredientData> Contents => contents;
 
     private void Reset() => GetComponent<Collider2D>().isTrigger = true;
@@ -30,6 +34,7 @@ public class Cauldron : MonoBehaviour
     private void Start()
     {
         if (liquid != null) liquid.color = emptyLiquidColor;
+        potionContentsText.text = "";
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -48,6 +53,18 @@ public class Cauldron : MonoBehaviour
         Debug.Log($"[Cauldron] Added {ingredient.displayName} ({contents.Count}/{IngredientsPerPotion})");
         onIngredientAdded.Invoke(ingredient);
 
+        //this is messy i know, i just wanted to test out getting the tags to combine together for a readable string
+        contentsEffects.AddRange(ListContentsByEffects(ingredient.ingredientEffects));
+        HashSet<IngredientTags.Effects> uniqueEffects = new HashSet<IngredientTags.Effects>(contentsEffects);
+
+        string cauldronUI = "";
+        foreach (var item in uniqueEffects)
+        {
+            cauldronUI += $"{item}:{CountTagsInBrew(contentsEffects, item)}\n";
+        }
+        potionContentsText.text = cauldronUI;
+
+
         return contents.Count >= IngredientsPerPotion ? Brew() : null;
     }
 
@@ -55,6 +72,8 @@ public class Cauldron : MonoBehaviour
     {
         PotionData result = recipeBook != null ? recipeBook.Combine(contents[0], contents[1]) : null;
         contents.Clear();
+        contentsEffects.Clear();
+        
         if (liquid != null) liquid.color = emptyLiquidColor;
 
         if (result == null)
@@ -73,5 +92,26 @@ public class Cauldron : MonoBehaviour
         }
         onPotionBrewed.Invoke(result);
         return result;
+    }
+
+    private int CountTagsInBrew(List<IngredientTags.Effects> list, IngredientTags.Effects effect)
+    {
+        int count = 0;
+        foreach (var tag in list)
+        {
+            count += (tag == effect) ? 1 : 0;
+        }
+
+        return count;
+    }
+
+    private List<IngredientTags.Effects> ListContentsByEffects(List<IngredientTags> l)
+    {
+        List<IngredientTags.Effects> effects = new List<IngredientTags.Effects>();
+        foreach (var item in l)
+        {
+            effects.Add(item.tag_effect);
+        }
+        return effects;
     }
 }

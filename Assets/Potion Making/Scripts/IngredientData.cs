@@ -4,11 +4,18 @@ using UnityEngine;
 [System.Serializable]
 public class IngredientTags {
     public enum Effects {
+        WARMING,
+        CHILLING,
+        HEALING,
         POISON,
-        SLEEPY,
-        STRENGTH,
-        CORPOREAL,
-        BUBBLY
+        GLOWING,
+        BLINDING,
+        REVEALING,
+        SILENCING,
+        WITHERING,
+        CRYSTALLIZING,
+        BUBBLING,
+        STRENGTHENING
     }
     public Effects tag_effect;
     [Range(1,4)]

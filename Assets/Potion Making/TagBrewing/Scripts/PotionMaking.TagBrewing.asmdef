@@ -1,0 +1,14 @@
+{
+    "name": "PotionMaking.TagBrewing",
+    "rootNamespace": "Nocturne.PotionMaking.TagBrewing",
+    "references": ["PotionMaking", "Unity.TextMeshPro", "Unity.InputSystem"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
