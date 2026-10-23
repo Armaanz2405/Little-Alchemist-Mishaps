@@ -79,8 +79,14 @@ public class CustomerTalk : MonoBehaviour
         {
             playerInput.DeactivateInput();
         }
-        onTalk.Invoke();
+
         dialogueRunner.StartDialogue(startNode);
+    }
+
+    [YarnCommand("spend_talk_amount")]
+    public void SpendTalkAmount()
+    {
+        onTalk.Invoke();
     }
 
     private void OnDialogueComplete()
