@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Yarn.Unity;
 
 public class GrabAndThrow : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class GrabAndThrow : MonoBehaviour
     [SerializeField] private float throwHieght = 4f;
 
     [SerializeField] private GameObject bookUI;
+    [SerializeField] private VariableStorageBehaviour variableStorage;
     private float facing = 1f;
     
     private Rigidbody2D heldItem;
@@ -61,6 +63,8 @@ public class GrabAndThrow : MonoBehaviour
             heldItem.transform.SetParent(transform);
             heldItem.freezeRotation = true;
             heldItem.transform.localPosition = new Vector2(0f, 0.82f); // changed for holding above head
+
+            if (heldItem.GetComponent<Potion>() != null) variableStorage.SetValue("$isHoldingPotion", true);
         }
     }
 
@@ -99,6 +103,7 @@ public class GrabAndThrow : MonoBehaviour
             Vector2 throwVector = new Vector2(facing,throwHieght);
             heldItem.linearVelocity =  throwVector * throwForce;
 
+            if (heldItem.GetComponent<Potion>() != null) variableStorage.SetValue("$isHoldingPotion", false);
             heldItem = null;
         }
     }
@@ -110,6 +115,7 @@ public class GrabAndThrow : MonoBehaviour
         heldItem.simulated = true;                
         heldItem.linearVelocity = Vector2.down;
 
+        if (heldItem.GetComponent<Potion>() != null) variableStorage.SetValue("$isHoldingPotion", false);
         heldItem = null;
     }
     

@@ -7,6 +7,7 @@ public class CuttingBoard : MonoBehaviour
     [SerializeField] private Ingredient ingredientPrefab;
     [Tooltip("Where the packed ingredient pops out. Defaults to just above the mortar.")]
     [SerializeField] private Transform ingredientSpawnPoint;
+    [SerializeField] private SpriteRenderer ingredientOnBoardSprite;
 
     [SerializeField] private Nocturne.PotionMaking.Minigames.MinigameStation chopMinigameStation;
 
@@ -18,7 +19,7 @@ public class CuttingBoard : MonoBehaviour
     
     void Start()
     {
-        
+        ingredientOnBoardSprite.gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -36,6 +37,11 @@ public class CuttingBoard : MonoBehaviour
         //onIngredientAdded.Invoke(ingredient);
 
         chopMinigameStation.isReadyToPlay = true;
+        // display the ingredient
+        ingredientOnBoardSprite.color = ingredient.color;
+        if (ingredient.sprite != null) ingredientOnBoardSprite.sprite = ingredient.sprite;
+        ingredientOnBoardSprite.gameObject.SetActive(true);
+
         return null;
     }
 
@@ -53,6 +59,8 @@ public class CuttingBoard : MonoBehaviour
         choppedIngredient.displayName = $"Chopped {content.displayName}";
         choppedIngredient.ingredientEffects = new_tags;
         choppedIngredient.color = content.color;
+
+        ingredientOnBoardSprite.gameObject.SetActive(false);
         content = null;
 
         if (ingredientPrefab != null)
