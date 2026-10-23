@@ -27,19 +27,16 @@ public abstract class PromptSource : MonoBehaviour
     // how far away the player is, or infinity when they're out of range
     public virtual float Distance(Vector2 player)
     {
-        float d;
         if (area != null)
         {
             Bounds b = area.bounds;
             float dx = Mathf.Max(0f, Mathf.Max(b.min.x - player.x, player.x - b.max.x));
             float dy = Mathf.Max(0f, Mathf.Max(b.min.y - player.y, player.y - b.max.y));
-            if (dy > heightRange) return float.PositiveInfinity;
-            d = dx;
+            if (dy > heightRange || dx > range) return float.PositiveInfinity;
+            // being in front of or behind it counts too, so nearby things on the floor don't tie
+            return dx + dy;
         }
-        else
-        {
-            d = Vector2.Distance(transform.position, player);
-        }
+        float d = Vector2.Distance(transform.position, player);
         return d <= range ? d : float.PositiveInfinity;
     }
 
