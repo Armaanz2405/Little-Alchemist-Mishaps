@@ -10,6 +10,7 @@ public class CustomerTalk : MonoBehaviour
     [SerializeField] private string startNode = "KnightDialogueBranch1";
     [SerializeField] private Transform player;
     [SerializeField] private float range = 3f;
+    [SerializeField] private Collider2D talkZone;
     [SerializeField] private InputAction talkAction = DefaultTalkAction();
 
     public UnityEvent onTalk = new UnityEvent();
@@ -57,8 +58,15 @@ public class CustomerTalk : MonoBehaviour
 
     public bool CanTalk()
     {
-        return dialogueRunner != null && player != null && !dialogueRunner.IsDialogueRunning
-            && Mathf.Abs(player.position.x - transform.position.x) <= range;
+        if (dialogueRunner == null || player == null || dialogueRunner.IsDialogueRunning)
+        {
+            return false;
+        }
+        if (talkZone != null)
+        {
+            return talkZone.OverlapPoint(player.position);
+        }
+        return Mathf.Abs(player.position.x - transform.position.x) <= range;
     }
 
     private void OnTalkPressed(InputAction.CallbackContext context)

@@ -11,6 +11,7 @@ public class PlayerWalkAnimation : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Rigidbody2D rb;
     private GrabAndThrow grabAndThrow;
+    private PlayerMovement movement;
     private float timer;
 
     private void Awake()
@@ -18,6 +19,7 @@ public class PlayerWalkAnimation : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         grabAndThrow = GetComponent<GrabAndThrow>();
+        movement = GetComponent<PlayerMovement>();
     }
 
     private void LateUpdate()
@@ -49,6 +51,11 @@ public class PlayerWalkAnimation : MonoBehaviour
             return false;
         }
         Vector2 velocity = rb.linearVelocity;
+        // on the floorboards walking up and down counts too, but not mid jump
+        if (movement != null && movement.OnFloorboards)
+        {
+            return !movement.FloorJumping && velocity.magnitude > minWalkSpeed;
+        }
         return Mathf.Abs(velocity.x) > minWalkSpeed && Mathf.Abs(velocity.y) < minWalkSpeed;
     }
 

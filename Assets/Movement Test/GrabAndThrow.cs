@@ -62,7 +62,8 @@ public class GrabAndThrow : MonoBehaviour
             heldItem.simulated = false;          
             heldItem.transform.SetParent(transform);
             heldItem.freezeRotation = true;
-            heldItem.transform.localPosition = new Vector2(0f, 0.82f); // changed for holding above head
+            float half = hit.bounds.extents.y;
+            heldItem.transform.localPosition = new Vector2(0f, 0.445f + half);
 
             if (heldItem.GetComponent<Potion>() != null) variableStorage.SetValue("$isHoldingPotion", true);
         }
