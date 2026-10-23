@@ -10,7 +10,9 @@ namespace Nocturne.PotionMaking.Energy
     {
         [SerializeField] private EnergyMeter meter;
         [SerializeField] private Vector2 anchoredPosition = new Vector2(30f, -30f);
+        [SerializeField] private int minPips = 5;
 
+        private RectTransform panelRect;
         private RectTransform pipRow;
         private TextMeshProUGUI label;
         private readonly List<Image> pips = new List<Image>();
@@ -30,9 +32,9 @@ namespace Nocturne.PotionMaking.Energy
 
             var panel = new GameObject("EnergyPanel", typeof(RectTransform), typeof(Image), typeof(VerticalLayoutGroup), typeof(ContentSizeFitter));
             panel.transform.SetParent(canvasGo.transform, false);
-            var rt = (RectTransform)panel.transform;
-            rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0f, 1f);
-            rt.anchoredPosition = anchoredPosition;
+            panelRect = (RectTransform)panel.transform;
+            panelRect.anchorMin = panelRect.anchorMax = panelRect.pivot = new Vector2(0f, 1f);
+            panelRect.anchoredPosition = anchoredPosition;
             UIStyle.Box(panel.GetComponent<Image>(), BoxKind.Panel, 1.6f);
             var layout = panel.GetComponent<VerticalLayoutGroup>();
             layout.padding = new RectOffset(20, 20, 12, 16);
@@ -43,12 +45,14 @@ namespace Nocturne.PotionMaking.Energy
             fit.horizontalFit = fit.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
             label = UIStyle.MakeText(panel.transform, "", 28, TextKind.Title, "Label");
+            label.textWrappingMode = TextWrappingModes.NoWrap;
 
-            var row = new GameObject("Pips", typeof(RectTransform), typeof(HorizontalLayoutGroup));
+            var row = new GameObject("Pips", typeof(RectTransform), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
             row.transform.SetParent(panel.transform, false);
             pipRow = (RectTransform)row.transform;
             var h = row.GetComponent<HorizontalLayoutGroup>();
             h.spacing = 6;
+            row.GetComponent<LayoutElement>().minWidth = minPips * 26 + Mathf.Max(0, minPips - 1) * h.spacing;
             h.childControlWidth = h.childControlHeight = false;
             h.childForceExpandWidth = h.childForceExpandHeight = false;
         }
@@ -73,6 +77,10 @@ namespace Nocturne.PotionMaking.Energy
             var pipLayout = pipRow.GetComponent<HorizontalLayoutGroup>();
             pipRow.sizeDelta = new Vector2(max * 26 + Mathf.Max(0, max - 1) * pipLayout.spacing, 26);
             label.text = $"Energy  <color={UITheme.Hex(UITheme.Current.accentText)}>{current}/{max}</color>";
+            // resize now so the text never spills out of the box
+            label.ForceMeshUpdate();
+            LayoutRebuilder.ForceRebuildLayoutImmediate(pipRow);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(panelRect);
         }
     }
 }

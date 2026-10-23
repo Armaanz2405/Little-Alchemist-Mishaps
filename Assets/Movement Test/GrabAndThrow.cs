@@ -32,6 +32,7 @@ public class GrabAndThrow : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         playerMovement = GetComponent<PlayerMovement>();
         characterSprite = GetComponent<SpriteRenderer>();
+        if (variableStorage == null) variableStorage = FindAnyObjectByType<VariableStorageBehaviour>();
     }
 
     // Update is called once per frame
@@ -65,13 +66,15 @@ public class GrabAndThrow : MonoBehaviour
             float half = hit.bounds.extents.y;
             heldItem.transform.localPosition = new Vector2(0f, 0.445f + half);
 
-            if (heldItem.GetComponent<Potion>() != null) variableStorage.SetValue("$isHoldingPotion", true);
+            if (heldItem.GetComponent<Potion>() != null) SetHoldingPotion(true);
         }
     }
 
     public void InteractInput(InputAction.CallbackContext context) {
         if (context.started) {
-            
+            // E talks to the customer instead of dropping
+            if (heldItem != null && CustomerTalk.AnyCanTalk()) return;
+
             if (heldItem == null)
             {
                 TryGrab();
@@ -104,7 +107,7 @@ public class GrabAndThrow : MonoBehaviour
             Vector2 throwVector = new Vector2(facing,throwHieght);
             heldItem.linearVelocity =  throwVector * throwForce;
 
-            if (heldItem.GetComponent<Potion>() != null) variableStorage.SetValue("$isHoldingPotion", false);
+            if (heldItem.GetComponent<Potion>() != null) SetHoldingPotion(false);
             heldItem = null;
         }
     }
@@ -116,8 +119,21 @@ public class GrabAndThrow : MonoBehaviour
         heldItem.simulated = true;                
         heldItem.linearVelocity = Vector2.down;
 
-        if (heldItem.GetComponent<Potion>() != null) variableStorage.SetValue("$isHoldingPotion", false);
+        if (heldItem.GetComponent<Potion>() != null) SetHoldingPotion(false);
         heldItem = null;
+    }
+
+    public void ConsumeHeldItem()
+    {
+        if (heldItem == null) return;
+        if (heldItem.GetComponent<Potion>() != null) SetHoldingPotion(false);
+        Destroy(heldItem.gameObject);
+        heldItem = null;
+    }
+
+    private void SetHoldingPotion(bool holding)
+    {
+        if (variableStorage != null) variableStorage.SetValue("$isHoldingPotion", holding);
     }
     
     public bool hasHeldItem()

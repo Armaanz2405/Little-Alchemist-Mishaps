@@ -15,6 +15,6 @@ MonoBehaviour:
   displayName: Quality Heartroot
   ingredientEffects:
   - tag_effect: 2
-    tag_value: 1
+    tag_value: 2
   color: {r: 1, g: 1, b: 1, a: 1}
   sprite: {fileID: 21300000, guid: 838ebb9546a24e7db153c3e1e35cb9ce, type: 3}

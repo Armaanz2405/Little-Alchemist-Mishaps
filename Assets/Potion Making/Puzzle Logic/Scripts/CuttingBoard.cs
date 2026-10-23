@@ -12,6 +12,7 @@ public class CuttingBoard : MonoBehaviour
     [SerializeField] private Nocturne.PotionMaking.Minigames.MinigameStation chopMinigameStation;
 
     private IngredientData content;
+    public bool HasIngredient => content != null;
     //public IReadOnlyIngredientData Content => content;
 
     private void Reset() => GetComponent<Collider2D>().isTrigger = true;
@@ -19,12 +20,13 @@ public class CuttingBoard : MonoBehaviour
     
     void Start()
     {
-        ingredientOnBoardSprite.gameObject.SetActive(false);
+        if (ingredientOnBoardSprite != null) ingredientOnBoardSprite.gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         var ingredient = other.GetComponentInParent<Ingredient>();
+        if (content != null) return;
         if (ingredient == null || ingredient.data == null || ingredient.data.ingredientEffects.Count <= 0 || !ingredient.TryUse()) return;
         AddIngredient(ingredient.data);
         Destroy(ingredient.gameObject);
@@ -36,11 +38,14 @@ public class CuttingBoard : MonoBehaviour
         Debug.Log($"[Chopping Board] Added {ingredient.displayName}");
         //onIngredientAdded.Invoke(ingredient);
 
-        chopMinigameStation.isReadyToPlay = true;
+        if (chopMinigameStation != null) chopMinigameStation.isReadyToPlay = true;
         // display the ingredient
-        ingredientOnBoardSprite.color = ingredient.color;
-        if (ingredient.sprite != null) ingredientOnBoardSprite.sprite = ingredient.sprite;
-        ingredientOnBoardSprite.gameObject.SetActive(true);
+        if (ingredientOnBoardSprite != null)
+        {
+            ingredientOnBoardSprite.color = ingredient.color;
+            if (ingredient.sprite != null) ingredientOnBoardSprite.sprite = ingredient.sprite;
+            ingredientOnBoardSprite.gameObject.SetActive(true);
+        }
 
         return null;
     }
@@ -52,15 +57,16 @@ public class CuttingBoard : MonoBehaviour
 
     private IngredientData Chop()
     {
+        if (content == null) return null;
         IngredientData choppedIngredient = ScriptableObject.CreateInstance<IngredientData>();
         List<IngredientTags> new_tags = new List<IngredientTags>(content.ingredientEffects);
         new_tags.RemoveAt(0);
 
         choppedIngredient.displayName = $"Chopped {content.displayName}";
         choppedIngredient.ingredientEffects = new_tags;
-        choppedIngredient.color = content.color;
+        choppedIngredient.color = new_tags.Count > 0 ? IngredientTags.ColorOf(new_tags[0].tag_effect) : content.color;
 
-        ingredientOnBoardSprite.gameObject.SetActive(false);
+        if (ingredientOnBoardSprite != null) ingredientOnBoardSprite.gameObject.SetActive(false);
         content = null;
 
         if (ingredientPrefab != null)

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Nocturne.PotionMaking.Energy;
 using Nocturne.UI;
 using UnityEngine;
 
@@ -45,4 +46,31 @@ public abstract class PromptSource : MonoBehaviour
 
     protected static string PickKey(PromptContext context, string key, string padKey) =>
         context.gamepad && !string.IsNullOrEmpty(padKey) ? padKey : key;
+
+    private static EnergyMeter meter;
+    private static float nextMeterSearch;
+
+    public static string Cost(EnergyAction action)
+    {
+        var m = Meter();
+        int cost = m != null && m.Costs != null ? m.Costs.CostOf(action) : 0;
+        if (cost <= 0) return null;
+        return m.CanSpend(cost) ? $"-{cost}" : "No energy";
+    }
+
+    public static bool CanAfford(EnergyAction action)
+    {
+        var m = Meter();
+        return m == null || m.CanAfford(action);
+    }
+
+    private static EnergyMeter Meter()
+    {
+        if (meter == null && Time.unscaledTime >= nextMeterSearch)
+        {
+            meter = FindAnyObjectByType<EnergyMeter>();
+            nextMeterSearch = Time.unscaledTime + 1f;
+        }
+        return meter;
+    }
 }

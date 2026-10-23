@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Nocturne.UI
 {
-    // controls screen shown at the start, the game stays paused until Start is pressed
+    // how to play and controls screen shown at the start, the game stays paused until Start is pressed
     public class ControlsScreen : MonoBehaviour
     {
         [Serializable]
@@ -27,20 +27,30 @@ namespace Nocturne.UI
         }
 
         [SerializeField] private bool showOnStart = true;
+        [SerializeField] private Key openKey = Key.C;
         [SerializeField] private PlayerInput playerInput;
         [SerializeField] private List<Control> controls = new List<Control>
         {
             new Control("Move", "WASD/Arrows", "Left Stick/D-pad"),
             new Control("Jump", "Space", "A"),
-            new Control("Pick up, drop and talk", "E", "B"),
+            new Control("Interact", "E", "B"),
             new Control("Throw", "Q", "Y"),
             new Control("Dash", "Shift", "X"),
-            new Control("Inspect an ingredient", "R", ""),
-            new Control("Ingredient book", "Tab", ""),
+            new Control("Inspect", "R", ""),
+            new Control("Book", "Tab", ""),
             new Control("Shop", "B", "Select"),
         };
+        [SerializeField, TextArea(8, 16)] private string howToPlay =
+            "Start by talking to your customer to hear what they need.\n\n" +
+            "Ingredients are scattered across the shelves of your apothecary, so climb the ladders and pick up what you can find. Inspect anything new to learn its tags, then check your book whenever you forget.\n\n" +
+            "Most ingredients have a primary tag and a secondary tag, so you'll often need to refine them first. Chopping an ingredient on the cutting board cuts out its primary tag, and the mortar packs three ingredients together into one that keeps all of their tags.\n\n" +
+            "When you're ready, drop two ingredients into the cauldron and stir to brew. Hand the potion to your customer, who wants a primary and secondary tag.\n\n" +
+            "Inspecting, refining, brewing and asking questions all use energy. Running short on something? The shop sells quality ingredients that only carry their primary tag.";
 
         private GameObject canvasObject;
+        private TextMeshProUGUI title;
+        private GameObject howToPage;
+        private Button nextButton;
         private GameObject choosePage;
         private GameObject listPage;
         private RectTransform list;
@@ -50,6 +60,14 @@ namespace Nocturne.UI
         private float previousTimeScale = 1f;
 
         public bool IsOpen => canvasObject != null && canvasObject.activeSelf;
+
+        private void Update()
+        {
+            var kb = Keyboard.current;
+            // not while talking or in another menu
+            bool busy = playerInput != null && !playerInput.inputIsActive;
+            if (kb != null && kb[openKey].wasPressedThisFrame && !IsOpen && !busy) Open();
+        }
 
         private void Start()
         {
@@ -65,7 +83,8 @@ namespace Nocturne.UI
             previousTimeScale = Time.timeScale > 0f ? Time.timeScale : 1f;
             Time.timeScale = 0f;
             if (playerInput != null) playerInput.DeactivateInput();
-            ShowChoose();
+            if (!string.IsNullOrWhiteSpace(howToPlay)) ShowHowTo();
+            else ShowChoose();
         }
 
         public void Close()
@@ -75,8 +94,19 @@ namespace Nocturne.UI
             if (playerInput != null) playerInput.ActivateInput();
         }
 
+        private void ShowHowTo()
+        {
+            title.text = "How to Play";
+            howToPage.SetActive(true);
+            choosePage.SetActive(false);
+            listPage.SetActive(false);
+            Select(nextButton);
+        }
+
         private void ShowChoose()
         {
+            title.text = "Controls";
+            howToPage.SetActive(false);
             choosePage.SetActive(true);
             listPage.SetActive(false);
             Select(keyboardButton);
@@ -129,9 +159,16 @@ namespace Nocturne.UI
             var fit = panel.GetComponent<ContentSizeFitter>();
             fit.horizontalFit = fit.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
-            var title = UIStyle.MakeText(panel.transform, "Controls", 54, TextKind.Title, "Title");
+            title = UIStyle.MakeText(panel.transform, "Controls", 54, TextKind.Title, "Title");
             title.horizontalAlignment = HorizontalAlignmentOptions.Center;
             UIStyle.Divider(panel.transform, 14f).GetComponent<LayoutElement>().minWidth = 520f;
+
+            howToPage = Page(panel.transform, "How to Play");
+            var description = UIStyle.MakeText(howToPage.transform, howToPlay, 25, TextKind.Body, "Description");
+            description.horizontalAlignment = HorizontalAlignmentOptions.Center;
+            description.gameObject.AddComponent<LayoutElement>().preferredWidth = 900f;
+            nextButton = UIStyle.MakeButton(howToPage.transform, "Next");
+            nextButton.onClick.AddListener(ShowChoose);
 
             choosePage = Page(panel.transform, "Choose");
             var question = UIStyle.MakeText(choosePage.transform, "Which are you using?", 30, TextKind.Muted, "Question");

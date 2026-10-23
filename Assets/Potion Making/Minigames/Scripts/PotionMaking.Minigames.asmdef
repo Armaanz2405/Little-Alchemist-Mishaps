@@ -1,7 +1,7 @@
 {
     "name": "PotionMaking.Minigames",
     "rootNamespace": "Nocturne.PotionMaking.Minigames",
-    "references": ["PotionMaking", "UnityEngine.UI", "Unity.InputSystem", "Unity.TextMeshPro", "Nocturne.UI"],
+    "references": ["PotionMaking", "PotionMaking.Energy", "UnityEngine.UI", "Unity.InputSystem", "Unity.TextMeshPro", "Nocturne.UI"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

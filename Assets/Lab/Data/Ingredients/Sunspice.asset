@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: Sunspice
   ingredientEffects:
   - tag_effect: 0
-    tag_value: 1
+    tag_value: 2
   - tag_effect: 11
     tag_value: 1
   color: {r: 1, g: 1, b: 1, a: 1}

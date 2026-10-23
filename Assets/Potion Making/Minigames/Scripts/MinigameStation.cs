@@ -1,3 +1,4 @@
+using Nocturne.PotionMaking.Energy;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -8,6 +9,9 @@ namespace Nocturne.PotionMaking.Minigames
     // onPlayedWithIngredient passes the ingredient you were holding (if any) so the cutting board / cauldron can use the score.
     public class MinigameStation : MonoBehaviour
     {
+        // what happens when the player can't afford it
+        public enum EnergyRule { Free, Block, ZeroScore }
+
         [SerializeField] private Minigame minigame;
         [SerializeField] private Transform player;
         [SerializeField] private Transform holdPoint;
@@ -17,18 +21,24 @@ namespace Nocturne.PotionMaking.Minigames
         [SerializeField] private bool showLabel = true;
         // turn on for stations that something else unlocks (like the cutting board) by setting isReadyToPlay
         [SerializeField] private bool waitUntilReady = false;
+        [SerializeField] private EnergyRule energyRule = EnergyRule.Free;
+        [SerializeField] private EnergyAction energyAction = EnergyAction.Refine;
 
         public bool isReadyToPlay = false;
 
         public float Range => range;
         public Key Key => key;
-        public bool CanPlay => minigame != null && !minigame.Running && (!waitUntilReady || isReadyToPlay);
+        public bool CanPlay => Ready && (energyRule != EnergyRule.Block || HasEnergy);
+        public bool BlockedByEnergy => Ready && energyRule == EnergyRule.Block && !HasEnergy;
+        public bool HasEnergy => energyRule == EnergyRule.Free || energy == null || energy.CanAfford(energyAction);
+        private bool Ready => minigame != null && !minigame.Running && (!waitUntilReady || isReadyToPlay);
 
         public UnityEvent<float> onPlayed = new UnityEvent<float>();
         public UnityEvent<IngredientData, float> onPlayedWithIngredient = new UnityEvent<IngredientData, float>();
 
         private TextMesh label;
         private PlayerInput playerInput;
+        private EnergyMeter energy;
 
         private void Start()
         {
@@ -38,6 +48,7 @@ namespace Nocturne.PotionMaking.Minigames
                 if (p != null) player = p.transform;
             }
             if (player != null) playerInput = player.GetComponent<PlayerInput>();
+            energy = FindAnyObjectByType<EnergyMeter>();
             label = MakeLabel();
         }
 
@@ -59,8 +70,9 @@ namespace Nocturne.PotionMaking.Minigames
             var data = held != null ? held.data : null;
             if (data != null && minigame is KnifeSliceMinigame knife) knife.SetIngredientColor(data.color);
 
+            bool outOfEnergy = energyRule == EnergyRule.ZeroScore && !HasEnergy;
             if (playerInput != null) playerInput.DeactivateInput();
-            minigame.Begin(score =>
+            minigame.Begin(outOfEnergy: outOfEnergy, onDone: score =>
             {
                 if (playerInput != null) playerInput.ActivateInput();
                 onPlayed.Invoke(score);

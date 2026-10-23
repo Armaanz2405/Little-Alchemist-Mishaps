@@ -1,5 +1,6 @@
 using System;
 using Nocturne.PotionMaking.Discovery;
+using Nocturne.PotionMaking.Energy;
 using Nocturne.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -94,7 +95,7 @@ public class PlayerPrompt : MonoBehaviour
         bool known = ingredient.data == null || log == null || log.IsDiscovered(ingredient.data);
         if (known && ingredient.data != null) content.header = ingredient.data.displayName;
         content.lines.Add(new PromptLine(context.gamepad ? interactPadKey : interactKey, pickUpText));
-        if (!known) content.lines.Add(new PromptLine(inspectKey, inspectText));
+        if (!known) content.lines.Add(new PromptLine(inspectKey, inspectText, PromptSource.Cost(EnergyAction.Inspect)));
     }
 
     // just above whatever is on top, the held ingredient, or the player's head

@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using Nocturne.PotionMaking.Energy;
+using Nocturne.UI;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -15,13 +18,32 @@ public class CustomerTalk : MonoBehaviour
 
     public UnityEvent onTalk = new UnityEvent();
 
+    private static readonly List<CustomerTalk> all = new List<CustomerTalk>();
+    private static readonly HashSet<string> askedTopics = new HashSet<string>();
     private PlayerInput playerInput;
+
+    public static bool AnyCanTalk()
+    {
+        foreach (var customer in all)
+        {
+            if (customer.CanTalk())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private static InputAction DefaultTalkAction()
     {
         InputAction action = new InputAction("Talk", InputActionType.Button, "<Keyboard>/e");
         action.AddBinding("<Gamepad>/buttonEast");
         return action;
+    }
+
+    private void Awake()
+    {
+        askedTopics.Clear();
     }
 
     private void Start()
@@ -46,12 +68,14 @@ public class CustomerTalk : MonoBehaviour
 
     private void OnEnable()
     {
+        all.Add(this);
         talkAction.performed += OnTalkPressed;
         talkAction.Enable();
     }
 
     private void OnDisable()
     {
+        all.Remove(this);
         talkAction.performed -= OnTalkPressed;
         talkAction.Disable();
     }
@@ -83,9 +107,20 @@ public class CustomerTalk : MonoBehaviour
         dialogueRunner.StartDialogue(startNode);
     }
 
-    [YarnCommand("spend_talk_amount")]
-    public void SpendTalkAmount()
+    [YarnFunction("can_talk")]
+    public static bool CanTalkAbout(string topic) => askedTopics.Contains(topic) || PromptSource.CanAfford(EnergyAction.Talk);
+
+    [YarnFunction("talk_cost")]
+    public static string TalkCost(string topic)
     {
+        string cost = askedTopics.Contains(topic) ? null : PromptSource.Cost(EnergyAction.Talk);
+        return cost != null ? $"  <color={UITheme.Hex(UITheme.Current.goldText)}>{cost}</color>" : "";
+    }
+
+    [YarnCommand("spend_talk_amount")]
+    public void SpendTalkAmount(string topic)
+    {
+        if (!askedTopics.Add(topic)) return;
         onTalk.Invoke();
     }
 

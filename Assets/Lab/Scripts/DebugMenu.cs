@@ -78,7 +78,7 @@ public class DebugMenu : MonoBehaviour
         });
 
         var customers = Column(columns.transform, "Customer Energy");
-        var standard = SliderRow(customers, "Standard Energy", 0, 6, customerEnergy.standardEnergy, x => customerEnergy.standardEnergy = x);
+        var standard = SliderRow(customers, "Standard Energy", 0, 10, customerEnergy.standardEnergy, x => { customerEnergy.standardEnergy = x; ApplyStandardEnergy(); });
         var npcSliders = new Slider[customerEnergy.keyNpcs.Count];
         for (int i = 0; i < customerEnergy.keyNpcs.Count; i++)
         {
@@ -90,6 +90,12 @@ public class DebugMenu : MonoBehaviour
             standard.value = 5;
             foreach (var slider in npcSliders) slider.value = 6;
         });
+    }
+
+    private static void ApplyStandardEnergy()
+    {
+        var customer = FindAnyObjectByType<Customer_Order>();
+        if (customer != null) customer.ResetEnergy();
     }
 
     private static Transform Column(Transform parent, string title)

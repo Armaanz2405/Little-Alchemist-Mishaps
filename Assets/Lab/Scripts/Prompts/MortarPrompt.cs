@@ -1,3 +1,4 @@
+using Nocturne.PotionMaking.Energy;
 using UnityEngine;
 
 // mortar prompt with how many ingredients are in it
@@ -13,4 +14,8 @@ public class MortarPrompt : StationPrompt
     }
 
     protected override string Counter() => $"{mortar.Contents.Count}/{MortarNPestle.MaxIngredientsPerCrush}";
+
+    // the last ingredient crushes them all
+    protected override string ActionCost() =>
+        mortar.Contents.Count == MortarNPestle.MaxIngredientsPerCrush - 1 ? Cost(EnergyAction.Refine) : null;
 }

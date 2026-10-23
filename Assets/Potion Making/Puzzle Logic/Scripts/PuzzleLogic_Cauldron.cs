@@ -35,7 +35,7 @@ public class PuzzleLogic_Cauldron : MonoBehaviour
     private void Start()
     {
         if (liquid != null) liquid.color = emptyLiquidColor;
-        potionContentsText.text = "";
+        if (potionContentsText != null) potionContentsText.text = "";
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -63,12 +63,12 @@ public class PuzzleLogic_Cauldron : MonoBehaviour
         {
             cauldronUI += $"{item}:{CountTagsInBrew(contentsEffects, item)}\n";
         }
-        potionContentsText.text = cauldronUI;
+        if (potionContentsText != null) potionContentsText.text = cauldronUI;
 
 
         //return contents.Count >= IngredientsPerPotion ? Brew() : null;
 
-        if (contents.Count >= IngredientsPerPotion) stirMinigameStation.isReadyToPlay = true;
+        if (contents.Count >= IngredientsPerPotion && stirMinigameStation != null) stirMinigameStation.isReadyToPlay = true;
         return null;
     }
 
@@ -79,9 +79,11 @@ public class PuzzleLogic_Cauldron : MonoBehaviour
 
     private PotionData Brew()
     {
-        PotionData result = recipeBook != null ? recipeBook.Combine(contents[0], contents[1]) : null;
+        if (contents.Count < IngredientsPerPotion) return null;
+        PotionData result = MakePotion(contents[0], contents[1]);
         contents.Clear();
         contentsEffects.Clear();
+        if (potionContentsText != null) potionContentsText.text = "";
         
         if (liquid != null) liquid.color = emptyLiquidColor;
 
@@ -103,6 +105,28 @@ public class PuzzleLogic_Cauldron : MonoBehaviour
         return result;
     }
 
+    private PotionData MakePotion(IngredientData a, IngredientData b)
+    {
+        var totals = new Dictionary<IngredientTags.Effects, int>();
+        foreach (var tag in a.ingredientEffects.Concat(b.ingredientEffects))
+        {
+            if (tag == null || tag.tag_value <= 0) continue;
+            totals.TryGetValue(tag.tag_effect, out int v);
+            totals[tag.tag_effect] = v + tag.tag_value;
+        }
+        if (totals.Count == 0) return recipeBook != null ? recipeBook.failedPotion : null;
+
+        var strongest = totals.OrderByDescending(kv => kv.Value).ThenBy(kv => (int)kv.Key).First().Key;
+        PotionData recipe = recipeBook != null ? recipeBook.Match(a, b) : null;
+        PotionData potion = ScriptableObject.CreateInstance<PotionData>();
+        potion.displayName = recipe != null ? recipe.displayName : $"{IngredientTags.Name(strongest)} Draught";
+        potion.color = recipe != null ? recipe.color : IngredientTags.ColorOf(strongest);
+        potion.sprite = recipe != null ? recipe.sprite : null;
+        potion.potionEffects = totals.OrderByDescending(kv => kv.Value).ThenBy(kv => (int)kv.Key)
+            .Select(kv => new IngredientTags { tag_effect = kv.Key, tag_value = kv.Value }).ToList();
+        return potion;
+    }
+
     private int CountTagsInBrew(List<IngredientTags.Effects> list, IngredientTags.Effects effect)
     {
         int count = 0;
@@ -119,7 +143,7 @@ public class PuzzleLogic_Cauldron : MonoBehaviour
         List<IngredientTags.Effects> effects = new List<IngredientTags.Effects>();
         foreach (var item in l)
         {
-            effects.Add(item.tag_effect);
+            for (int i = 0; i < Mathf.Max(1, item.tag_value); i++) effects.Add(item.tag_effect);
         }
         return effects;
     }

@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: Widow Kiss
   ingredientEffects:
   - tag_effect: 3
-    tag_value: 1
+    tag_value: 2
   - tag_effect: 5
     tag_value: 1
   color: {r: 1, g: 1, b: 1, a: 1}

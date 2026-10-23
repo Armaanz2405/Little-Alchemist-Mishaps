@@ -10,11 +10,13 @@ namespace Nocturne.UI
     {
         public string key;
         public string text;
+        public string cost;
 
-        public PromptLine(string key, string text)
+        public PromptLine(string key, string text, string cost = null)
         {
             this.key = key;
             this.text = text;
+            this.cost = cost;
         }
     }
 
@@ -46,7 +48,7 @@ namespace Nocturne.UI
         {
             var sb = new StringBuilder();
             sb.Append(header).Append('|').Append(counter);
-            foreach (var line in lines) sb.Append('|').Append(line.key).Append(':').Append(line.text);
+            foreach (var line in lines) sb.Append('|').Append(line.key).Append(':').Append(line.text).Append(':').Append(line.cost);
             return sb.ToString();
         }
     }
@@ -66,7 +68,7 @@ namespace Nocturne.UI
         private TextMeshProUGUI headerText;
         private TextMeshProUGUI counterText;
         private GameObject divider;
-        private readonly List<(GameObject row, TextMeshProUGUI key, TextMeshProUGUI label)> rows = new List<(GameObject, TextMeshProUGUI, TextMeshProUGUI)>();
+        private readonly List<(GameObject row, TextMeshProUGUI key, TextMeshProUGUI label, TextMeshProUGUI cost)> rows = new List<(GameObject, TextMeshProUGUI, TextMeshProUGUI, TextMeshProUGUI)>();
         private string shown;
         private bool visible;
         private float alpha;
@@ -132,6 +134,8 @@ namespace Nocturne.UI
                 if (!used) continue;
                 UIStyle.SetKey(rows[i].key, content.lines[i].key);
                 rows[i].label.text = content.lines[i].text;
+                rows[i].cost.text = content.lines[i].cost ?? "";
+                rows[i].cost.gameObject.SetActive(!string.IsNullOrEmpty(content.lines[i].cost));
             }
             LayoutRebuilder.ForceRebuildLayoutImmediate(box);
         }
@@ -184,7 +188,7 @@ namespace Nocturne.UI
             MakeNub();
         }
 
-        private (GameObject, TextMeshProUGUI, TextMeshProUGUI) MakeRow()
+        private (GameObject, TextMeshProUGUI, TextMeshProUGUI, TextMeshProUGUI) MakeRow()
         {
             var row = new GameObject("Line", typeof(RectTransform), typeof(HorizontalLayoutGroup));
             row.transform.SetParent(box, false);
@@ -198,7 +202,10 @@ namespace Nocturne.UI
             // same height as the key so the text lines up with it
             label.verticalAlignment = VerticalAlignmentOptions.Geometry;
             label.gameObject.AddComponent<LayoutElement>().minHeight = 38f;
-            return (row, key, label);
+            var cost = UIStyle.MakeText(row.transform, "", 24, TextKind.Gold, "Cost");
+            cost.verticalAlignment = VerticalAlignmentOptions.Geometry;
+            cost.gameObject.AddComponent<LayoutElement>().minHeight = 38f;
+            return (row, key, label, cost);
         }
 
         private void MakeNub()

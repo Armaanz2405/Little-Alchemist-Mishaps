@@ -18,17 +18,20 @@ namespace Nocturne.PotionMaking.Minigames
         protected RectTransform Root { get; private set; }
         private Action<float> callback;
         private bool finishing;
+        private bool outOfEnergy;
 
-        public void Begin(Action<float> onDone = null)
+        public void Begin(Action<float> onDone = null, bool outOfEnergy = false)
         {
             if (Running) return;
             callback = onDone;
             finishing = false;
+            this.outOfEnergy = outOfEnergy;
             var canvas = MinigameUI.MakeCanvas(transform, Title, 80);
             Root = MinigameUI.Rect(canvas.transform, "Panel", Vector2.zero, new Vector2(1100, 760), MinigameUI.Panel);
             UIStyle.Box(Root.GetComponent<Image>(), BoxKind.Panel);
             MinigameUI.Label(Root, $"<b>{Title}</b>", new Vector2(0, 330), 46, MinigameUI.Gold);
             MinigameUI.Label(Root, Instructions, new Vector2(0, 278), 24, MinigameUI.Ink);
+            if (outOfEnergy) MinigameUI.Label(Root, "Out of energy, this one scores 0%", new Vector2(0, 240), 24, MinigameUI.Bad);
             Build();
             Running = true;
         }
@@ -52,6 +55,11 @@ namespace Nocturne.PotionMaking.Minigames
         {
             if (finishing) return;
             finishing = true;
+            if (outOfEnergy)
+            {
+                score = 0f;
+                result = "Out of energy";
+            }
             StartCoroutine(FinishRoutine(Mathf.Clamp01(score), result));
         }
 

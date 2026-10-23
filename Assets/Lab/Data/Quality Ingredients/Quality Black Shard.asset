@@ -15,6 +15,6 @@ MonoBehaviour:
   displayName: Quality Black Shard
   ingredientEffects:
   - tag_effect: 3
-    tag_value: 1
+    tag_value: 2
   color: {r: 1, g: 1, b: 1, a: 1}
   sprite: {fileID: 21300000, guid: ce38fdf462b14c9bb33f4c1850b9f356, type: 3}

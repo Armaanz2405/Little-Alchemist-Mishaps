@@ -553,13 +553,17 @@ PrefabInstance:
       propertyPath: m_Offset.y
       value: 1.3
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7220298933757614650, guid: 74412f5c838544b44986283917ad4406, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 5319818396785774885, guid: 74412f5c838544b44986283917ad4406, type: 3}
       insertIndex: -1
       addedObject: {fileID: 830952529}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2098892810994306635, guid: 74412f5c838544b44986283917ad4406, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1125467289}
   m_SourcePrefab: {fileID: 100100000, guid: 74412f5c838544b44986283917ad4406, type: 3}
 --- !u!4 &58521207 stripped
 Transform:
@@ -3877,6 +3881,8 @@ GameObject:
   - component: {fileID: 1347712782}
   - component: {fileID: 1485738843}
   - component: {fileID: 1929583699}
+  - component: {fileID: 1446347738}
+  - component: {fileID: 1246245600}
   m_Layer: 0
   m_Name: GameManagers
   m_TagString: Untagged
@@ -4027,7 +4033,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: PotionMaking.Minigames::Nocturne.PotionMaking.Minigames.StirTimingMinigame
   onFinished:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1125467289}
+        m_TargetAssemblyTypeName: PuzzleLogic_Cauldron, Assembly-CSharp
+        m_MethodName: Brew_Trigger
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument:
+          m_BoolArgument: 0
+        m_CallState: 2
   liquidColor: {r: 0.45, g: 0.75, b: 0.55, a: 1}
 --- !u!114 &754850637
 MonoBehaviour:
@@ -4043,7 +4061,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: PotionMaking.Minigames::Nocturne.PotionMaking.Minigames.KnifeSliceMinigame
   onFinished:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1008043909}
+        m_TargetAssemblyTypeName: CuttingBoard, Assembly-CSharp
+        m_MethodName: Chop_Trigger
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument:
+          m_BoolArgument: 0
+        m_CallState: 2
   pieceColor: {r: 0.85, g: 0.45, b: 0.55, a: 1}
   rottenColor: {r: 0.25, g: 0.3, b: 0.2, a: 1}
 --- !u!114 &754850638
@@ -5971,23 +6001,13 @@ MonoBehaviour:
   key: 19
   prompt: 'E: stir'
   showLabel: 0
-  waitUntilReady: 0
+  waitUntilReady: 1
+  energyRule: 2
+  energyAction: 2
   isReadyToPlay: 0
   onPlayed:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 458729755}
-        m_TargetAssemblyTypeName: Nocturne.PotionMaking.Energy.EnergyMeter, PotionMaking.Energy
-        m_MethodName: SpendRefine
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   onPlayedWithIngredient:
     m_PersistentCalls:
       m_Calls: []
@@ -6269,18 +6289,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1376598483}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84dc228cc0534b05982d0dc02c8572f8, type: 3}
+  m_Script: {fileID: 11500000, guid: 87450fc9f12d4c2c87e9d02295be12b5, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StationPrompt
+  m_EditorClassIdentifier: Assembly-CSharp::CuttingBoardPrompt
   range: 0.3
   heightRange: 2
   title: Cutting Board
   actionText: Chop
   actionKey: E
-  padKey: 
+  padKey: B
   needsIngredient: 1
   showWhenIdle: 0
   station: {fileID: 1376598484}
+  placeText: Place on board
 --- !u!114 &1077777868
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7971,6 +7992,7 @@ GameObject:
   - component: {fileID: 1222820192}
   - component: {fileID: 1222820194}
   - component: {fileID: 1423938499}
+  - component: {fileID: 1926049509}
   m_Layer: 0
   m_Name: CUSTOMER_SPRITE
   m_TagString: Untagged
@@ -9277,6 +9299,8 @@ GameObject:
   - component: {fileID: 1376598485}
   - component: {fileID: 1376598484}
   - component: {fileID: 1051847156}
+  - component: {fileID: 1097327825}
+  - component: {fileID: 1008043909}
   m_Layer: 0
   m_Name: Knife Station
   m_TagString: Untagged
@@ -9303,7 +9327,9 @@ MonoBehaviour:
   key: 19
   prompt: 'E: chop'
   showLabel: 0
-  waitUntilReady: 0
+  waitUntilReady: 1
+  energyRule: 1
+  energyAction: 1
   isReadyToPlay: 0
   onPlayed:
     m_PersistentCalls:
@@ -9338,6 +9364,7 @@ Transform:
   m_Children:
   - {fileID: 2035312399}
   - {fileID: 264659182}
+  - {fileID: 1866512239}
   m_Father: {fileID: 1345137086}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1411544023
@@ -12310,7 +12337,7 @@ MonoBehaviour:
   - action: Jump
     keyboard: Space
     controller: A
-  - action: Pick up, drop and talk
+  - action: Interact
     keyboard: E
     controller: B
   - action: Throw
@@ -12319,10 +12346,10 @@ MonoBehaviour:
   - action: Dash
     keyboard: Shift
     controller: X
-  - action: Inspect an ingredient
+  - action: Inspect
     keyboard: R
     controller: 
-  - action: Ingredient book
+  - action: Book
     keyboard: Tab
     controller: 
   - action: Shop
@@ -13490,6 +13517,202 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 2.8, y: 1.15}
   m_EdgeRadius: 0
+--- !u!1 &1835549143 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2098892810994306635, guid: 74412f5c838544b44986283917ad4406, type: 3}
+  m_PrefabInstance: {fileID: 58521206}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1473233031 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4274941968529645121, guid: 74412f5c838544b44986283917ad4406, type: 3}
+  m_PrefabInstance: {fileID: 58521206}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1125467289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1835549143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b892ec3f5a7f074398999ee8dcb26ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PuzzleLogic_Cauldron
+  recipeBook: {fileID: 11400000, guid: 9fe859d2b9fe24a87b03b8d335561f44, type: 2}
+  potionPrefab: {fileID: 3411548334474998657, guid: fa73dbeade6ac4c7cb6e030505baf02c, type: 3}
+  potionSpawnPoint: {fileID: 1473233031}
+  liquid: {fileID: 0}
+  emptyLiquidColor: {r: 0.24, g: 0.2, b: 0.27, a: 1}
+  potionContentsText: {fileID: 1514330344}
+  stirMinigameStation: {fileID: 999230993}
+  onIngredientAdded:
+    m_PersistentCalls:
+      m_Calls: []
+  onPotionBrewed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 458729755}
+        m_TargetAssemblyTypeName: Nocturne.PotionMaking.Energy.EnergyMeter, PotionMaking.Energy
+        m_MethodName: SpendBottle
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument:
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!61 &1097327825
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1376598483}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: -0.794}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 2.4, y: 2.188}
+  m_EdgeRadius: 0
+--- !u!114 &1008043909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1376598483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e99d6bfded318f04f90cbb4710ded4fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CuttingBoard
+  ingredientPrefab: {fileID: 7667439634201628183, guid: daef4117b831d4d18b76b31fbc940fcd, type: 3}
+  ingredientSpawnPoint: {fileID: 1866512239}
+  chopMinigameStation: {fileID: 1376598484}
+--- !u!1 &1978152988
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1866512239}
+  m_Layer: 0
+  m_Name: Chop Spawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1866512239
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1978152988}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.9, y: 0.6, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1376598485}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1926049509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1222820191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36f8608c3bea71047a3acf042998b558, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Customer_Order
+  ordered_tags:
+  - tag_effect: 0
+    tag_value: 2
+  variableStorage: {fileID: 0}
+  availableIngredients: {fileID: 11400000, guid: e23ced1bb0e74fc1a069c5491b211d1e, type: 2}
+  customerEnergy: {fileID: 11400000, guid: f2ddec69b7725422da24175a365a1c18, type: 2}
+  mainTagPoints: 40
+  lesserTagPoints: 30
+  sizePoints: 30
+  extraTagPenalty: 15
+  passScore: 60
+--- !u!114 &1446347738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 715113969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1595e73658684e17bd8b4f2000904a28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ResultsScreen
+  toggleKey: 5
+  playerInput: {fileID: 0}
+--- !u!114 &1246245600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 715113969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3767dca13fa24a28b7a7408fe807ddbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Nocturne.UI::Nocturne.UI.HotkeyPanel
+  anchoredPosition: {x: 30, y: -150}
+  hotkeys:
+  - key: Tab
+    label: Book
+  - key: B
+    label: Shop
+  - key: C
+    label: Controls
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
