@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20b439e3717994748a58394ac5f03c82, type: 3}
+  m_Name: Lab Ingredient Book
+  m_EditorClassIdentifier: PotionMaking.Discovery::Nocturne.PotionMaking.Discovery.IngredientCatalog
+  entries:
+  - ingredient: {fileID: 11400000, guid: 956926138a184f5791e0a2224a21bd44, type: 2}
+    hint: A sunflower with a spicy seed pod at its heart.
+  - ingredient: {fileID: 11400000, guid: 5e5d9fae55284562a8823b4b91bfdbbb, type: 2}
+    hint: Petals that flicker like flames.
+  - ingredient: {fileID: 11400000, guid: 7c50a5f623a14c5f82e017b3a1cae8f9, type: 2}
+    hint: Frost never melts off its leaves.
+  - ingredient: {fileID: 11400000, guid: e94718a0b6d842dcae422b293810f653, type: 2}
+    hint: A single droplet cradled in a shell.
+  - ingredient: {fileID: 11400000, guid: daa51ccdb7fa4381a9e83ae3f98d02a1, type: 2}
+    hint: A heart-shaped root with tangled tendrils.
+  - ingredient: {fileID: 11400000, guid: fa162d4928314c2fa021f3909b1a476d, type: 2}
+    hint: A feather that never stops burning.
+  - ingredient: {fileID: 11400000, guid: 5df2f93483d04ee7a8f5c2daf638b2c8, type: 2}
+    hint: A dark bloom with fangs. Don't get too close.
+  - ingredient: {fileID: 11400000, guid: f62f9e0710b24173b9a3b622aa51cbc4, type: 2}
+    hint: A black crystal veined with green.

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Yarn.Unity;
 
 public class GrabAndThrow : MonoBehaviour
 {
@@ -15,16 +16,23 @@ public class GrabAndThrow : MonoBehaviour
     [SerializeField] private float throwHieght = 4f;
 
     [SerializeField] private GameObject bookUI;
+    [SerializeField] private VariableStorageBehaviour variableStorage;
     private float facing = 1f;
     
     private Rigidbody2D heldItem;
     private PlayerMovement playerMovement;
+
+    public Transform HoldPoint => holdPoint;
+    public float GrabRadius => grabRadius;
+    public LayerMask GrabbableLayer => grabbableLayer;
+    public Rigidbody2D HeldItem => heldItem;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         playerMovement = GetComponent<PlayerMovement>();
         characterSprite = GetComponent<SpriteRenderer>();
+        if (variableStorage == null) variableStorage = FindAnyObjectByType<VariableStorageBehaviour>();
     }
 
     // Update is called once per frame
@@ -40,21 +48,6 @@ public class GrabAndThrow : MonoBehaviour
         }
         
     }
-    
-    public void GrabInput(InputAction.CallbackContext context)
-    {
-        if (context.started)
-        {
-            if (heldItem == null)
-            {
-                TryGrab();
-            }
-            else if (heldItem != null)
-            {
-                Release();
-            }
-        }
-    }
     private void TryGrab()
     {
         Collider2D hit = Physics2D.OverlapCircle(holdPoint.position, grabRadius, grabbableLayer);
@@ -68,14 +61,29 @@ public class GrabAndThrow : MonoBehaviour
             heldItem.linearVelocity = Vector2.zero;
             heldItem.angularVelocity = 0f;
             heldItem.simulated = false;          
-            heldItem.transform.SetParent(holdPoint);
+            heldItem.transform.SetParent(transform);
             heldItem.freezeRotation = true;
-            heldItem.transform.localPosition = Vector2.zero;
+            float half = hit.bounds.extents.y;
+            heldItem.transform.localPosition = new Vector2(0f, 0.445f + half);
+
+            if (heldItem.GetComponent<Potion>() != null) SetHoldingPotion(true);
         }
     }
 
     public void InteractInput(InputAction.CallbackContext context) {
         if (context.started) {
+            // E talks to the customer instead of dropping
+            if (heldItem != null && CustomerTalk.AnyCanTalk()) return;
+
+            if (heldItem == null)
+            {
+                TryGrab();
+            }
+            else if (heldItem != null)
+            {
+                Release();
+            }
+            
             Collider2D hit = Physics2D.OverlapCircle(transform.position, grabRadius, interactableLayer);
 
             if (hit != null)
@@ -84,6 +92,7 @@ public class GrabAndThrow : MonoBehaviour
                 //right now the book ui is hard coded bc that's the only interactable so far
                 var interactableObj = hit.gameObject;
                 bookUI.SetActive(true);
+                InputManager.instanceInput.EnableUI();
             }
         }
     }
@@ -98,6 +107,7 @@ public class GrabAndThrow : MonoBehaviour
             Vector2 throwVector = new Vector2(facing,throwHieght);
             heldItem.linearVelocity =  throwVector * throwForce;
 
+            if (heldItem.GetComponent<Potion>() != null) SetHoldingPotion(false);
             heldItem = null;
         }
     }
@@ -109,7 +119,21 @@ public class GrabAndThrow : MonoBehaviour
         heldItem.simulated = true;                
         heldItem.linearVelocity = Vector2.down;
 
+        if (heldItem.GetComponent<Potion>() != null) SetHoldingPotion(false);
         heldItem = null;
+    }
+
+    public void ConsumeHeldItem()
+    {
+        if (heldItem == null) return;
+        if (heldItem.GetComponent<Potion>() != null) SetHoldingPotion(false);
+        Destroy(heldItem.gameObject);
+        heldItem = null;
+    }
+
+    private void SetHoldingPotion(bool holding)
+    {
+        if (variableStorage != null) variableStorage.SetValue("$isHoldingPotion", holding);
     }
     
     public bool hasHeldItem()
@@ -119,5 +143,10 @@ public class GrabAndThrow : MonoBehaviour
             return true;
         }
         else return false;
+    }
+
+    public float getFacing()
+    {
+        return facing;
     }
 }

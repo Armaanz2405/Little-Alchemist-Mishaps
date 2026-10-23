@@ -1,0 +1,14 @@
+{
+    "name": "PotionMaking.Discovery",
+    "rootNamespace": "Nocturne.PotionMaking.Discovery",
+    "references": ["PotionMaking", "PotionMaking.Energy", "Unity.TextMeshPro", "UnityEngine.UI", "Unity.InputSystem", "Nocturne.UI"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
