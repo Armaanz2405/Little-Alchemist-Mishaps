@@ -55,7 +55,7 @@ public class CustomerTalk : MonoBehaviour
         talkAction.Disable();
     }
 
-    private bool CanTalk()
+    public bool CanTalk()
     {
         return dialogueRunner != null && player != null && !dialogueRunner.IsDialogueRunning
             && Mathf.Abs(player.position.x - transform.position.x) <= range;

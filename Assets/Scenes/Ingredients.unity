@@ -1907,6 +1907,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 715113970}
+  - component: {fileID: 1347712782}
+  - component: {fileID: 1485738843}
+  - component: {fileID: 1929583699}
   m_Layer: 0
   m_Name: GameManagers
   m_TagString: Untagged
@@ -2321,7 +2324,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &824599655
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3123,6 +3126,7 @@ GameObject:
   m_Component:
   - component: {fileID: 999230994}
   - component: {fileID: 999230993}
+  - component: {fileID: 1077777868}
   m_Layer: 0
   m_Name: Stir Station
   m_TagString: Untagged
@@ -3144,10 +3148,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: PotionMaking.Minigames::Nocturne.PotionMaking.Minigames.MinigameStation
   minigame: {fileID: 754850636}
   player: {fileID: 1195681937}
-  holdPoint: {fileID: 1211706409}
+  holdPoint: {fileID: 1195681937}
   range: 1.8
   key: 19
   prompt: 'E: stir'
+  showLabel: 0
+  waitUntilReady: 0
   onPlayed:
     m_PersistentCalls:
       m_Calls:
@@ -3628,6 +3634,7 @@ GameObject:
   - component: {fileID: 1195681940}
   - component: {fileID: 1195681941}
   - component: {fileID: 1195681942}
+  - component: {fileID: 1161973069}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -4005,7 +4012,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: PotionMaking.Discovery::Nocturne.PotionMaking.Discovery.IngredientInspector
   log: {fileID: 189414967}
-  holdPoint: {fileID: 1211706409}
+  holdPoint: {fileID: 1195681937}
   reach: 0.9
   inspectKey: 32
   onInspected:
@@ -4420,6 +4427,7 @@ GameObject:
   - component: {fileID: 1222820193}
   - component: {fileID: 1222820192}
   - component: {fileID: 1222820194}
+  - component: {fileID: 1423938499}
   m_Layer: 0
   m_Name: CUSTOMER_SPRITE
   m_TagString: Untagged
@@ -5134,6 +5142,7 @@ GameObject:
   - component: {fileID: 1362820470}
   - component: {fileID: 1362820472}
   - component: {fileID: 1362820471}
+  - component: {fileID: 1698935572}
   m_Layer: 0
   m_Name: MortarNPestle
   m_TagString: Untagged
@@ -5171,7 +5180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b676281ac5cb96d47970abf2fda78ad9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MortarNPestle
-  igredientPrefab: {fileID: 7667439634201628183, guid: daef4117b831d4d18b76b31fbc940fcd, type: 3}
+  ingredientPrefab: {fileID: 7667439634201628183, guid: daef4117b831d4d18b76b31fbc940fcd, type: 3}
   ingredientSpawnPoint: {fileID: 1115385094}
   fillAmntText: {fileID: 1921734911}
   onIngredientsCrushed:
@@ -5245,6 +5254,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1376598485}
   - component: {fileID: 1376598484}
+  - component: {fileID: 1051847156}
   m_Layer: 0
   m_Name: Knife Station
   m_TagString: Untagged
@@ -5266,10 +5276,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: PotionMaking.Minigames::Nocturne.PotionMaking.Minigames.MinigameStation
   minigame: {fileID: 754850637}
   player: {fileID: 1195681937}
-  holdPoint: {fileID: 1211706409}
+  holdPoint: {fileID: 1195681937}
   range: 1.8
   key: 19
   prompt: 'E: chop'
+  showLabel: 0
+  waitUntilReady: 0
   onPlayed:
     m_PersistentCalls:
       m_Calls:
@@ -7486,3 +7498,147 @@ SceneRoots:
   - {fileID: 2144821914}
   - {fileID: 1021400585}
   - {fileID: 1230314907}
+--- !u!114 &1347712782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 715113969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7749ddb0af56484cb6b7539a4c5b5052, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Nocturne.UI::Nocturne.UI.ThemeSkin
+  allCanvases: 1
+  rescanInterval: 0.2
+--- !u!114 &1161973069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1195681931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54e0b14be26043cfba397190404f9561, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerPrompt
+  pickUpText: Pick up
+  inspectText: Inspect
+  interactKey: E
+  interactPadKey: B
+  inspectKey: R
+  heightAboveHead: 0.12
+--- !u!114 &1423938499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1222820191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 005f3095c19c4d95b9ddfbccdac22daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TalkPrompt
+  range: 0.4
+  heightRange: 2
+  text: Talk
+  key: E
+  padKey: B
+--- !u!114 &1698935572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1362820469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8c884fa097444ba8d6b2da81c834da5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MortarPrompt
+  range: 0.3
+  heightRange: 2
+  title: Mortar & Pestle
+  actionText: Drop in
+  actionKey: E
+  padKey: B
+  needsIngredient: 1
+  showWhenIdle: 1
+  station: {fileID: 0}
+--- !u!114 &1051847156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1376598483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84dc228cc0534b05982d0dc02c8572f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StationPrompt
+  range: 0.3
+  heightRange: 2
+  title: Cutting Board
+  actionText: Chop
+  actionKey: E
+  padKey: 
+  needsIngredient: 1
+  showWhenIdle: 0
+  station: {fileID: 1376598484}
+--- !u!114 &1077777868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 999230992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a91dc84f4ce94246be354a83a0a77405, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CauldronPrompt
+  range: 0.3
+  heightRange: 2
+  title: Cauldron
+  actionText: Add
+  actionKey: E
+  padKey: B
+  needsIngredient: 1
+  showWhenIdle: 1
+  station: {fileID: 0}
+  cauldron: {fileID: 0}
+  stirStation: {fileID: 999230993}
+  stirText: Stir
+--- !u!114 &1485738843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 715113969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74ac74adbfae64cb3b3907400fa6a11b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DebugMenu
+  energyCosts: {fileID: 11400000, guid: 086f4ddb8ceae4ce29cc6e74c9fc80c9, type: 2}
+  customerEnergy: {fileID: 11400000, guid: f2ddec69b7725422da24175a365a1c18, type: 2}
+  toggleKey: 6
+--- !u!114 &1929583699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 715113969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd81c9ca13c84f1cb228c6051df76ab4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Nocturne.UI::Nocturne.UI.ControlsScreen
+  showOnStart: 1
+  playerInput: {fileID: 1195681934}

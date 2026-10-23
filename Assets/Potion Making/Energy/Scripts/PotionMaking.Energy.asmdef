@@ -1,7 +1,7 @@
 {
     "name": "PotionMaking.Energy",
     "rootNamespace": "Nocturne.PotionMaking.Energy",
-    "references": ["Unity.TextMeshPro", "UnityEngine.UI", "Unity.InputSystem"],
+    "references": ["Unity.TextMeshPro", "UnityEngine.UI", "Unity.InputSystem", "Nocturne.UI"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

@@ -1,3 +1,5 @@
+using Nocturne.UI;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,30 +7,17 @@ namespace Nocturne.PotionMaking.Minigames
 {
     public static class MinigameUI
     {
-        public static readonly Color Panel = new Color(0.16f, 0.12f, 0.2f, 0.96f);
         public static readonly Color Wood = new Color(0.55f, 0.38f, 0.24f);
         public static readonly Color Dark = new Color(0.1f, 0.08f, 0.12f);
-        public static readonly Color Good = new Color(0.55f, 0.85f, 0.45f);
-        public static readonly Color Bad = new Color(0.95f, 0.4f, 0.3f);
-        public static readonly Color Gold = new Color(0.98f, 0.82f, 0.35f);
-        public static readonly Color Ink = new Color(0.95f, 0.92f, 0.85f);
+        public static Color Panel => UITheme.Current.panelFill;
+        public static Color Good => UITheme.Current.goodText;
+        public static Color Bad => UITheme.Current.badText;
+        public static Color Gold => UITheme.Current.goldText;
+        public static Color Ink => UITheme.Current.text;
 
         private static Sprite circle, ring;
-        private static Font font;
 
-        public static Canvas MakeCanvas(Transform parent, string name, int order)
-        {
-            var go = new GameObject(name, typeof(Canvas), typeof(CanvasScaler));
-            go.transform.SetParent(parent, false);
-            var canvas = go.GetComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = order;
-            var scaler = go.GetComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920, 1080);
-            scaler.matchWidthOrHeight = 0.5f;
-            return canvas;
-        }
+        public static Canvas MakeCanvas(Transform parent, string name, int order) => UIStyle.MakeCanvas(parent, name, order);
 
         public static RectTransform Rect(Transform parent, string name, Vector2 pos, Vector2 size, Color color, Sprite sprite = null)
         {
@@ -55,23 +44,16 @@ namespace Nocturne.PotionMaking.Minigames
             return f;
         }
 
-        public static Text Label(Transform parent, string text, Vector2 pos, int size, Color color, float width = 1000f)
+        public static TMP_Text Label(Transform parent, string text, Vector2 pos, int size, Color color, float width = 1000f)
         {
-            var go = new GameObject("Label", typeof(RectTransform), typeof(Text));
-            go.transform.SetParent(parent, false);
-            var rt = (RectTransform)go.transform;
+            var t = UIStyle.MakeText(parent, text, size, TextKind.Body, "Label");
+            var rt = t.rectTransform;
             rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
             rt.anchoredPosition = pos;
             rt.sizeDelta = new Vector2(width, size * 2.5f);
-            var t = go.GetComponent<Text>();
-            if (font == null) font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            t.font = font;
-            t.text = text;
-            t.fontSize = size;
             t.color = color;
-            t.alignment = TextAnchor.MiddleCenter;
-            t.supportRichText = true;
-            t.raycastTarget = false;
+            t.horizontalAlignment = HorizontalAlignmentOptions.Center;
+            t.verticalAlignment = VerticalAlignmentOptions.Geometry;
             return t;
         }
 

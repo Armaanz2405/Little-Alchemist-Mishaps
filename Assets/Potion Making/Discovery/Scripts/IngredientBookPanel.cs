@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Nocturne.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -21,7 +22,6 @@ namespace Nocturne.PotionMaking.Discovery
         private Coroutine toastRoutine;
 
         private static readonly Color Silhouette = new Color(0.12f, 0.1f, 0.14f);
-        private static readonly Color SilhouetteGrey = new Color(0.45f, 0.45f, 0.48f);
         private readonly Dictionary<Sprite, Sprite> greyedCache = new Dictionary<Sprite, Sprite>();
 
         private void Awake()
@@ -55,9 +55,9 @@ namespace Nocturne.PotionMaking.Discovery
         private IEnumerator ShowToast(string message)
         {
             toast.text = message;
-            toast.gameObject.SetActive(true);
+            toast.transform.parent.gameObject.SetActive(true);
             yield return new WaitForSeconds(2f);
-            toast.gameObject.SetActive(false);
+            toast.transform.parent.gameObject.SetActive(false);
         }
 
         public void Refresh()
@@ -98,11 +98,11 @@ namespace Nocturne.PotionMaking.Discovery
                 image.color = known ? entry.ingredient.color : Silhouette;
             }
             var le = swatch.GetComponent<LayoutElement>();
-            le.preferredWidth = le.preferredHeight = art != null ? 80 : 56;
+            le.preferredWidth = le.preferredHeight = art != null ? 72 : 56;
 
             string title = known ? $"<b>{entry.ingredient.displayName}</b>" : "<b>???</b>";
-            string detail = known ? IngredientCatalog.DescribeTags(entry.ingredient) : $"<i>{entry.hint}</i>";
-            var text = MakeText(row.transform, $"{title}\n<size=70%>{detail}</size>", 30, known ? Color.white : new Color(1f, 1f, 1f, 0.55f));
+            string detail = known ? $"<color={UITheme.Hex(UITheme.Current.accentText)}>{IngredientCatalog.DescribeTags(entry.ingredient)}</color>" : $"<i>{entry.hint}</i>";
+            var text = MakeText(row.transform, $"{title}\n<size=70%>{detail}</size>", 30, known ? UITheme.Current.text : UITheme.Current.mutedText);
             text.GetComponent<LayoutElement>().preferredWidth = 520;
             return row;
         }
@@ -118,7 +118,7 @@ namespace Nocturne.PotionMaking.Discovery
                 int w = Mathf.FloorToInt(art.rect.width), h = Mathf.FloorToInt(art.rect.height);
                 var pixels = art.texture.GetPixels(x, y, w, h);
                 for (int i = 0; i < pixels.Length; i++)
-                    pixels[i] = new Color(SilhouetteGrey.r, SilhouetteGrey.g, SilhouetteGrey.b, pixels[i].a);
+                    pixels[i] = new Color(UITheme.Current.silhouette.r, UITheme.Current.silhouette.g, UITheme.Current.silhouette.b, pixels[i].a);
                 var tex = new Texture2D(w, h, TextureFormat.RGBA32, false);
                 tex.SetPixels(pixels);
                 tex.Apply();
@@ -130,48 +130,50 @@ namespace Nocturne.PotionMaking.Discovery
 
         private void Build()
         {
-            var canvasGo = new GameObject("IngredientBookCanvas", typeof(Canvas), typeof(CanvasScaler));
-            canvasGo.transform.SetParent(transform, false);
-            var canvas = canvasGo.GetComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 60;
-            var scaler = canvasGo.GetComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920, 1080);
+            var canvasGo = UIStyle.MakeCanvas(transform, "IngredientBookCanvas", 60).gameObject;
 
             page = new GameObject("Page", typeof(RectTransform), typeof(Image), typeof(VerticalLayoutGroup), typeof(ContentSizeFitter));
             page.transform.SetParent(canvasGo.transform, false);
             var rt = (RectTransform)page.transform;
             rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(1f, 0.5f);
             rt.anchoredPosition = new Vector2(-40, 0);
-            page.GetComponent<Image>().color = new Color(0.93f, 0.87f, 0.74f, 0.97f);
+            UIStyle.Box(page.GetComponent<Image>(), BoxKind.Panel);
             var v = page.GetComponent<VerticalLayoutGroup>();
-            v.padding = new RectOffset(28, 28, 24, 28);
+            v.padding = new RectOffset(36, 36, 28, 32);
             v.spacing = 14;
             v.childControlWidth = v.childControlHeight = true;
             v.childForceExpandWidth = v.childForceExpandHeight = false;
             var fit = page.GetComponent<ContentSizeFitter>();
             fit.horizontalFit = fit.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
-            MakeText(page.transform, "<b>Ingredients</b>", 40, new Color(0.25f, 0.15f, 0.1f));
+            MakeText(page.transform, "Ingredients", 42, UITheme.Current.text);
+            UIStyle.Divider(page.transform, 14f);
             var listGo = new GameObject("List", typeof(RectTransform), typeof(VerticalLayoutGroup), typeof(Image));
             listGo.transform.SetParent(page.transform, false);
-            listGo.GetComponent<Image>().color = new Color(0.2f, 0.16f, 0.22f, 0.9f);
+            UIStyle.Box(listGo.GetComponent<Image>(), BoxKind.Card);
             var lv = listGo.GetComponent<VerticalLayoutGroup>();
             lv.padding = new RectOffset(16, 16, 16, 16);
             lv.spacing = 12;
             lv.childControlWidth = lv.childControlHeight = true;
             lv.childForceExpandWidth = lv.childForceExpandHeight = false;
             list = (RectTransform)listGo.transform;
-            MakeText(page.transform, "R: inspect an ingredient    Tab: open/close book", 22, new Color(0.25f, 0.15f, 0.1f, 0.8f));
+            MakeText(page.transform, "R: inspect an ingredient    Tab: open/close book", 22, UITheme.Current.mutedText);
 
-            toast = MakeText(canvasGo.transform, "", 34, Color.white);
-            var trt = (RectTransform)toast.transform;
+            var toastBox = new GameObject("Toast", typeof(RectTransform), typeof(Image), typeof(HorizontalLayoutGroup), typeof(ContentSizeFitter));
+            toastBox.transform.SetParent(canvasGo.transform, false);
+            var trt = (RectTransform)toastBox.transform;
             trt.anchorMin = trt.anchorMax = trt.pivot = new Vector2(0.5f, 1f);
-            trt.anchoredPosition = new Vector2(0, -60);
-            trt.sizeDelta = new Vector2(900, 60);
-            toast.alignment = TextAlignmentOptions.Center;
-            toast.gameObject.SetActive(false);
+            trt.anchoredPosition = new Vector2(0, -50);
+            UIStyle.Box(toastBox.GetComponent<Image>(), BoxKind.Panel, 1.6f);
+            var th = toastBox.GetComponent<HorizontalLayoutGroup>();
+            th.padding = new RectOffset(30, 30, 14, 16);
+            th.childControlWidth = th.childControlHeight = true;
+            var tfit = toastBox.GetComponent<ContentSizeFitter>();
+            tfit.horizontalFit = tfit.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            toast = MakeText(toastBox.transform, "", 32, UITheme.Current.text);
+            toast.horizontalAlignment = HorizontalAlignmentOptions.Center;
+            toast.verticalAlignment = VerticalAlignmentOptions.Geometry;
+            toastBox.SetActive(false);
         }
 
         private static TextMeshProUGUI MakeText(Transform parent, string text, float size, Color color)
@@ -179,6 +181,7 @@ namespace Nocturne.PotionMaking.Discovery
             var go = new GameObject("Text", typeof(RectTransform), typeof(TextMeshProUGUI), typeof(LayoutElement));
             go.transform.SetParent(parent, false);
             var tmp = go.GetComponent<TextMeshProUGUI>();
+            tmp.font = UITheme.Current.TextFont;
             tmp.text = text;
             tmp.fontSize = size;
             tmp.color = color;

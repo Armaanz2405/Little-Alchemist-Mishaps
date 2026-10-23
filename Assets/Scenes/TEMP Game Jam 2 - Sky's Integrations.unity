@@ -3281,6 +3281,7 @@ MonoBehaviour:
   range: 1.8
   key: 19
   prompt: 'E: stir'
+  waitUntilReady: 1
   isReadyToPlay: 0
   onPlayed:
     m_PersistentCalls:
@@ -6380,6 +6381,7 @@ MonoBehaviour:
   range: 1.8
   key: 19
   prompt: 'E: chop'
+  waitUntilReady: 1
   isReadyToPlay: 0
   onPlayed:
     m_PersistentCalls:

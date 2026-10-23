@@ -14,8 +14,15 @@ namespace Nocturne.PotionMaking.Minigames
         [SerializeField] private float range = 1.8f;
         [SerializeField] private Key key = Key.E;
         [SerializeField] private string prompt = "E: play";
+        [SerializeField] private bool showLabel = true;
+        // turn on for stations that something else unlocks (like the cutting board) by setting isReadyToPlay
+        [SerializeField] private bool waitUntilReady = false;
 
-        public bool isReadyToPlay = false; 
+        public bool isReadyToPlay = false;
+
+        public float Range => range;
+        public Key Key => key;
+        public bool CanPlay => minigame != null && !minigame.Running && (!waitUntilReady || isReadyToPlay);
 
         public UnityEvent<float> onPlayed = new UnityEvent<float>();
         public UnityEvent<IngredientData, float> onPlayedWithIngredient = new UnityEvent<IngredientData, float>();
@@ -36,9 +43,9 @@ namespace Nocturne.PotionMaking.Minigames
 
         private void Update()
         {
-            if (minigame == null || player == null || !isReadyToPlay) return;
-            bool near = !minigame.Running && Vector2.Distance(player.position, transform.position) <= range;
-            label.gameObject.SetActive(near);
+            if (minigame == null || player == null) return;
+            bool near = CanPlay && Vector2.Distance(player.position, transform.position) <= range;
+            label.gameObject.SetActive(near && showLabel);
             var kb = Keyboard.current;
             if (near && kb != null && kb[key].wasPressedThisFrame) Play();
         }

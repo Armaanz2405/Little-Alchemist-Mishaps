@@ -19,6 +19,11 @@ public class GrabAndThrow : MonoBehaviour
     
     private Rigidbody2D heldItem;
     private PlayerMovement playerMovement;
+
+    public Transform HoldPoint => holdPoint;
+    public float GrabRadius => grabRadius;
+    public LayerMask GrabbableLayer => grabbableLayer;
+    public Rigidbody2D HeldItem => heldItem;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

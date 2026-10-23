@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
+using Nocturne.UI;
 
 namespace Nocturne.PotionMaking.Minigames
 {
@@ -24,6 +26,7 @@ namespace Nocturne.PotionMaking.Minigames
             finishing = false;
             var canvas = MinigameUI.MakeCanvas(transform, Title, 80);
             Root = MinigameUI.Rect(canvas.transform, "Panel", Vector2.zero, new Vector2(1100, 760), MinigameUI.Panel);
+            UIStyle.Box(Root.GetComponent<Image>(), BoxKind.Panel);
             MinigameUI.Label(Root, $"<b>{Title}</b>", new Vector2(0, 330), 46, MinigameUI.Gold);
             MinigameUI.Label(Root, Instructions, new Vector2(0, 278), 24, MinigameUI.Ink);
             Build();

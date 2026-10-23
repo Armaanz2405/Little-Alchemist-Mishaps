@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Nocturne.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,8 +9,6 @@ namespace Nocturne.PotionMaking.Energy
     public class EnergyBarUI : MonoBehaviour
     {
         [SerializeField] private EnergyMeter meter;
-        [SerializeField] private Color fullColor = new Color(0.98f, 0.82f, 0.35f);
-        [SerializeField] private Color emptyColor = new Color(1f, 1f, 1f, 0.15f);
         [SerializeField] private Vector2 anchoredPosition = new Vector2(30f, -30f);
 
         private RectTransform pipRow;
@@ -27,34 +26,23 @@ namespace Nocturne.PotionMaking.Energy
 
         private void Build()
         {
-            var canvasGo = new GameObject("EnergyCanvas", typeof(Canvas), typeof(CanvasScaler));
-            canvasGo.transform.SetParent(transform, false);
-            var canvas = canvasGo.GetComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 50;
-            var scaler = canvasGo.GetComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920, 1080);
+            var canvasGo = UIStyle.MakeCanvas(transform, "EnergyCanvas", 50).gameObject;
 
             var panel = new GameObject("EnergyPanel", typeof(RectTransform), typeof(Image), typeof(VerticalLayoutGroup), typeof(ContentSizeFitter));
             panel.transform.SetParent(canvasGo.transform, false);
             var rt = (RectTransform)panel.transform;
             rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0f, 1f);
             rt.anchoredPosition = anchoredPosition;
-            panel.GetComponent<Image>().color = new Color(0.1f, 0.08f, 0.14f, 0.75f);
+            UIStyle.Box(panel.GetComponent<Image>(), BoxKind.Panel, 1.6f);
             var layout = panel.GetComponent<VerticalLayoutGroup>();
-            layout.padding = new RectOffset(16, 16, 10, 12);
+            layout.padding = new RectOffset(20, 20, 12, 16);
             layout.spacing = 6;
             layout.childControlWidth = layout.childControlHeight = true;
             layout.childForceExpandWidth = layout.childForceExpandHeight = false;
             var fit = panel.GetComponent<ContentSizeFitter>();
             fit.horizontalFit = fit.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
-            var labelGo = new GameObject("Label", typeof(RectTransform), typeof(TextMeshProUGUI));
-            labelGo.transform.SetParent(panel.transform, false);
-            label = labelGo.GetComponent<TextMeshProUGUI>();
-            label.fontSize = 28;
-            label.color = Color.white;
+            label = UIStyle.MakeText(panel.transform, "", 28, TextKind.Title, "Label");
 
             var row = new GameObject("Pips", typeof(RectTransform), typeof(HorizontalLayoutGroup));
             row.transform.SetParent(panel.transform, false);
@@ -72,16 +60,19 @@ namespace Nocturne.PotionMaking.Energy
                 var pip = new GameObject("Pip", typeof(RectTransform), typeof(Image));
                 pip.transform.SetParent(pipRow, false);
                 ((RectTransform)pip.transform).sizeDelta = new Vector2(26, 26);
-                pips.Add(pip.GetComponent<Image>());
+                var image = pip.GetComponent<Image>();
+                image.sprite = UITheme.Current.pipSprite;
+                image.raycastTarget = false;
+                pips.Add(image);
             }
             for (int i = 0; i < pips.Count; i++)
             {
                 pips[i].gameObject.SetActive(i < max);
-                pips[i].color = i < current ? fullColor : emptyColor;
+                pips[i].color = i < current ? UITheme.Current.pipFull : UITheme.Current.pipEmpty;
             }
             var pipLayout = pipRow.GetComponent<HorizontalLayoutGroup>();
             pipRow.sizeDelta = new Vector2(max * 26 + Mathf.Max(0, max - 1) * pipLayout.spacing, 26);
-            label.text = $"Energy  {current}/{max}";
+            label.text = $"Energy  <color={UITheme.Hex(UITheme.Current.accentText)}>{current}/{max}</color>";
         }
     }
 }

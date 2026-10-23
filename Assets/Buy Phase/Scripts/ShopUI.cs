@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Nocturne.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -11,8 +12,6 @@ public class ShopUI : MonoBehaviour
     [SerializeField] private GameObject window;
     [SerializeField] private Button[] tabButtons;
     [SerializeField] private GameObject[] tabPages;
-    [SerializeField] private Color tabColor = new Color(0.25f, 0.21f, 0.29f);
-    [SerializeField] private Color selectedTabColor = new Color(0.55f, 0.42f, 0.62f);
     [SerializeField] private ShopItemEntry entryPrefab;
 
     [SerializeField] private ShopCatalog ingredientCatalog;
@@ -144,7 +143,7 @@ public class ShopUI : MonoBehaviour
         for (int i = 0; i < tabPages.Length; i++)
         {
             tabPages[i].SetActive(i == tab);
-            tabButtons[i].image.color = i == tab ? selectedTabColor : tabColor;
+            tabButtons[i].image.color = i == tab ? Color.white : UITheme.Current.tabIdle;
         }
 
         // give controllers something selected to start from
