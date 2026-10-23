@@ -55,8 +55,7 @@ public class PlayerPrompt : MonoBehaviour
             return;
         }
 
-        Ingredient held = grab.HeldItem != null ? grab.HeldItem.GetComponent<Ingredient>() : null;
-        var context = new PromptContext { holding = grab.HeldItem != null, held = held, gamepad = gamepad };
+        var context = new PromptContext { holding = grab.HeldItem != null, gamepad = gamepad, position = transform.position };
         Vector2 here = transform.position;
         content.Clear();
         float best = float.PositiveInfinity;
@@ -74,11 +73,7 @@ public class PlayerPrompt : MonoBehaviour
         if (!context.holding)
         {
             Ingredient near = Grabbable();
-            if (near != null && Vector2.Distance(near.transform.position, here) < best) ShowIngredient(near, context, true);
-        }
-        else if (content.IsEmpty && held != null)
-        {
-            ShowIngredient(held, context, false);
+            if (near != null && Vector2.Distance(near.transform.position, here) < best) ShowIngredient(near, context);
         }
 
         if (content.IsEmpty) box.Hide();
@@ -93,12 +88,12 @@ public class PlayerPrompt : MonoBehaviour
         return hit != null && hit.attachedRigidbody != null ? hit.GetComponentInParent<Ingredient>() : null;
     }
 
-    private void ShowIngredient(Ingredient ingredient, PromptContext context, bool canPickUp)
+    private void ShowIngredient(Ingredient ingredient, PromptContext context)
     {
         content.Clear();
         bool known = ingredient.data == null || log == null || log.IsDiscovered(ingredient.data);
-        if (known && ingredient.data != null && canPickUp) content.header = ingredient.data.displayName;
-        if (canPickUp) content.lines.Add(new PromptLine(context.gamepad ? interactPadKey : interactKey, pickUpText));
+        if (known && ingredient.data != null) content.header = ingredient.data.displayName;
+        content.lines.Add(new PromptLine(context.gamepad ? interactPadKey : interactKey, pickUpText));
         if (!known) content.lines.Add(new PromptLine(inspectKey, inspectText));
     }
 

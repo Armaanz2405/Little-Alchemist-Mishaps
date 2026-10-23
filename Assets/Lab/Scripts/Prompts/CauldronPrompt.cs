@@ -20,7 +20,8 @@ public class CauldronPrompt : StationPrompt
 
     protected override void AddLines(PromptContext context, PromptContent content)
     {
-        if (!context.holding && stirStation != null && stirStation.CanPlay)
+        bool inStirRange = stirStation != null && Vector2.Distance(stirStation.transform.position, context.position) <= stirStation.Range;
+        if (!context.holding && inStirRange && stirStation.CanPlay)
             content.lines.Add(new PromptLine(stirStation.Key.ToString(), stirText));
     }
 

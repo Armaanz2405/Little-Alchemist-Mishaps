@@ -5,8 +5,8 @@ using UnityEngine;
 public struct PromptContext
 {
     public bool holding;
-    public Ingredient held;
     public bool gamepad;
+    public Vector2 position;
 }
 
 // something the player can walk up to and get a prompt for

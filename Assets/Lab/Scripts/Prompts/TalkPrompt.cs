@@ -8,7 +8,6 @@ public class TalkPrompt : PromptSource
     [SerializeField] private string text = "Talk";
     [SerializeField] private string key = "E";
     [SerializeField] private string padKey = "B";
-    [SerializeField] private float backLineY = -100f;
 
     private CustomerTalk talk;
 
@@ -20,7 +19,7 @@ public class TalkPrompt : PromptSource
     }
 
     public override float Distance(Vector2 player) =>
-        talk != null && talk.CanTalk() ? Mathf.Abs(player.x - transform.position.x) + Mathf.Max(0f, backLineY - player.y) : float.PositiveInfinity;
+        talk != null && talk.CanTalk() ? Mathf.Abs(player.x - transform.position.x) : float.PositiveInfinity;
 
     public override bool Fill(PromptContext context, PromptContent content)
     {
