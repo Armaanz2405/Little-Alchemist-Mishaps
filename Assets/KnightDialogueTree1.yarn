@@ -1,6 +1,11 @@
 title: KnightDialogueBranch1
+position: 8,-262
 tags:
 ---
+// Determines if the dialogue for submitting a potion is available
+<<declare $isHoldingPotion = false>>
+<<declare $isPotionPassable = false>>
+
 Ferdinand: "Well met, young apothecary!"
 Ferdinand: "You may call me Ferdinand, a knight of renown."
 
@@ -8,10 +13,13 @@ Ferdinand: "You may call me Ferdinand, a knight of renown."
 ===
 
 title: KnightHub
+position: 7,-61
 ---
 
 Ferdinand: "I heard that this was the finest procurer of potions in all the land. I require a concoction that will allow me to maintain my flame. Can you conjure such a spell for me?"
 
+-> [Give Potion] <<if $isHoldingPotion is true>>
+    <<jump KnightGivePotion>>
 -> [What happened to your body?]
     <<jump KnightBody>>
 -> [What can you tell me about Emberseed?]
@@ -22,9 +30,12 @@ Ferdinand: "I heard that this was the finest procurer of potions in all the land
     <<jump KnightShop>>
 -> [Small talk]
     <<jump KnightSmallTalk>>
+-> [Exit]
+    <<jump KnightLeaveTalk>>
 ===
 
 title: KnightBody
+position: -560,177
 ---
 Ferdinand: "Alas, I was slain in the midst of battle."
 Ferdinand: "A traveling necromancer was able to return my soul, but not my body."
@@ -34,6 +45,7 @@ Ferdinand: "Now this flame of mine, my undying will, shall burn forevermore."
 ===
 
 title: KnightEmberseed
+position: 535,107
 ---
 Ferdinand: "Ah, Emberseed, you say?"
 Ferdinand: "I couldn't tell you much about the seeds themselves, unfortunately."
@@ -46,6 +58,7 @@ Ferdinand: "Had a very pungent smell. We could hardly fall asleep at night becau
 ===
 
 title: KnightTravels
+position: 380,282
 ---
 Ferdinand: "Well, if you'll allow me to regale you with some tales, then regale you I shall!"
 Ferdinand: "Allow me to tell you the tale of the time a group of brigands and I came across a griffin."
@@ -57,6 +70,7 @@ Ferdinand: "I still keep the claw in my vault as a memory of our victory, and to
 ===
 
 title: KnightMentor
+position: 140,274
 ---
 Ferdinand: "Unfortunately not, my friend."
 Ferdinand: "I have yet to hear the name throughout my travels."
@@ -67,6 +81,7 @@ Ferdinand: "I have yet to hear the name throughout my travels."
 ===
 
 title: KnightShop
+position: -98,261
 ---
 Ferdinand: "But of course! From land to land, people tell the tale of this very shop."
 Ferdinand: "I have known you for exactly 3 minutes, and already I trust you with my life!"
@@ -75,8 +90,26 @@ Ferdinand: "I have known you for exactly 3 minutes, and already I trust you with
 ===
 
 title: KnightSmallTalk
+position: -326,222
 ---
 Ferdinand: "My goodness! Is it just me, or is it growing quite warm in here?"
 Ferdinand: "Only kidding, of course."
 <<jump KnightHub>>
+===
+title: KnightLeaveTalk
+position: 795,287
+---
+Ferdinand: "I await my potion still."
+===
+
+title: KnightGivePotion
+position: -889,366
+---
+Ferdinand: "Hmmm..."
+<<grade_potion Customer>>
+<<if $isPotionPassable is true>>
+    Ferdinand: "Well done, young apothecary."
+<<else>>
+    Ferdinand: "Perhaps I can fulfill my needs elsewhere."
+<<endif>>
 ===
