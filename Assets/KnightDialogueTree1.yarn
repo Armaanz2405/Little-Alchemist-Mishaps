@@ -21,12 +21,16 @@ Ferdinand: "I heard that this was the finest procurer of potions in all the land
 -> [Give Potion] <<if $isHoldingPotion is true>>
     <<jump KnightGivePotion>>
 -> [What happened to your body?]
+    <<spend_talk_amount CUSTOMER_SPRITE>>
     <<jump KnightBody>>
 -> [What can you tell me about Emberseed?]
+    <<spend_talk_amount CUSTOMER_SPRITE>>
     <<jump KnightEmberseed>>
 -> [Have you heard anything about my mentor?]
+    <<spend_talk_amount CUSTOMER_SPRITE>>
     <<jump KnightMentor>>
 -> [You've heard of this shop before?]
+    <<spend_talk_amount CUSTOMER_SPRITE>>
     <<jump KnightShop>>
 -> [Small talk]
     <<jump KnightSmallTalk>>
@@ -106,7 +110,7 @@ title: KnightGivePotion
 position: -889,366
 ---
 Ferdinand: "Hmmm..."
-<<grade_potion Customer>>
+<<grade_potion CUSTOMER_SPRITE>>
 <<if $isPotionPassable is true>>
     Ferdinand: "Well done, young apothecary."
 <<else>>
