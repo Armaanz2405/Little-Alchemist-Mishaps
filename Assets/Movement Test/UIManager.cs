@@ -8,8 +8,10 @@ public class UIManager : MonoBehaviour
     public int lastToggleFrame { get; set; } = -1;
     public EventSystem eventSystem;
     [SerializeField] private GameObject currentUI;
+    [SerializeField] private GameObject previousUI;
     [SerializeField] private GameObject pauseScreen;
     [SerializeField] private PauseMenu pauseMenuScript;
+    
     //set instance so it can be called by any script if needed by using UIManager.instance.FUNCTION
     private void Awake()
     {
@@ -33,6 +35,12 @@ public class UIManager : MonoBehaviour
         currentUI=current;
     }
 
+    //set the current so it can be closed later. MUST be called when changing UI screen. 
+    public void setPrevious(GameObject previous)
+    {
+        previousUI=previous;
+    }
+
     public GameObject getCurrent()
     {
         return currentUI;
@@ -50,17 +58,14 @@ public class UIManager : MonoBehaviour
         if (currentUI == pauseScreen)
         {
             Debug.Log("Closing Pause Screen");
-            pauseMenuScript.closePauseScreen();
+         //   pauseMenuScript.closePauseScreen();
             return;
         }
-        Debug.Log("I didn't stop");
-        Transform parentTransform = currentUI.transform.parent;
-        if (parentTransform == null) return;
-
-        GameObject parent = parentTransform.gameObject;
+        
         currentUI.SetActive(false);
-        parent.SetActive(true);
-        currentUI = parent;
+        previousUI.SetActive(true);
+        currentUI = previousUI;
     }
+    
 }
 
