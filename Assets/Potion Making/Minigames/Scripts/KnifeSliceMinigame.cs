@@ -6,20 +6,37 @@ using UnityEngine.UI;
 
 namespace Nocturne.PotionMaking.Minigames
 {
-    // Fruit Ninja style knife game: hold the mouse and swipe through the pieces, skip the rotten ones.
+    // Chopping: first pick which tag to cut away (A/D then E), then the Fruit Ninja style swipe through the pieces.
     public class KnifeSliceMinigame : Minigame
     {
         [SerializeField] private Color pieceColor = new Color(0.85f, 0.45f, 0.55f);
-        [SerializeField] private Color rottenColor = new Color(0.25f, 0.3f, 0.2f);
+        [SerializeField] private Color rottenColor = new Color(0.32f, 0.14f, 0.38f);
 
         public override string Title => "Chop It!";
-        public override string Instructions => "Hold the mouse button and swipe through the pieces. Don't cut the rotten ones!";
+        public override string Instructions => choosing
+            ? "Which tag do you want to cut away? A / D to pick, E to start chopping."
+            : "Hold the mouse button and swipe through the pieces. Don't cut the rotten ones!";
+
+        // index into the ingredient's tag list that the player chose to cut off
+        public int ChosenTag { get; private set; }
 
         public void SetIngredientColor(Color color) => pieceColor = color;
 
+        // the cutting board calls this with whatever is on the board before the game can start
+        public void SetIngredient(IngredientData data)
+        {
+            ingredient = data;
+            if (data != null) pieceColor = data.color;
+            ChosenTag = 0;
+            choosing = data != null && data.ingredientEffects != null && data.ingredientEffects.Count > 1;
+        }
+
+        private IngredientData ingredient;
+        private bool choosing;
         private SliceLogic logic;
-        private RectTransform board;
-        private TMP_Text counter;
+        private RectTransform board, choiceRoot;
+        private TMP_Text counter, pickLabel;
+        private readonly List<RectTransform> frames = new List<RectTransform>();
         private readonly Dictionary<SliceLogic.Piece, RectTransform> views = new Dictionary<SliceLogic.Piece, RectTransform>();
         private readonly List<(RectTransform rt, Vector2 vel, float life)> halves = new List<(RectTransform, Vector2, float)>();
         private readonly List<(Image img, float life)> trail = new List<(Image, float)>();
@@ -27,11 +44,41 @@ namespace Nocturne.PotionMaking.Minigames
 
         protected override void Build()
         {
-            logic = new SliceLogic();
             views.Clear();
             halves.Clear();
             trail.Clear();
             lastMouse = null;
+            if (choosing) BuildChoice();
+            else BuildBoard();
+        }
+
+        private void BuildChoice()
+        {
+            choiceRoot = MinigameUI.Rect(Root, "Choice", new Vector2(0, -20), new Vector2(1000, 560), new Color(0.3f, 0.22f, 0.16f));
+            frames.Clear();
+            var tags = ingredient.ingredientEffects;
+            const float spacing = 260f;
+            for (int i = 0; i < tags.Count; i++)
+            {
+                float x = (i - (tags.Count - 1) / 2f) * spacing;
+                frames.Add(MinigameUI.Rect(choiceRoot, "Frame", new Vector2(x, 20), new Vector2(232, 192), MinigameUI.Gold));
+                var card = MinigameUI.Rect(choiceRoot, "Tag", new Vector2(x, 20), new Vector2(214, 174), IngredientTags.ColorOf(tags[i].tag_effect));
+                MinigameUI.Label(card, $"<b>{IngredientTags.Name(tags[i].tag_effect)}</b>\n<size=22>x{tags[i].tag_value}</size>", Vector2.zero, 30, MinigameUI.Dark, 200);
+            }
+            pickLabel = MinigameUI.Label(choiceRoot, "", new Vector2(0, -190), 26, MinigameUI.Ink);
+            RefreshChoice();
+        }
+
+        private void RefreshChoice()
+        {
+            for (int i = 0; i < frames.Count; i++) frames[i].gameObject.SetActive(i == ChosenTag);
+            var tag = ingredient.ingredientEffects[ChosenTag];
+            pickLabel.text = $"Cut away <b>{IngredientTags.Name(tag.tag_effect)}</b> and keep the rest";
+        }
+
+        private void BuildBoard()
+        {
+            logic = new SliceLogic();
             board = MinigameUI.Rect(Root, "Board", new Vector2(0, -20), new Vector2(1000, 560), new Color(0.3f, 0.22f, 0.16f));
             board.gameObject.AddComponent<RectMask2D>();
             counter = MinigameUI.Label(Root, "", new Vector2(0, -330), 26, MinigameUI.Ink);
@@ -39,6 +86,22 @@ namespace Nocturne.PotionMaking.Minigames
 
         protected override void Step(float dt)
         {
+            if (choosing)
+            {
+                int n = ingredient.ingredientEffects.Count;
+                if (MinigameInput.LeftPressed) { ChosenTag = (ChosenTag + n - 1) % n; RefreshChoice(); }
+                if (MinigameInput.RightPressed) { ChosenTag = (ChosenTag + 1) % n; RefreshChoice(); }
+                if (MinigameInput.ConfirmPressed)
+                {
+                    choosing = false;
+                    pieceColor = IngredientTags.ColorOf(ingredient.ingredientEffects[ChosenTag].tag_effect);
+                    Destroy(choiceRoot.gameObject);
+                    if (InstructionLabel != null) InstructionLabel.text = Instructions;
+                    BuildBoard();
+                }
+                return;
+            }
+
             logic.Tick(dt);
             HandleMouse();
             Draw(dt);

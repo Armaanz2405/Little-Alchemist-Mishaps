@@ -51,7 +51,7 @@ public class IngredientTags {
 [CreateAssetMenu(fileName = "NewIngredient", menuName = "Potion Making/Ingredient")]
 public class IngredientData : ScriptableObject
 {
-    
+
 
     public string displayName = "New Ingredient";
     public List<IngredientTags> ingredientEffects = new List<IngredientTags>();
@@ -59,4 +59,6 @@ public class IngredientData : ScriptableObject
     public Color color = Color.white;
     [Tooltip("Optional. Leave empty to keep the prefab's sprite.")]
     public Sprite sprite;
+    [Tooltip("How well it was chopped or ground, 0 to 1. Raw ingredients are 1.")]
+    [Range(0f, 1f)] public float refineQuality = 1f;
 }

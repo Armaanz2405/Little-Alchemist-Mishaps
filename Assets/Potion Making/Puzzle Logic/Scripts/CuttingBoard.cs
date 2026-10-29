@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Nocturne.PotionMaking.Minigames;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
@@ -9,7 +10,7 @@ public class CuttingBoard : MonoBehaviour
     [SerializeField] private Transform ingredientSpawnPoint;
     [SerializeField] private SpriteRenderer ingredientOnBoardSprite;
 
-    [SerializeField] private Nocturne.PotionMaking.Minigames.MinigameStation chopMinigameStation;
+    [SerializeField] private MinigameStation chopMinigameStation;
 
     private IngredientData content;
     public bool HasIngredient => content != null;
@@ -17,7 +18,7 @@ public class CuttingBoard : MonoBehaviour
 
     private void Reset() => GetComponent<Collider2D>().isTrigger = true;
 
-    
+
     void Start()
     {
         if (ingredientOnBoardSprite != null) ingredientOnBoardSprite.gameObject.SetActive(false);
@@ -38,7 +39,12 @@ public class CuttingBoard : MonoBehaviour
         Debug.Log($"[Chopping Board] Added {ingredient.displayName}");
         //onIngredientAdded.Invoke(ingredient);
 
-        if (chopMinigameStation != null) chopMinigameStation.isReadyToPlay = true;
+        if (chopMinigameStation != null)
+        {
+            chopMinigameStation.isReadyToPlay = true;
+            // the knife needs to know the tags so the player can pick which one to cut away
+            if (chopMinigameStation.Game is KnifeSliceMinigame knife) knife.SetIngredient(ingredient);
+        }
         // display the ingredient
         if (ingredientOnBoardSprite != null)
         {
@@ -55,16 +61,24 @@ public class CuttingBoard : MonoBehaviour
         Chop();
     }
 
+    // Removes the tag the player picked in the minigame (the first one when there was no choice).
+    // How well they chopped becomes the chopped ingredient's refine quality.
     private IngredientData Chop()
     {
         if (content == null) return null;
+        var knife = chopMinigameStation != null ? chopMinigameStation.Game as KnifeSliceMinigame : null;
         IngredientData choppedIngredient = ScriptableObject.CreateInstance<IngredientData>();
         List<IngredientTags> new_tags = new List<IngredientTags>(content.ingredientEffects);
-        new_tags.RemoveAt(0);
+        int index = knife != null ? Mathf.Clamp(knife.ChosenTag, 0, new_tags.Count - 1) : 0;
+        IngredientTags removed = new_tags[index];
+        new_tags.RemoveAt(index);
+        float score = knife != null ? knife.LastScore : 1f;
 
         choppedIngredient.displayName = $"Chopped {content.displayName}";
         choppedIngredient.ingredientEffects = new_tags;
         choppedIngredient.color = new_tags.Count > 0 ? IngredientTags.ColorOf(new_tags[0].tag_effect) : content.color;
+        choppedIngredient.refineQuality = CraftQuality.Combine(score, content.refineQuality);
+        Debug.Log($"[Chopping Board] Cut {IngredientTags.Name(removed.tag_effect)} off {content.displayName}, quality {Mathf.RoundToInt(choppedIngredient.refineQuality * 100)}%");
 
         if (ingredientOnBoardSprite != null) ingredientOnBoardSprite.gameObject.SetActive(false);
         content = null;

@@ -4027,6 +4027,7 @@ GameObject:
   - component: {fileID: 754850637}
   - component: {fileID: 754850636}
   - component: {fileID: 754850638}
+  - component: {fileID: 1844001001}
   m_Layer: 0
   m_Name: Minigames
   m_TagString: Untagged
@@ -4090,7 +4091,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   pieceColor: {r: 0.85, g: 0.45, b: 0.55, a: 1}
-  rottenColor: {r: 0.25, g: 0.3, b: 0.2, a: 1}
+  rottenColor: {r: 0.32, g: 0.14, b: 0.38, a: 1}
 --- !u!114 &754850638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4105,6 +4106,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: PotionMaking.Minigames::Nocturne.PotionMaking.Minigames.MinigameLauncher
   knife: {fileID: 754850637}
   stir: {fileID: 754850636}
+  grind: {fileID: 1844001001}
+--- !u!114 &1844001001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 754850635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd249194e91e4ef4a24420b815ef4950, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PotionMaking.Minigames::Nocturne.PotionMaking.Minigames.GrindMinigame
+  onFinished:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1362820471}
+        m_TargetAssemblyTypeName: MortarNPestle, Assembly-CSharp
+        m_MethodName: Grind_Trigger
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  pasteColor: {r: 0.6, g: 0.5, b: 0.35, a: 1}
 --- !u!4 &754850639
 Transform:
   m_ObjectHideFlags: 0
@@ -9328,6 +9358,7 @@ GameObject:
   - component: {fileID: 1362820472}
   - component: {fileID: 1362820471}
   - component: {fileID: 1698935572}
+  - component: {fileID: 1844001002}
   m_Layer: 0
   m_Name: MortarNPestle
   m_TagString: Untagged
@@ -9369,6 +9400,7 @@ MonoBehaviour:
   ingredientPrefab: {fileID: 7667439634201628183, guid: daef4117b831d4d18b76b31fbc940fcd, type: 3}
   ingredientSpawnPoint: {fileID: 1115385094}
   fillAmntText: {fileID: 1921734911}
+  grindMinigameStation: {fileID: 1844001002}
   onIngredientsCrushed:
     m_PersistentCalls:
       m_Calls:
@@ -9384,6 +9416,35 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1844001002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1362820469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d57656e066d3743119f08b5f3a111614, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PotionMaking.Minigames::Nocturne.PotionMaking.Minigames.MinigameStation
+  minigame: {fileID: 1844001001}
+  player: {fileID: 1195681937}
+  holdPoint: {fileID: 1195681937}
+  range: 1.8
+  key: 19
+  prompt: 'E: grind'
+  showLabel: 0
+  waitUntilReady: 1
+  energyRule: 1
+  energyAction: 1
+  isReadyToPlay: 0
+  onPlayed:
+    m_PersistentCalls:
+      m_Calls: []
+  onPlayedWithIngredient:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!61 &1362820472
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11370,7 +11431,7 @@ MonoBehaviour:
   padKey: B
   needsIngredient: 1
   showWhenIdle: 1
-  station: {fileID: 0}
+  station: {fileID: 1844001002}
 --- !u!1 &1702277965
 GameObject:
   m_ObjectHideFlags: 0

@@ -81,6 +81,12 @@ public class PuzzleLogic_Cauldron : MonoBehaviour
     {
         if (contents.Count < IngredientsPerPotion) return null;
         PotionData result = MakePotion(contents[0], contents[1]);
+        // how well it was stirred, times how well the ingredients were refined, becomes the potion's craft quality
+        if (result != null && (recipeBook == null || result != recipeBook.failedPotion))
+        {
+            float stir = stirMinigameStation != null && stirMinigameStation.Game != null ? stirMinigameStation.Game.LastScore : 1f;
+            result.craftQuality = Nocturne.PotionMaking.Minigames.CraftQuality.Combine(stir, contents.Select(c => c.refineQuality));
+        }
         contents.Clear();
         contentsEffects.Clear();
         if (potionContentsText != null) potionContentsText.text = "";

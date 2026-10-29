@@ -11,6 +11,8 @@ public class PotionData : ScriptableObject
     [Tooltip("Optional. Leave empty to keep the prefab's sprite.")]
     public Sprite sprite;
     public List<IngredientTags> potionEffects = new List<IngredientTags>();
+    [Tooltip("How well it was made at the stations, 0 to 1. Feeds the customer's grade.")]
+    [Range(0f, 1f)] public float craftQuality = 1f;
 
     public int ValueOf(IngredientTags.Effects effect)
     {

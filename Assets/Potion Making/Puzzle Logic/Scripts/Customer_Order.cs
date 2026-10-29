@@ -15,6 +15,7 @@ public class Customer_Order : MonoBehaviour
         public string order;
         public int score;
         public bool passed;
+        public float craftQuality;
         public int minigamesPlayed;
         public float minigameScoreTotal;
         public int energyLeft;
@@ -31,6 +32,8 @@ public class Customer_Order : MonoBehaviour
     [SerializeField] private int lesserTagPoints = 30;
     [SerializeField] private int sizePoints = 30;
     [SerializeField] private int extraTagPenalty = 15;
+    [Tooltip("How much of the score the station minigames can take away. 0.4 means a botched craft keeps 60%.")]
+    [Range(0f, 1f)] [SerializeField] private float craftWeight = 0.4f;
     [SerializeField] private int passScore = 60;
 
     private readonly List<Submission> submissions = new List<Submission>();
@@ -73,12 +76,13 @@ public class Customer_Order : MonoBehaviour
             order = OrderText,
             score = score,
             passed = score >= passScore,
+            craftQuality = potion.data.craftQuality,
             minigamesPlayed = minigamesPlayed,
             minigameScoreTotal = minigameScoreTotal,
             energyLeft = energy != null ? energy.Current : 0,
             energyMax = energy != null ? energy.Max : 0,
         });
-        Debug.Log($"[Customer] {potion.data.displayName} for {OrderText} scored {score}");
+        Debug.Log($"[Customer] {potion.data.displayName} for {OrderText} scored {score} (craft {Mathf.RoundToInt(potion.data.craftQuality * 100)}%)");
         SetVariable("$potionScore", score);
         SetVariable("$isPotionPassable", score >= passScore);
         player.ConsumeHeldItem();
@@ -102,7 +106,7 @@ public class Customer_Order : MonoBehaviour
 
 
 
-    // main tag, lesser tags, main one strongest, minus extra tags
+    // main tag, lesser tags, main one strongest, minus extra tags, then scaled by how well it was crafted
     public int Score(PotionData potion)
     {
         if (ordered_tags.Count == 0) return 0;
@@ -120,6 +124,7 @@ public class Customer_Order : MonoBehaviour
         if (sized) score += sizePoints;
         foreach (var tag in potion.potionEffects)
             if (tag != null && !ordered_tags.Exists(t => t.tag_effect == tag.tag_effect)) score -= extraTagPenalty;
+        score = Mathf.RoundToInt(score * CraftQuality.Multiplier(potion.craftQuality, craftWeight));
         return Mathf.Clamp(score, 0, 100);
     }
 

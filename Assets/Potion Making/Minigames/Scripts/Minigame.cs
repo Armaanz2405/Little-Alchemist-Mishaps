@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -14,11 +15,15 @@ namespace Nocturne.PotionMaking.Minigames
         public abstract string Title { get; }
         public abstract string Instructions { get; }
         public bool Running { get; private set; }
+        // score of the last finished round, 0..1, so stations can read it after onFinished
+        public float LastScore { get; private set; } = 1f;
 
         protected RectTransform Root { get; private set; }
+        protected TMP_Text InstructionLabel { get; private set; }
         private Action<float> callback;
         private bool finishing;
         private bool outOfEnergy;
+        private int beginFrame;
 
         public void Begin(Action<float> onDone = null, bool outOfEnergy = false)
         {
@@ -26,11 +31,12 @@ namespace Nocturne.PotionMaking.Minigames
             callback = onDone;
             finishing = false;
             this.outOfEnergy = outOfEnergy;
+            beginFrame = Time.frameCount;
             var canvas = MinigameUI.MakeCanvas(transform, Title, 80);
             Root = MinigameUI.Rect(canvas.transform, "Panel", Vector2.zero, new Vector2(1100, 760), MinigameUI.Panel);
             UIStyle.Box(Root.GetComponent<Image>(), BoxKind.Panel);
             MinigameUI.Label(Root, $"<b>{Title}</b>", new Vector2(0, 330), 46, MinigameUI.Gold);
-            MinigameUI.Label(Root, Instructions, new Vector2(0, 278), 24, MinigameUI.Ink);
+            InstructionLabel = MinigameUI.Label(Root, Instructions, new Vector2(0, 278), 24, MinigameUI.Ink);
             if (outOfEnergy) MinigameUI.Label(Root, "Out of energy, this one scores 0%", new Vector2(0, 240), 24, MinigameUI.Bad);
             Build();
             Running = true;
@@ -48,7 +54,8 @@ namespace Nocturne.PotionMaking.Minigames
 
         private void Update()
         {
-            if (Running && !finishing) Step(Time.deltaTime);
+            // skip the frame the station started us on, so the key that opened the game isn't also its first input
+            if (Running && !finishing && Time.frameCount > beginFrame) Step(Time.deltaTime);
         }
 
         protected void Finish(float score, string result)
@@ -60,7 +67,8 @@ namespace Nocturne.PotionMaking.Minigames
                 score = 0f;
                 result = "Out of energy";
             }
-            StartCoroutine(FinishRoutine(Mathf.Clamp01(score), result));
+            LastScore = Mathf.Clamp01(score);
+            StartCoroutine(FinishRoutine(LastScore, result));
         }
 
         private IEnumerator FinishRoutine(float score, string result)
