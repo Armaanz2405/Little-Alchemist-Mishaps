@@ -18,6 +18,17 @@ namespace Nocturne.PotionMaking.Minigames
             }
         }
 
+        public static bool ConfirmHeld
+        {
+            get
+            {
+                var kb = Keyboard.current;
+                var pad = Gamepad.current;
+                return (kb != null && (kb.spaceKey.isPressed || kb.eKey.isPressed || kb.enterKey.isPressed))
+                    || (pad != null && pad.buttonSouth.isPressed);
+            }
+        }
+
         public static bool LeftPressed
         {
             get
@@ -39,5 +50,30 @@ namespace Nocturne.PotionMaking.Minigames
                     || (pad != null && (pad.dpad.right.wasPressedThisFrame || pad.rightShoulder.wasPressedThisFrame));
             }
         }
+
+        public static bool LeftHeld
+        {
+            get
+            {
+                var kb = Keyboard.current;
+                var pad = Gamepad.current;
+                return (kb != null && (kb.aKey.isPressed || kb.leftArrowKey.isPressed))
+                    || (pad != null && (pad.dpad.left.isPressed || pad.leftStick.x.ReadValue() < -0.3f));
+            }
+        }
+
+        public static bool RightHeld
+        {
+            get
+            {
+                var kb = Keyboard.current;
+                var pad = Gamepad.current;
+                return (kb != null && (kb.dKey.isPressed || kb.rightArrowKey.isPressed))
+                    || (pad != null && (pad.dpad.right.isPressed || pad.leftStick.x.ReadValue() > 0.3f));
+            }
+        }
+
+        // -1, 0 or 1 from whichever of left/right is held
+        public static float Horizontal => (LeftHeld ? -1f : 0f) + (RightHeld ? 1f : 0f);
     }
 }
