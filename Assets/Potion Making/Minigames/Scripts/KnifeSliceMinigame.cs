@@ -63,7 +63,7 @@ namespace Nocturne.PotionMaking.Minigames
                 float x = (i - (tags.Count - 1) / 2f) * spacing;
                 frames.Add(MinigameUI.Rect(choiceRoot, "Frame", new Vector2(x, 20), new Vector2(232, 192), MinigameUI.Gold));
                 var card = MinigameUI.Rect(choiceRoot, "Tag", new Vector2(x, 20), new Vector2(214, 174), IngredientTags.ColorOf(tags[i].tag_effect));
-                MinigameUI.Label(card, $"<b>{IngredientTags.Name(tags[i].tag_effect)}</b>\n<size=22>x{tags[i].tag_value}</size>", Vector2.zero, 30, MinigameUI.Dark, 200);
+                MinigameUI.Label(card, $"<b>{IngredientTags.Name(tags[i].tag_effect)}</b>\n<size=22>x{tags[i].tag_value}</size>", Vector2.zero, 26, MinigameUI.Dark, 210);
             }
             pickLabel = MinigameUI.Label(choiceRoot, "", new Vector2(0, -190), 26, MinigameUI.Ink);
             RefreshChoice();
