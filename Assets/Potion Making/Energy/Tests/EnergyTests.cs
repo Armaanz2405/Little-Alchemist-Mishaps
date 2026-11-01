@@ -1,5 +1,5 @@
-using NUnit.Framework;
 using Nocturne.PotionMaking.Energy;
+using NUnit.Framework;
 using UnityEngine;
 
 public class EnergyTests

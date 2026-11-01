@@ -202,61 +202,6 @@
                 },
                 {
                     "name": "2D Vector",
-                    "id": "90797c8d-0bf2-454d-b997-e3f1e9f5365a",
-                    "path": "2DVector",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Movement",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "a87439d5-dbad-4d8a-b64d-d7208263e494",
-                    "path": "<Keyboard>/upArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyBoard",
-                    "action": "Movement",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "66258112-943a-4657-b8b0-3c8814f536d9",
-                    "path": "<Keyboard>/downArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyBoard",
-                    "action": "Movement",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "25e9d627-1337-4d1c-bd52-a032a0f69cdd",
-                    "path": "<Keyboard>/leftArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyBoard",
-                    "action": "Movement",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "5c4cd611-de2e-46bc-8f9f-26c2f89912db",
-                    "path": "<Keyboard>/rightArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyBoard",
-                    "action": "Movement",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "2D Vector",
                     "id": "642016bd-2a85-47fc-a4f8-8ff09ec1f86b",
                     "path": "2DVector",
                     "interactions": "",
@@ -334,17 +279,6 @@
                 },
                 {
                     "name": "",
-                    "id": "ce946690-0c72-43c5-8159-89fcec7e49b2",
-                    "path": "<Keyboard>/z",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyBoard",
-                    "action": "Interact",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "1ce27b55-ac4a-411a-b79d-cb18c30aa88e",
                     "path": "<Keyboard>/q",
                     "interactions": "",
@@ -401,7 +335,7 @@
                 {
                     "name": "",
                     "id": "94c6ddde-4014-4437-856f-731b992f0087",
-                    "path": "<Gamepad>/select",
+                    "path": "<Gamepad>/start",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Controller",
@@ -506,7 +440,7 @@
                     "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";Controller",
                     "action": "Cancel",
                     "isComposite": false,
                     "isPartOfComposite": false

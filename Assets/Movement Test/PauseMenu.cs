@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,16 +38,20 @@ public class PauseMenu : MonoBehaviour
         IsPaused = false;
     }
     // ---------- pause / resume ----------
+    private void Update()
+    {
+        Debug.Log("Pause opened\n" + System.Environment.StackTrace);
+    }
 
     public void Pause()
     {
         IsPaused = true;
         Time.timeScale = 0f;
         AudioListener.pause = true;
-
+    
         history.Clear();
+        SetVisible(true);
         OpenPanel(mainPanel);
-        Fade(1f);
         InputManager.instanceInput.EnableUI();
     }
 
@@ -58,7 +63,7 @@ public class PauseMenu : MonoBehaviour
 
         foreach (Page p in history) p.panel.gameObject.SetActive(false);
         history.Clear();
-        Fade(0f);
+        SetVisible(false);
         InputManager.instanceInput.EnableGameplay();
     }
 
@@ -113,29 +118,6 @@ public class PauseMenu : MonoBehaviour
         if (go != null) EventSystem.current.SetSelectedGameObject(go);
     }
 
-    private void Fade(float target)
-    {
-        if (fadeRoutine != null) StopCoroutine(fadeRoutine);
-        fadeRoutine = StartCoroutine(FadeRoutine(target));
-    }
-
-    private IEnumerator FadeRoutine(float target)
-    {
-        float start = canvasGroup.alpha;
-        float t = 0f;
-
-        if (target > 0f) { canvasGroup.blocksRaycasts = true; canvasGroup.interactable = true; }
-
-        while (t < fadeDuration)
-        {
-            t += Time.unscaledDeltaTime;
-            canvasGroup.alpha = Mathf.Lerp(start, target, t / fadeDuration);
-            yield return null;
-        }
-
-        SetVisible(target > 0f);
-    }
-
     private void SetVisible(bool visible)
     {
         canvasGroup.alpha = visible ? 1f : 0f;
@@ -144,11 +126,9 @@ public class PauseMenu : MonoBehaviour
     }
     public void OnCancel(InputAction.CallbackContext context)
     {
-        if (!context.performed) return;
-        if (Time.frameCount == lastToggleFrame) return; // ignore the press that just opened/closed the menu
-        Debug.Log($"OnCancel phase={context.phase} paused={IsPaused} history={history.Count}");
-        if (!IsPaused) Pause();
-        else if (history.Count > 1) Back();
+        if (!context.performed || !IsPaused || Time.frameCount == lastToggleFrame) return;
+
+        if (history.Count > 1) Back();
         else Resume();
     }
 }
