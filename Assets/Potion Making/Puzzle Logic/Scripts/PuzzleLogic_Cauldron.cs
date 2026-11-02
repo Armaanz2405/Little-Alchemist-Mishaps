@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using TMPro;
 
 // Drop two ingredients in and it brews a potion: ingredient 1 + ingredient 2 = potion.
 // The collider must be a trigger. Held items have their Rigidbody2D un-simulated by PlayerMovement,

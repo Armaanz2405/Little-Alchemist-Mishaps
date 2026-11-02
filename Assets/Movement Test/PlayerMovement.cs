@@ -1,7 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour
@@ -25,7 +25,8 @@ public class PlayerMovement : MonoBehaviour
     private float coyoteTimer = 0f;
     private bool isJumping = false;
     private float jumpHoldTimer = 0f;
-    private bool isGrounded;
+    private readonly HashSet<Collider2D> groundContacts = new HashSet<Collider2D>();
+    private bool isGrounded => groundContacts.Count > 0;
     
     [SerializeField] private float climbSpeed = 0.2f;
     private bool isClimbing = false;
@@ -70,14 +71,10 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         //coyote time 
-        if (isGrounded && !isJumping)
-        {
+        if (isGrounded && rb.linearVelocity.y <= 0.01f && !isJumping)
             coyoteTimer = coyoteTime;
-        }
         else
-        {
             coyoteTimer -= Time.deltaTime;
-        }
         //climbing input
         if (!isClimbing && canClimb && moveInput.y > 0.1f && grabAndThrow.hasHeldItem() == false) 
         {
@@ -151,14 +148,14 @@ public class PlayerMovement : MonoBehaviour
             if (context.canceled) isJumping = false;
             return;
         }
-        if (context.started && coyoteTimer > 0f)
-        {
-            Jump();
-        }
-        if (isClimbing)
+        if (context.started && isClimbing)
         {
             Jump();
             StopClimbing();
+        }
+        else if (context.started && coyoteTimer > 0f)
+        {
+            Jump();
         }
 
         if (context.canceled)
@@ -170,10 +167,12 @@ public class PlayerMovement : MonoBehaviour
     
     private void Jump()
     {
+        if (isJumping) return;
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         isJumping = true;
         jumpHoldTimer = 0f;
         coyoteTimer = 0f;
+        groundContacts.Clear();
     }
 
     public void Movement(InputAction.CallbackContext context)
@@ -343,24 +342,34 @@ public class PlayerMovement : MonoBehaviour
     
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (IsGround(collision)) isGrounded = true;
+        UpdateGroundContact(collision);
 
         if (IsDropPlatform(collision.collider))
         {
-            if (isDropping) {
-                IgnorePlatform(collision.collider);
-            }
-            else
-            {
-                touchingPlatforms.Add(collision.collider);
-            }
+            if (isDropping) IgnorePlatform(collision.collider);
+            else touchingPlatforms.Add(collision.collider);
         }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        UpdateGroundContact(collision);
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (IsGround(collision)) isGrounded = false;
+        groundContacts.Remove(collision.collider);
         touchingPlatforms.Remove(collision.collider);
+    }
+
+    private void UpdateGroundContact(Collision2D collision)
+    {
+        if (!IsGround(collision)) return;
+
+        // only grounded if our feet are at or above the top of what we touch
+        bool feetAbove = col.bounds.min.y >= collision.collider.bounds.max.y - 0.05f;
+        if (feetAbove) groundContacts.Add(collision.collider);
+        else groundContacts.Remove(collision.collider);
     }
     
     public Vector2 getMoveInput()
