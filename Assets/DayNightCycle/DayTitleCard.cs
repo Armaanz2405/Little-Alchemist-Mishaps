@@ -7,13 +7,9 @@ public class DayTitleCard : MonoBehaviour
     public CanvasGroup group;
     public TMP_Text label;
 
-    public bool showOnFirstDay = false;
-
     public float fadeIn = 0.6f;
     public float hold = 1.5f;
     public float fadeOut = 0.8f;
-
-    private Coroutine running;
 
     void Awake()
     {
@@ -33,7 +29,6 @@ public class DayTitleCard : MonoBehaviour
         if (label == null)
         {
             Debug.LogError("DayTitleCard: put this script on the DayTitleText object.");
-            enabled = false;
             return;
         }
 
@@ -42,59 +37,16 @@ public class DayTitleCard : MonoBehaviour
         group.blocksRaycasts = false;
     }
 
-    void Start()
+    // NightShopController calls this and waits until it finishes
+    public IEnumerator ShowRoutine(string message)
     {
-        var dm = DayManager.Instance;
-        if (dm == null)
+        if (label == null)
         {
-            return;
+            yield break;
         }
 
-        dm.OnDayStarted += ShowDay;
-        dm.OnGameCompleted += ShowComplete;
-    }
-
-    void OnDestroy()
-    {
-        var dm = DayManager.Instance;
-        if (dm == null)
-        {
-            return;
-        }
-
-        dm.OnDayStarted -= ShowDay;
-        dm.OnGameCompleted -= ShowComplete;
-    }
-
-    void ShowDay(int day)
-    {
-        if (day == 1)
-        {
-            if (!showOnFirstDay)
-            {
-                return;
-            }
-        }
-        Play("Day " + day);
-    }
-
-    void ShowComplete()
-    {
-        Play("Two weeks complete!");
-    }
-
-    void Play(string message)
-    {
-        if (running != null)
-        {
-            StopCoroutine(running);
-        }
         label.text = message;
-        running = StartCoroutine(Sequence());
-    }
 
-    IEnumerator Sequence()
-    {
         Vector3 big = Vector3.one;
         Vector3 small = Vector3.one * 0.85f;
 

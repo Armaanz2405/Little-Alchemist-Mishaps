@@ -1,5 +1,4 @@
 using System.Collections;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -8,16 +7,16 @@ public class NightShopController : MonoBehaviour
     [Header("Required")]
     public GameObject shopRoot;          // drag Shop Canvas here
 
-    [Header("Optional: a 'Night Falls' banner")]
-    public CanvasGroup bannerGroup;
-    public TMP_Text bannerText;
-    public float bannerHold = 2f;
-    public float bannerFade = 1f;
+    [Header("The big day card (drag DayTitleText here)")]
+    public DayTitleCard titleCard;
 
-    [Header("Optional: things to hide while the shop is open")]
+    [Header("Optional: freeze these at night (e.g. the player's movement script)")]
+    public Behaviour[] disableAtNight;
+
+    [Header("Optional: things to hide at night")]
     public GameObject[] hideAtNight;
 
-    [Header("Optional: call the shop's own open/close functions")]
+    [Header("Optional: the shop's own open/close functions")]
     public UnityEvent onNightStarted;
     public UnityEvent onDayStarted;
     public UnityEvent onGameCompleted;
@@ -48,45 +47,62 @@ public class NightShopController : MonoBehaviour
 
     void HandleNight(int day)
     {
-        foreach (var g in hideAtNight) g.SetActive(false);
+        StartCoroutine(NightSequence(day));
+    }
+
+    IEnumerator NightSequence(int day)
+    {
+        var dm = DayManager.Instance;
+
+        foreach (var g in hideAtNight)
+        {
+            if (g != null) g.SetActive(false);
+        }
+        foreach (var b in disableAtNight)
+        {
+            if (b != null) b.enabled = false;
+        }
+
+        bool lastDay = day >= dm.totalDays;
+
+        // 1. Show the card for the next day
+        if (titleCard != null)
+        {
+            string message = lastDay ? "Two weeks complete!" : "Day " + (day + 1);
+            yield return StartCoroutine(titleCard.ShowRoutine(message));
+        }
+
+        // 2. After day 14 the game ends instead of opening the shop
+        if (lastDay)
+        {
+            dm.BeginNextDay();
+            yield break;
+        }
+
+        // 3. Open the shop
         shopRoot.SetActive(true);
         onNightStarted.Invoke();
-
-        if (bannerGroup != null)
-        {
-            if (bannerText != null)
-                bannerText.text = "Night Falls\nDay " + day + " complete";
-            StartCoroutine(ShowBanner());
-        }
     }
 
     void HandleDay(int day)
     {
         onDayStarted.Invoke();
         shopRoot.SetActive(false);
-        foreach (var g in hideAtNight) g.SetActive(true);
+
+        foreach (var g in hideAtNight)
+        {
+            if (g != null) g.SetActive(true);
+        }
+        foreach (var b in disableAtNight)
+        {
+            if (b != null) b.enabled = true;
+        }
     }
 
     void HandleGameCompleted()
     {
         shopRoot.SetActive(false);
         onGameCompleted.Invoke();
-    }
-
-    IEnumerator ShowBanner()
-    {
-        bannerGroup.gameObject.SetActive(true);
-        bannerGroup.alpha = 1f;
-        yield return new WaitForSecondsRealtime(bannerHold);
-
-        float t = 0f;
-        while (t < bannerFade)
-        {
-            t += Time.unscaledDeltaTime;
-            bannerGroup.alpha = 1f - t / bannerFade;
-            yield return null;
-        }
-        bannerGroup.gameObject.SetActive(false);
     }
 
     // The "Start Next Day" button calls this

@@ -15,8 +15,15 @@ public class DayManager : MonoBehaviour
     public int[] npcsPerDay = { 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6 };
     public int npcsFallback = 6;
 
+    [Header("Timing")]
     [Tooltip("Seconds to wait after the last NPC before night starts")]
-    public float endOfDayDelay = 2f;
+    public float endOfDayDelay = 0f;
+
+    [Tooltip("Tick this to skip the Start Next Day button and go on automatically")]
+    public bool autoStartNextDay = true;
+
+    [Tooltip("Seconds the night lasts before the next day starts (0 = instant)")]
+    public float nightDuration = 3f;
 
     public int CurrentDay { get; private set; } = 1;
     public int NpcsHelpedToday { get; private set; }
@@ -31,9 +38,14 @@ public class DayManager : MonoBehaviour
         }
     }
 
-    // 0 at the start of the day, 1 when the last NPC is helped
-    public float DayProgress01 =>
-        NpcsRequiredToday <= 0 ? 0f : Mathf.Clamp01((float)NpcsHelpedToday / NpcsRequiredToday);
+    public float DayProgress01
+    {
+        get
+        {
+            if (NpcsRequiredToday <= 0) return 0f;
+            return Mathf.Clamp01((float)NpcsHelpedToday / NpcsRequiredToday);
+        }
+    }
 
     public event Action<int> OnDayStarted;
     public event Action<int> OnNightStarted;
@@ -41,6 +53,7 @@ public class DayManager : MonoBehaviour
     public event Action OnGameCompleted;
 
     private bool endingDay;
+    private Coroutine autoRoutine;
 
     private void Awake()
     {
@@ -74,13 +87,20 @@ public class DayManager : MonoBehaviour
         OnNpcHelped?.Invoke(NpcsHelpedToday, NpcsRequiredToday);
 
         if (NpcsHelpedToday >= NpcsRequiredToday)
+        {
             StartCoroutine(EndDayRoutine());
+        }
     }
 
     private IEnumerator EndDayRoutine()
     {
         endingDay = true;
-        yield return new WaitForSeconds(endOfDayDelay);
+
+        if (endOfDayDelay > 0f)
+        {
+            yield return new WaitForSeconds(endOfDayDelay);
+        }
+
         StartNight();
     }
 
@@ -88,11 +108,36 @@ public class DayManager : MonoBehaviour
     {
         Phase = DayPhase.Night;
         OnNightStarted?.Invoke(CurrentDay);
+
+        if (autoStartNextDay)
+        {
+            autoRoutine = StartCoroutine(AutoNextDayRoutine());
+        }
     }
 
-    // The "Start Next Day" button calls this
+    private IEnumerator AutoNextDayRoutine()
+    {
+        if (nightDuration > 0f)
+        {
+            yield return new WaitForSeconds(nightDuration);
+        }
+
+        autoRoutine = null;
+        BeginNextDay();
+    }
+
+    // The Start Next Day button (and the M test key) call this
     public void BeginNextDay()
     {
+        // Only works at night, so it can't skip days by accident
+        if (Phase != DayPhase.Night) return;
+
+        if (autoRoutine != null)
+        {
+            StopCoroutine(autoRoutine);
+            autoRoutine = null;
+        }
+
         if (CurrentDay >= totalDays)
         {
             Phase = DayPhase.GameOver;
