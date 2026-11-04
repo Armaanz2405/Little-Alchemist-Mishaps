@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 942d562d56e783843a0fd19fd451d3c1, type: 3}
+  m_Name: Lab Ingredient Shop
+  m_EditorClassIdentifier: Assembly-CSharp::ShopCatalog
+  items:
+  - ingredient: {fileID: 11400000, guid: 4b3a9175d05c4e20b331cf0adf76179c, type: 2}
+    price: 10
+  - ingredient: {fileID: 11400000, guid: 045013a57aaa4799b2a3c2f86224f155, type: 2}
+    price: 10
+  - ingredient: {fileID: 11400000, guid: e2a1c401ad0e49a1b1892b63e4bce391, type: 2}
+    price: 10
+  - ingredient: {fileID: 11400000, guid: b9c8fcf086b94ccb803d93f6c3501afb, type: 2}
+    price: 10
+  - ingredient: {fileID: 11400000, guid: 8599f900ddf541e09978fc9467f3f6d6, type: 2}
+    price: 10
+  - ingredient: {fileID: 11400000, guid: b467dd19450644cfa4914b53a16fc49f, type: 2}
+    price: 10
+  - ingredient: {fileID: 11400000, guid: 9cf7665bbfc44efba6946affba4985da, type: 2}
+    price: 10
+  - ingredient: {fileID: 11400000, guid: 1bfecbc69c564b85b825164416bd7a93, type: 2}
+    price: 10

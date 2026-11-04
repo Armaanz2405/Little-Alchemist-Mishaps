@@ -1,7 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement : MonoBehaviour
@@ -25,7 +25,8 @@ public class PlayerMovement : MonoBehaviour
     private float coyoteTimer = 0f;
     private bool isJumping = false;
     private float jumpHoldTimer = 0f;
-    private bool isGrounded;
+    private readonly HashSet<Collider2D> groundContacts = new HashSet<Collider2D>();
+    private bool isGrounded => groundContacts.Count > 0;
     
     [SerializeField] private float climbSpeed = 0.2f;
     private bool isClimbing = false;
@@ -41,6 +42,23 @@ public class PlayerMovement : MonoBehaviour
     private readonly List<Collider2D> toRestore = new List<Collider2D>();
     
     private GrabAndThrow grabAndThrow;
+
+    //  up and down walk deeper or closer instead of falling and jump lands back at the same depth
+    [Header("Floorboards")]
+    [SerializeField] private bool walkOnFloorboards = false;
+    [SerializeField] private float floorBackY = -2.33f;
+    [SerializeField] private float floorFrontY = -4.1f;
+    [SerializeField] private float depthSpeed = 4.5f;
+    private bool onFloorboards;
+    private bool floorJumping;
+    private float floorJumpTime;
+    private float floorY;
+    private float normalGravity = 4f;
+
+    public bool OnFloorboards => onFloorboards;
+    public bool FloorJumping => floorJumping;
+    public float FloorY => floorY;
+
     private void Awake()
     { 
         
@@ -48,18 +66,15 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         grabAndThrow = GetComponent<GrabAndThrow>();
         moveSpeed = walkSpeed;
+        if (rb.gravityScale > 0f) normalGravity = rb.gravityScale;
     }
     private void Update()
     {
         //coyote time 
-        if (isGrounded && !isJumping)
-        {
+        if (isGrounded && rb.linearVelocity.y <= 0.01f && !isJumping)
             coyoteTimer = coyoteTime;
-        }
         else
-        {
             coyoteTimer -= Time.deltaTime;
-        }
         //climbing input
         if (!isClimbing && canClimb && moveInput.y > 0.1f && grabAndThrow.hasHeldItem() == false) 
         {
@@ -85,11 +100,20 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
         {
             if (isDashing) return;  //ignore all input while dashing
-            
+
+            UpdateFloorboards();
+            if (onFloorboards)
+            {
+                FloorboardMovement();
+                return;
+            }
+
             if (isClimbing)
             {
                 //climbing movement
                 rb.linearVelocity = moveInput * climbSpeed;
+                // climbing down a ladder puts you back on the floorboards
+                if (walkOnFloorboards && moveInput.y < 0f && col.bounds.min.y <= floorBackY) StopClimbing();
             }
             else
             {
@@ -111,14 +135,27 @@ public class PlayerMovement : MonoBehaviour
 
     public void JumpInput(InputAction.CallbackContext context)
     {
-        if (context.started && coyoteTimer > 0f)
+        if (onFloorboards)
         {
-            Jump();
+            if (context.started && !floorJumping)
+            {
+                floorJumping = true;
+                floorJumpTime = Time.time;
+                rb.gravityScale = normalGravity;
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+                Jump();
+            }
+            if (context.canceled) isJumping = false;
+            return;
         }
-        if (isClimbing)
+        if (context.started && isClimbing)
         {
             Jump();
             StopClimbing();
+        }
+        else if (context.started && coyoteTimer > 0f)
+        {
+            Jump();
         }
 
         if (context.canceled)
@@ -130,10 +167,12 @@ public class PlayerMovement : MonoBehaviour
     
     private void Jump()
     {
+        if (isJumping) return;
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         isJumping = true;
         jumpHoldTimer = 0f;
         coyoteTimer = 0f;
+        groundContacts.Clear();
     }
 
     public void Movement(InputAction.CallbackContext context)
@@ -155,6 +194,53 @@ public class PlayerMovement : MonoBehaviour
         rb.gravityScale = 4f;
     }
 
+
+    // landing on or walking onto the floorboards from a shelf or ladder
+    private void UpdateFloorboards()
+    {
+        if (!walkOnFloorboards || isClimbing)
+        {
+            onFloorboards = false;
+            return;
+        }
+        if (!onFloorboards && col.bounds.min.y <= floorBackY + 0.02f && rb.linearVelocity.y <= 0f)
+        {
+            onFloorboards = true;
+            floorJumping = false;
+            floorY = Mathf.Clamp(col.bounds.min.y, floorFrontY, floorBackY);
+            isJumping = false;
+        }
+    }
+
+    private void FloorboardMovement()
+    {
+        float feet = col.bounds.min.y;
+        if (floorJumping)
+        {
+            // landed on a shelf mid jump
+            if (isGrounded && feet > floorBackY + 0.05f)
+            {
+                onFloorboards = false;
+                floorJumping = false;
+                return;
+            }
+            rb.linearVelocity = new Vector2(moveInput.x * moveSpeed, rb.linearVelocity.y);
+            if (isJumping && jumpHoldTimer < maxJumpHoldTime)
+            {
+                rb.AddForce(Vector2.up * jumpHoldForce, ForceMode2D.Force);
+                jumpHoldTimer += Time.deltaTime;
+            }
+            // land once falling back to the starting depth, or on the front edge of the floor
+            bool rising = Time.time - floorJumpTime < 0.1f || rb.linearVelocity.y > 0.01f;
+            if (rising || (feet > floorY + 0.02f && !isGrounded)) return;
+            floorJumping = false;
+            isJumping = false;
+        }
+        rb.gravityScale = 0f;
+        floorY = Mathf.Clamp(floorY + moveInput.y * depthSpeed * Time.fixedDeltaTime, floorFrontY, floorBackY);
+        float targetY = floorY + (rb.position.y - feet);
+        rb.linearVelocity = new Vector2(moveInput.x * moveSpeed, (targetY - rb.position.y) / Time.fixedDeltaTime);
+    }
 
     private void FallThrough()
     {
@@ -256,24 +342,34 @@ public class PlayerMovement : MonoBehaviour
     
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (IsGround(collision)) isGrounded = true;
+        UpdateGroundContact(collision);
 
         if (IsDropPlatform(collision.collider))
         {
-            if (isDropping) {
-                IgnorePlatform(collision.collider);
-            }
-            else
-            {
-                touchingPlatforms.Add(collision.collider);
-            }
+            if (isDropping) IgnorePlatform(collision.collider);
+            else touchingPlatforms.Add(collision.collider);
         }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        UpdateGroundContact(collision);
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (IsGround(collision)) isGrounded = false;
+        groundContacts.Remove(collision.collider);
         touchingPlatforms.Remove(collision.collider);
+    }
+
+    private void UpdateGroundContact(Collision2D collision)
+    {
+        if (!IsGround(collision)) return;
+
+        // only grounded if our feet are at or above the top of what we touch
+        bool feetAbove = col.bounds.min.y >= collision.collider.bounds.max.y - 0.05f;
+        if (feetAbove) groundContacts.Add(collision.collider);
+        else groundContacts.Remove(collision.collider);
     }
     
     public Vector2 getMoveInput()

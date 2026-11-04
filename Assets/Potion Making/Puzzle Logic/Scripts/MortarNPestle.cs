@@ -1,15 +1,16 @@
 using System.Collections.Generic;
 using System.Linq;
+using Nocturne.PotionMaking.Energy;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using TMPro;
 
 [RequireComponent(typeof(Collider2D))]
 public class MortarNPestle : MonoBehaviour
 {
     public const int MaxIngredientsPerCrush = 3;
 
-    [SerializeField] private Ingredient igredientPrefab;
+    [SerializeField] private Ingredient ingredientPrefab;
     [Tooltip("Where the packed ingredient pops out. Defaults to just above the mortar.")]
     [SerializeField] private Transform ingredientSpawnPoint;
 
@@ -18,18 +19,22 @@ public class MortarNPestle : MonoBehaviour
 
     private readonly List<IngredientData> contents = new List<IngredientData>();
     public IReadOnlyList<IngredientData> Contents => contents;
+    private EnergyMeter energy;
 
     private void Reset() => GetComponent<Collider2D>().isTrigger = true;
 
     void Start()
     {
+        energy = FindAnyObjectByType<EnergyMeter>();
         fillAmntText.text = $"({contents.Count}/{MaxIngredientsPerCrush})";
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         var ingredient = other.GetComponentInParent<Ingredient>();
-        if (ingredient == null || ingredient.data == null || !ingredient.TryUse()) return;
+        if (ingredient == null || ingredient.data == null) return;
+        if (contents.Count == MaxIngredientsPerCrush - 1 && energy != null && !energy.CanAfford(EnergyAction.Refine)) return;
+        if (!ingredient.TryUse()) return;
         AddIngredient(ingredient.data);
         Destroy(ingredient.gameObject);
     }
@@ -49,20 +54,26 @@ public class MortarNPestle : MonoBehaviour
     {
         IngredientData packedIngredients = ScriptableObject.CreateInstance<IngredientData>();
 
-        var all_tags = contents[0].ingredientEffects.Concat(contents[1].ingredientEffects).Concat(contents[2].ingredientEffects);
+        var all_tags = contents.SelectMany(c => c.ingredientEffects)
+            .Where(tag => tag != null && tag.tag_value > 0)
+            .GroupBy(tag => tag.tag_effect)
+            .Select(g => new IngredientTags { tag_effect = g.Key, tag_value = g.Sum(tag => tag.tag_value) })
+            .OrderByDescending(tag => tag.tag_value).ThenBy(tag => (int)tag.tag_effect)
+            .ToList();
+
+        bool hasTags = all_tags.Count > 0;
+        packedIngredients.displayName = hasTags ? $"{IngredientTags.Name(all_tags[0].tag_effect)} Paste" : "New Goop";
+        packedIngredients.ingredientEffects = all_tags;
+        packedIngredients.color = hasTags ? IngredientTags.ColorOf(all_tags[0].tag_effect) : Color.black;
         contents.Clear();
         fillAmntText.text = $"({contents.Count}/{MaxIngredientsPerCrush})";
 
-        packedIngredients.displayName = "New Goop";
-        packedIngredients.ingredientEffects = all_tags.ToList();
-        packedIngredients.color = Color.black;
-
         Debug.Log($"[Cauldron] Brewed {packedIngredients.displayName}" + "\n" + ListContents(packedIngredients.ingredientEffects));
         
-        if (igredientPrefab != null)
+        if (ingredientPrefab != null)
         {
             Vector3 at = ingredientSpawnPoint != null ? ingredientSpawnPoint.position : transform.position + Vector3.up;
-            Ingredient ingredient = Instantiate(igredientPrefab, at, Quaternion.identity);
+            Ingredient ingredient = Instantiate(ingredientPrefab, at, Quaternion.identity);
             ingredient.data = packedIngredients;
             ingredient.ApplyLook();
         }

@@ -30,7 +30,10 @@ namespace Nocturne.PotionMaking.Energy
             return true;
         }
 
-        public bool TrySpend(EnergyAction action) => TrySpend(costs != null ? costs.CostOf(action) : 1);
+        public bool TrySpend(EnergyAction action) => TrySpend(CostOf(action));
+
+        public int CostOf(EnergyAction action) => costs != null ? costs.CostOf(action) : 1;
+        public bool CanAfford(EnergyAction action) => CanSpend(CostOf(action));
 
         public void Refill(int amount)
         {

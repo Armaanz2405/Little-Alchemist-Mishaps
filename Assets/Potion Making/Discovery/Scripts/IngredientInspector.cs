@@ -1,3 +1,4 @@
+using Nocturne.PotionMaking.Energy;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -13,10 +14,13 @@ namespace Nocturne.PotionMaking.Discovery
 
         public UnityEvent<IngredientData> onInspected = new UnityEvent<IngredientData>();
 
+        private EnergyMeter energy;
+
         private void Awake()
         {
             if (log == null) log = FindFirstObjectByType<DiscoveryLog>();
             if (holdPoint == null) holdPoint = transform;
+            energy = FindFirstObjectByType<EnergyMeter>();
         }
 
         private void Update()
@@ -29,6 +33,8 @@ namespace Nocturne.PotionMaking.Discovery
         {
             var target = FindTarget();
             if (target == null || target.data == null) return null;
+            if (log != null && log.IsDiscovered(target.data)) return null;
+            if (energy != null && !energy.CanAfford(EnergyAction.Inspect)) return null;
             if (log != null) log.Discover(target.data);
             onInspected.Invoke(target.data);
             return target.data;

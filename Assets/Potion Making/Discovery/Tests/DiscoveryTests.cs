@@ -1,5 +1,5 @@
-using NUnit.Framework;
 using Nocturne.PotionMaking.Discovery;
+using NUnit.Framework;
 using UnityEngine;
 
 public class DiscoveryTests

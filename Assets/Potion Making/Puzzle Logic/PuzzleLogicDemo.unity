@@ -2795,7 +2795,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b676281ac5cb96d47970abf2fda78ad9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MortarNPestle
-  igredientPrefab: {fileID: 7667439634201628183, guid: daef4117b831d4d18b76b31fbc940fcd, type: 3}
+  ingredientPrefab: {fileID: 7667439634201628183, guid: daef4117b831d4d18b76b31fbc940fcd, type: 3}
   ingredientSpawnPoint: {fileID: 1115385094}
   fillAmntText: {fileID: 1921734911}
   onIngredientsCrushed:

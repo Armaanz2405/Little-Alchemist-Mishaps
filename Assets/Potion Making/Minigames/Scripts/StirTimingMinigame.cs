@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -15,7 +16,7 @@ namespace Nocturne.PotionMaking.Minigames
         private StirTimingLogic logic;
         private RectTransform pot, zone, spoon, quality;
         private Image liquid;
-        private Text status;
+        private TMP_Text status;
         private float flash;
         private const float Radius = 170f;
 

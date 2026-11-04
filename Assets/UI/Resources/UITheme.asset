@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b05a87b400e74bca9d00758235f8ed11, type: 3}
+  m_Name: UITheme
+  m_EditorClassIdentifier: Nocturne.UI::Nocturne.UI.UITheme
+  font: {fileID: 12800000, guid: 7cf18551840043739a971a953b1dcc92, type: 3}
+  fontAsset: {fileID: 0}
+  text: {r: 0.902, g: 0.878, b: 0.933, a: 1}
+  mutedText: {r: 0.541, g: 0.502, b: 0.596, a: 1}
+  accentText: {r: 0.647, g: 0.58, b: 0.741, a: 1}
+  goldText: {r: 0.831, g: 0.69, b: 0.416, a: 1}
+  keyText: {r: 1, g: 1, b: 1, a: 1}
+  goodText: {r: 0.55, g: 0.85, b: 0.45, a: 1}
+  badText: {r: 0.95, g: 0.4, b: 0.36, a: 1}
+  panelFill: {r: 0.133, g: 0.098, b: 0.196, a: 0.96}
+  panelFrame: {r: 0.29, g: 0.235, b: 0.369, a: 1}
+  panelFlourish: {r: 0.49, g: 0.424, b: 0.58, a: 1}
+  panelGlow: {r: 0.235, g: 0.188, b: 0.282, a: 0.5}
+  cardFill: {r: 0.11, g: 0.082, b: 0.157, a: 0.95}
+  cardFrame: {r: 0.212, g: 0.169, b: 0.275, a: 1}
+  buttonFill: {r: 0.173, g: 0.133, b: 0.251, a: 1}
+  buttonHover: {r: 0.239, g: 0.188, b: 0.329, a: 1}
+  buttonPressed: {r: 0.114, g: 0.086, b: 0.161, a: 1}
+  buttonDisabled: {r: 0.129, g: 0.11, b: 0.161, a: 0.7}
+  buttonFrame: {r: 0.29, g: 0.235, b: 0.369, a: 1}
+  tabIdle: {r: 0.6, g: 0.6, b: 0.6, a: 1}
+  keyFill: {r: 0.294, g: 0.227, b: 0.388, a: 1}
+  keyFrame: {r: 0.541, g: 0.471, b: 0.639, a: 1}
+  pipFull: {r: 0.541, g: 0.416, b: 0.659, a: 1}
+  pipEmpty: {r: 1, g: 1, b: 1, a: 0.12}
+  silhouette: {r: 0.29, g: 0.259, b: 0.337, a: 1}
+  panelFillSprite: {fileID: 21300000, guid: c0d1c1e4a62e4189a9ea6d15b3c85ca3, type: 3}
+  panelFrameSprite: {fileID: 21300000, guid: 1ae718159e784d118879efed11b3d222, type: 3}
+  panelFlourishSprite: {fileID: 21300000, guid: eb1db7e6a8e44c2b8e66a7f639c6a507, type: 3}
+  panelGlowSprite: {fileID: 21300000, guid: 56229b66856e4bea85064eca3ae696d0, type: 3}
+  glowSize: 24
+  cardFillSprite: {fileID: 21300000, guid: 179a2fd8eade467ba8acf479822ea8f5, type: 3}
+  cardFrameSprite: {fileID: 21300000, guid: db5a3c13e20844648c6db1c2e7e17f27, type: 3}
+  buttonFillSprite: {fileID: 21300000, guid: 77ddea4c722d46fc8bc6715270ce06fa, type: 3}
+  buttonFrameSprite: {fileID: 21300000, guid: 46a13e577aa040888b74bfa98d8a76f1, type: 3}
+  tabFillSprite: {fileID: 21300000, guid: 1dd177ddf2474e869afdfd0908cb59ce, type: 3}
+  tabFrameSprite: {fileID: 21300000, guid: fcb2796f507b4c8b9fc267e716888b3e, type: 3}
+  keyFillSprite: {fileID: 21300000, guid: eea7d82580f54b9aa622455abaf65db9, type: 3}
+  keyFrameSprite: {fileID: 21300000, guid: 855ac3162f8b4662a2224daa9a51b522, type: 3}
+  pipSprite: {fileID: 21300000, guid: 13ba3a5976e748268c129fa9f495b7d8, type: 3}
+  dividerSprite: {fileID: 21300000, guid: 75f329f1deb64dac83138497c3be1e65, type: 3}
+  starSprite: {fileID: 21300000, guid: 1220ca832a51486292cfc34e33567eb2, type: 3}
+  nubFillSprite: {fileID: 21300000, guid: c097155b842c4f369513f68dcb5773e5, type: 3}
+  nubFrameSprite: {fileID: 21300000, guid: 4bd817c6c99d4af2b1d10ce089805bbf, type: 3}

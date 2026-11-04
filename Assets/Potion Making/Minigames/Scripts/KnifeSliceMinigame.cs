@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -18,7 +19,7 @@ namespace Nocturne.PotionMaking.Minigames
 
         private SliceLogic logic;
         private RectTransform board;
-        private Text counter;
+        private TMP_Text counter;
         private readonly Dictionary<SliceLogic.Piece, RectTransform> views = new Dictionary<SliceLogic.Piece, RectTransform>();
         private readonly List<(RectTransform rt, Vector2 vel, float life)> halves = new List<(RectTransform, Vector2, float)>();
         private readonly List<(Image img, float life)> trail = new List<(Image, float)>();

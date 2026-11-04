@@ -21,7 +21,9 @@ public class PotionRecipeBook : ScriptableObject
     public PotionData failedPotion;
 
     // Order doesn't matter: A + B and B + A make the same potion.
-    public PotionData Combine(IngredientData a, IngredientData b)
+    public PotionData Combine(IngredientData a, IngredientData b) => Match(a, b) ?? failedPotion;
+
+    public PotionData Match(IngredientData a, IngredientData b)
     {
         foreach (var recipe in recipes)
         {
@@ -29,6 +31,6 @@ public class PotionRecipeBook : ScriptableObject
             bool match = (recipe.first == a && recipe.second == b) || (recipe.first == b && recipe.second == a);
             if (match) return recipe.result;
         }
-        return failedPotion;
+        return null;
     }
 }

@@ -1,5 +1,5 @@
-using UnityEngine;
 using Unity.Cinemachine;
+using UnityEngine;
 
 public class CameraZoneTransition : MonoBehaviour
 {
