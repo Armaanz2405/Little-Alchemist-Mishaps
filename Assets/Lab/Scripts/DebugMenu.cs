@@ -1,5 +1,6 @@
 using System;
 using Nocturne.PotionMaking.Energy;
+using Nocturne.PotionMaking.Minigames;
 using Nocturne.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -90,6 +91,28 @@ public class DebugMenu : MonoBehaviour
             standard.value = 5;
             foreach (var slider in npcSliders) slider.value = 6;
         });
+
+        // A/B switches for the station minigames, so playtesters can try both versions
+        var minigames = Column(columns.transform, "Minigames");
+        var cauldron = UIStyle.MakeButton(minigames, "", 320f, 48f, 20f);
+        var chop = UIStyle.MakeButton(minigames, "", 320f, 48f, 20f);
+        void ShowVariants()
+        {
+            cauldron.GetComponentInChildren<TMPro.TMP_Text>().text = "Cauldron: " + MinigameVariants.Describe(MinigameVariants.Cauldron);
+            chop.GetComponentInChildren<TMPro.TMP_Text>().text = "Cutting board: " + MinigameVariants.Describe(MinigameVariants.Chop);
+        }
+        cauldron.onClick.AddListener(() =>
+        {
+            MinigameVariants.Cauldron = MinigameVariants.Cauldron == CauldronVariant.Brew ? CauldronVariant.StirRing : CauldronVariant.Brew;
+            ShowVariants();
+        });
+        chop.onClick.AddListener(() =>
+        {
+            MinigameVariants.Chop = MinigameVariants.Chop == ChopVariant.Rhythm ? ChopVariant.Knife : ChopVariant.Rhythm;
+            ShowVariants();
+        });
+        ShowVariants();
+        UIStyle.MakeText(minigames, "Click to swap. Takes effect next time a station is used.", 18, TextKind.Muted, "Hint");
     }
 
     private static void ApplyStandardEnergy()

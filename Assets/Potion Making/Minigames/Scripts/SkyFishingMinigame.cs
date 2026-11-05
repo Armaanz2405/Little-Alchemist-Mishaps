@@ -5,13 +5,14 @@ using UnityEngine.UI;
 
 namespace Nocturne.PotionMaking.Minigames
 {
-    // Concept: sky fishing. Move the lantern, hold the light to draw bugs in, catch them for the Moth shopkeeper.
+    // Flamefly fishing at the window (Maddy's lantern idea, Skylar's twist): move the lantern, hold the light to draw the
+    // flameflies in. Every one caught goes under the cauldron as fuel for the next brew.
     public class SkyFishingMinigame : Minigame
     {
-        [SerializeField] private Color bugColor = new Color(0.78f, 0.95f, 0.45f);
+        [SerializeField] private Color bugColor = new Color(1f, 0.72f, 0.3f);
 
-        public override string Title => "Lantern Fishing";
-        public override string Instructions => "A/D (or the stick) move the lantern. Hold E or Space (A on a pad) to shine the light and draw the bugs in.";
+        public override string Title => "Catch Flameflies";
+        public override string Instructions => "A/D (or the stick) move the lantern. Hold E or Space (A on a pad) to shine the light and draw the flameflies in. They fuel the cauldron.";
 
         public SkyFishingLogic Logic => logic;
 
@@ -84,7 +85,9 @@ namespace Nocturne.PotionMaking.Minigames
             if (logic.Done)
             {
                 counter.text = "";
-                Finish(logic.Score, logic.Caught >= logic.total ? "Jar's full!" : logic.Score >= 0.5f ? "Good haul" : "They got away...");
+                MinigameVariants.Flameflies += logic.Caught;
+                string fuel = logic.Caught > 0 ? $" {logic.Caught} for the fire" : "";
+                Finish(logic.Score, logic.Caught >= logic.total ? "Jar's full!" + fuel : logic.Score >= 0.5f ? "Good haul," + fuel : "They got away...");
             }
         }
     }

@@ -5,24 +5,46 @@ using UnityEngine.UI;
 
 namespace Nocturne.PotionMaking.Minigames
 {
-    // Concept: rhythm chopping. The knife sweeps across the ingredient one cut line per beat, press as it reaches each line.
-    public class RhythmChopMinigame : Minigame
+    // Chop to the beat: pick which tag to cut away, then the knife sweeps across the ingredient one cut line per beat.
+    // Press as it reaches each line. Plays a synthesized click until a real track is dropped into the track slot.
+    public class RhythmChopMinigame : Minigame, ITagChoiceMinigame
     {
         [SerializeField] private Color pieceColor = new Color(0.85f, 0.45f, 0.55f);
         [SerializeField] private float bpm = 100f;
+        [Tooltip("Optional beat track. When set it replaces the metronome click; bpm and trackOffset must match it.")]
+        [SerializeField] private AudioClip track;
+        [Tooltip("Seconds into the track where the first count-in beat lands.")]
+        [SerializeField] private float trackOffset = 0f;
         [SerializeField] private bool metronome = true;
 
         public override string Title => "Chop to the Beat";
-        public override string Instructions => "Press E or Space (A on a pad) as the knife reaches each cut line. Stay on the beat!";
+        public override string Instructions => choice != null && choice.Open
+            ? "Which tag do you want to cut away? A / D to pick, E to start chopping."
+            : "Press E or Space (A on a pad) as the knife reaches each cut line. Stay on the beat!";
 
         public RhythmChopLogic Logic => logic;
+        // index into the ingredient's tag list that the player chose to cut off
+        public int ChosenTag { get; private set; }
+
         public void SetIngredientColor(Color color) => pieceColor = color;
 
+        // the cutting board calls this with whatever is on the board before the game can start
+        public void SetIngredient(IngredientData data)
+        {
+            ingredient = data;
+            if (data != null) pieceColor = data.color;
+            ChosenTag = 0;
+            choosing = data != null && data.ingredientEffects != null && data.ingredientEffects.Count > 1;
+        }
+
+        private IngredientData ingredient;
+        private bool choosing;
+        private TagChoiceScreen choice;
         private RhythmChopLogic logic;
         private RectTransform board, knife, pulse;
         private readonly List<RectTransform> lines = new List<RectTransform>();
         private TMP_Text counter, countdown;
-        private AudioSource clicks;
+        private AudioSource audio;
         private AudioClip tick, tock, chop;
         private int shown, lastBeat = -1;
         private float pulseScale = 1f;
@@ -34,6 +56,17 @@ namespace Nocturne.PotionMaking.Minigames
 
         protected override void Build()
         {
+            choice = null;
+            if (choosing)
+            {
+                choice = new TagChoiceScreen(ingredient);
+                choice.Build(Root);
+            }
+            else BuildBoard();
+        }
+
+        private void BuildBoard()
+        {
             logic = new RhythmChopLogic { bpm = bpm };
             lines.Clear();
             flashes.Clear();
@@ -41,7 +74,7 @@ namespace Nocturne.PotionMaking.Minigames
             shown = 0;
             lastBeat = -1;
 
-            board = MinigameUI.Rect(Root, "Board", new Vector2(0, 0), new Vector2(1000, 440), new Color(0.3f, 0.22f, 0.16f));
+            board = MinigameUI.Rect(Root, "Board", new Vector2(0, 0), new Vector2(1000, 440), MinigameUI.Board);
             board.gameObject.AddComponent<RectMask2D>();
             MinigameUI.Rect(board, "Ingredient", new Vector2(0, 30), new Vector2(760, 200), pieceColor);
             for (int i = 0; i < logic.cuts; i++)
@@ -52,25 +85,41 @@ namespace Nocturne.PotionMaking.Minigames
             countdown = MinigameUI.Label(board, "", new Vector2(0, -170), 40, MinigameUI.Gold, 300);
             counter = MinigameUI.Label(Root, "", new Vector2(0, -262), 24, MinigameUI.Ink);
 
-            if (metronome)
+            audio = GetComponent<AudioSource>();
+            if (audio == null) audio = gameObject.AddComponent<AudioSource>();
+            if (chop == null) chop = Click("chop", 220f, 0.09f);
+            if (track != null)
             {
-                clicks = GetComponent<AudioSource>();
-                if (clicks == null) clicks = gameObject.AddComponent<AudioSource>();
+                audio.clip = track;
+                audio.time = Mathf.Clamp(trackOffset, 0f, Mathf.Max(0f, track.length - 0.01f));
+                audio.Play();
+            }
+            else if (metronome)
+            {
                 if (tick == null) tick = Click("tick", 1320f);
                 if (tock == null) tock = Click("tock", 880f);
-                if (chop == null) chop = Click("chop", 220f, 0.09f);
             }
         }
 
         protected override void Step(float dt)
         {
+            if (choice != null && choice.Open)
+            {
+                if (!choice.Step()) return;
+                ChosenTag = choice.Chosen;
+                pieceColor = IngredientTags.ColorOf(ingredient.ingredientEffects[ChosenTag].tag_effect);
+                if (InstructionLabel != null) InstructionLabel.text = Instructions;
+                BuildBoard();
+                return;
+            }
+
             logic.Tick(dt);
 
             if (MinigameInput.ConfirmPressed && !logic.Done)
             {
                 var result = logic.Press();
                 if (result == RhythmChopLogic.Judgement.None) Popup("Early!", KnifeX(), MinigameUI.Bad);
-                else if (clicks != null) clicks.PlayOneShot(chop);
+                else audio.PlayOneShot(chop);
             }
 
             // show whatever got judged this frame, by press or by letting the line slide past
@@ -92,7 +141,7 @@ namespace Nocturne.PotionMaking.Minigames
             {
                 lastBeat = logic.Beat;
                 pulseScale = 1.7f;
-                if (clicks != null) clicks.PlayOneShot(lastBeat % 4 == 0 ? tick : tock, 0.7f);
+                if (track == null && tick != null) audio.PlayOneShot(lastBeat % 4 == 0 ? tick : tock, 0.7f);
             }
             pulseScale = Mathf.Lerp(pulseScale, 1f, dt * 10f);
             pulse.localScale = Vector3.one * pulseScale;
@@ -125,6 +174,7 @@ namespace Nocturne.PotionMaking.Minigames
             if (logic.Done)
             {
                 counter.text = "";
+                if (track != null) audio.Stop();
                 string result = logic.Perfects == logic.cuts ? "Flawless rhythm!" : logic.Score >= 0.5f ? "Nicely chopped" : "Off the beat...";
                 Finish(logic.Score, result);
             }

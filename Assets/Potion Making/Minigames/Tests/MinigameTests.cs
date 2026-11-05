@@ -181,4 +181,153 @@ public class MinigameTests
         Assert.AreEqual(1f, CraftQuality.Multiplier(1f, 0.4f), 1e-4);
         Assert.AreEqual(0.8f, CraftQuality.Multiplier(0.5f, 0.4f), 1e-4);
     }
+
+    // ---- brew (Aliyah's cauldron)
+
+    private static CauldronBrewLogic.Need SlowCounter(int turns = 1) => new CauldronBrewLogic.Need
+        { name = "a", direction = CauldronBrewLogic.Direction.Counterclockwise, fast = false, turns = turns };
+
+    // keeps the fire in range while ticking, so only the stirring is under test
+    private static void Run(CauldronBrewLogic b, float seconds, float stir)
+    {
+        for (int i = 0; i < seconds * 60 && !b.Done; i++) b.Tick(1f / 60f, stir, b.Heat < b.heatMin + 0.05f);
+    }
+
+    [Test]
+    public void Brew_StirringTheRightWayCompletesTheIngredient()
+    {
+        var b = new CauldronBrewLogic(new[] { SlowCounter() });
+        Run(b, 8f, 0.3f); // 0.3 of the stick is 126 deg/s, inside the slow band
+        Assert.IsTrue(b.Done);
+        Assert.AreEqual(1, b.Current);
+        Assert.Greater(b.Score, 0.95f);
+    }
+
+    [Test]
+    public void Brew_WrongDirectionDoesNotCount()
+    {
+        var b = new CauldronBrewLogic(new[] { SlowCounter() });
+        Run(b, 4f, -0.3f);
+        Assert.AreEqual(0f, b.Needs[0].Done, 1e-4);
+        Assert.AreEqual(0, b.Current);
+    }
+
+    [Test]
+    public void Brew_TooFastDoesNotCount()
+    {
+        var b = new CauldronBrewLogic(new[] { SlowCounter() });
+        Run(b, 4f, 1f); // full push is 420 deg/s, way over the slow band; only the ramp through it counts
+        Assert.Less(b.Needs[0].Done, 0.1f);
+        Assert.AreEqual(0, b.Current);
+        Assert.IsFalse(b.SpeedInBand(b.Needs[0]));
+    }
+
+    [Test]
+    public void Brew_FireDiesDownAndTheBellowsBringItBack()
+    {
+        var b = new CauldronBrewLogic(new[] { SlowCounter(3) });
+        float start = b.Heat;
+        for (int i = 0; i < 60 * 3; i++) b.Tick(1f / 60f, 0f, false);
+        Assert.Less(b.Heat, start);
+        float low = b.Heat;
+        b.Tick(1f / 60f, 0f, true);
+        Assert.AreEqual(low + b.stokeAmount - b.heatDecay / 60f, b.Heat, 1e-3);
+    }
+
+    [Test]
+    public void Brew_StirringDoesNotCountWhileTheFireIsLow()
+    {
+        var b = new CauldronBrewLogic(new[] { SlowCounter(3) });
+        for (int i = 0; i < 60 * 10; i++) b.Tick(1f / 60f, 0f, false);
+        Assert.IsTrue(b.FireTooLow);
+        float before = b.Needs[0].Done;
+        for (int i = 0; i < 60 * 2; i++) b.Tick(1f / 60f, 0.3f, false);
+        Assert.AreEqual(before, b.Needs[0].Done, 1e-4);
+    }
+
+    [Test]
+    public void Brew_OverheatingScorchesAndCostsScore()
+    {
+        var b = new CauldronBrewLogic(new[] { SlowCounter(3) });
+        for (int i = 0; i < 60 * 3; i++) b.Tick(1f / 60f, 0.3f, true); // pumping every frame
+        Assert.IsTrue(b.FireTooHot);
+        Assert.Greater(b.Scorch, 0f);
+        Assert.AreEqual(b.Progress * (1f - 0.5f * b.Scorch), b.Score, 1e-4);
+    }
+
+    [Test]
+    public void Brew_RunsOutOfTime()
+    {
+        var b = new CauldronBrewLogic(new[] { SlowCounter(3) }) { timeLimit = 2f };
+        for (int i = 0; i < 60 * 3; i++) b.Tick(1f / 60f, 0f, false);
+        Assert.IsTrue(b.Done);
+        Assert.AreEqual(0, b.Current);
+    }
+
+    [Test]
+    public void Brew_FlamefliesMakeTheBellowsStronger()
+    {
+        var plain = new CauldronBrewLogic(new[] { SlowCounter() });
+        var fuelled = new CauldronBrewLogic(new[] { SlowCounter() }, 5);
+        Assert.Greater(fuelled.stokeAmount, plain.stokeAmount);
+        Assert.GreaterOrEqual(fuelled.Heat, plain.Heat);
+    }
+
+    [Test]
+    public void Brew_NeedIsStableForAnIngredientAndHarderWhenPoorlyRefined()
+    {
+        var a = CauldronBrewLogic.NeedFor("Heartroot", Color.red, 1f);
+        var b = CauldronBrewLogic.NeedFor("Heartroot", Color.red, 1f);
+        Assert.AreEqual(a.direction, b.direction);
+        Assert.AreEqual(a.fast, b.fast);
+        Assert.AreEqual(2, a.turns);
+        Assert.AreEqual(3, CauldronBrewLogic.NeedFor("Heartroot", Color.red, 0.4f).turns);
+    }
+
+    // ---- chop to the beat
+
+    [Test]
+    public void Rhythm_PressOnTheBeatIsPerfect()
+    {
+        var r = new RhythmChopLogic(2) { bpm = 120f };
+        r.Tick(r.CutTime(0));
+        Assert.AreEqual(RhythmChopLogic.Judgement.Perfect, r.Press());
+        Assert.AreEqual(1, r.Perfects);
+    }
+
+    [Test]
+    public void Rhythm_PressALittleLateIsGood()
+    {
+        var r = new RhythmChopLogic(2) { bpm = 120f };
+        r.Tick(r.CutTime(0) + 0.12f);
+        Assert.AreEqual(RhythmChopLogic.Judgement.Good, r.Press());
+    }
+
+    [Test]
+    public void Rhythm_TooEarlyDoesNotCount()
+    {
+        var r = new RhythmChopLogic(2) { bpm = 120f };
+        r.Tick(r.CutTime(0) - 0.5f);
+        Assert.AreEqual(RhythmChopLogic.Judgement.None, r.Press());
+        Assert.AreEqual(0, r.NextCut);
+    }
+
+    [Test]
+    public void Rhythm_LettingTheLineSlidePastIsAMiss()
+    {
+        var r = new RhythmChopLogic(2) { bpm = 120f };
+        r.Tick(r.CutTime(0) + r.goodWindow + 0.01f);
+        Assert.AreEqual(1, r.Misses);
+        Assert.AreEqual(1, r.NextCut);
+    }
+
+    [Test]
+    public void Rhythm_ScoreWeighsGoodsBelowPerfects()
+    {
+        var r = new RhythmChopLogic(2) { bpm = 120f };
+        r.Tick(r.CutTime(0)); r.Press();
+        r.Tick(r.CutTime(1) - r.Time + 0.12f); r.Press();
+        Assert.IsTrue(r.Done);
+        Assert.AreEqual(0.8f, r.Score, 1e-4);
+    }
 }

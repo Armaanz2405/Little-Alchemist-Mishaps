@@ -68,7 +68,13 @@ public class PuzzleLogic_Cauldron : MonoBehaviour
 
         //return contents.Count >= IngredientsPerPotion ? Brew() : null;
 
-        if (contents.Count >= IngredientsPerPotion && stirMinigameStation != null) stirMinigameStation.isReadyToPlay = true;
+        if (contents.Count >= IngredientsPerPotion && stirMinigameStation != null)
+        {
+            stirMinigameStation.isReadyToPlay = true;
+            // the brew game asks for a different stir per ingredient, so it needs to know what's in the pot
+            foreach (var game in stirMinigameStation.AllGames)
+                if (game is Nocturne.PotionMaking.Minigames.CauldronBrewMinigame brew) brew.SetIngredients(contents);
+        }
         return null;
     }
 

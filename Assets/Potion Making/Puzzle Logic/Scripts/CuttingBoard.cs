@@ -42,8 +42,9 @@ public class CuttingBoard : MonoBehaviour
         if (chopMinigameStation != null)
         {
             chopMinigameStation.isReadyToPlay = true;
-            // the knife needs to know the tags so the player can pick which one to cut away
-            if (chopMinigameStation.Game is KnifeSliceMinigame knife) knife.SetIngredient(ingredient);
+            // whichever chopping game runs needs the tags so the player can pick which one to cut away
+            foreach (var game in chopMinigameStation.AllGames)
+                if (game is ITagChoiceMinigame choice) choice.SetIngredient(ingredient);
         }
         // display the ingredient
         if (ingredientOnBoardSprite != null)
@@ -66,13 +67,14 @@ public class CuttingBoard : MonoBehaviour
     private IngredientData Chop()
     {
         if (content == null) return null;
-        var knife = chopMinigameStation != null ? chopMinigameStation.Game as KnifeSliceMinigame : null;
+        var game = chopMinigameStation != null ? chopMinigameStation.Game : null;
+        var choice = game as ITagChoiceMinigame;
         IngredientData choppedIngredient = ScriptableObject.CreateInstance<IngredientData>();
         List<IngredientTags> new_tags = new List<IngredientTags>(content.ingredientEffects);
-        int index = knife != null ? Mathf.Clamp(knife.ChosenTag, 0, new_tags.Count - 1) : 0;
+        int index = choice != null ? Mathf.Clamp(choice.ChosenTag, 0, new_tags.Count - 1) : 0;
         IngredientTags removed = new_tags[index];
         new_tags.RemoveAt(index);
-        float score = knife != null ? knife.LastScore : 1f;
+        float score = game != null ? game.LastScore : 1f;
 
         choppedIngredient.displayName = $"Chopped {content.displayName}";
         choppedIngredient.ingredientEffects = new_tags;
