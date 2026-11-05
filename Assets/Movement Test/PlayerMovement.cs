@@ -31,6 +31,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float climbSpeed = 0.2f;
     private bool isClimbing = false;
     [SerializeField] private bool canClimb= false;
+    [SerializeField] private LayerMask climbableLayer;
 
     [SerializeField] private float holdDownDelay = 0.2f; 
     private float holdDownTimer;
@@ -76,6 +77,8 @@ public class PlayerMovement : MonoBehaviour
         else
             coyoteTimer -= Time.deltaTime;
         //climbing input
+        
+        CheckClimbable(); 
         if (!isClimbing && canClimb && moveInput.y > 0.1f && grabAndThrow.hasHeldItem() == false) 
         {
             StartClimbing();
@@ -193,7 +196,14 @@ public class PlayerMovement : MonoBehaviour
         isClimbing = false;
         rb.gravityScale = 4f;
     }
+    
+    private void CheckClimbable()
+    {
+        canClimb = Physics2D.OverlapBox(col.bounds.center, col.bounds.size, 0f ,climbableLayer) != null;
 
+        if (!canClimb && isClimbing)
+            StopClimbing();
+    }
 
     // landing on or walking onto the floorboards from a shelf or ladder
     private void UpdateFloorboards()
@@ -316,29 +326,29 @@ public class PlayerMovement : MonoBehaviour
         canDash = true;
     }
     
-    private void OnTriggerEnter2D(Collider2D trigger)
-    {
-        if (IsClimbable(trigger))
-        {
-            canClimb = true;
-        }
-    }
-    private void OnTriggerExit2D(Collider2D trigger)
-    {
-        if (IsClimbable(trigger))
-        {
-            canClimb = false;
-            StopClimbing();
-        }
-    }
+    // private void OnTriggerEnter2D(Collider2D trigger)
+    // {
+    //     if (IsClimbable(trigger))
+    //     {
+    //         canClimb = true;
+    //     }
+    // }
+    // private void OnTriggerExit2D(Collider2D trigger)
+    // {
+    //     if (IsClimbable(trigger))
+    //     {
+    //         canClimb = false;
+    //         StopClimbing();
+    //     }
+    // }
     private bool IsGround(Collision2D collision)
     {
         return collision.gameObject.CompareTag("Ground");
     }
-    private bool IsClimbable(Collider2D trigger)
-    {
-        return trigger.gameObject.CompareTag("Climbable");
-    }
+    // private bool IsClimbable(Collider2D trigger)
+    // {
+    //     return trigger.gameObject.CompareTag("Climbable");
+    // }
     
     private void OnCollisionEnter2D(Collision2D collision)
     {
