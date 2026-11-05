@@ -83,22 +83,22 @@ public class ResultsScreen : MonoBehaviour
         var customer = FindAnyObjectByType<Customer_Order>();
         if (customer == null) return;
 
-        Row(panel.transform, TextKind.Muted, "Order", "Wanted", "Potion", "Minigame score", "Energy left");
+        Row(panel.transform, TextKind.Muted, "Order", "Wanted", "Potion", "Craft", "Score", "Minigame score", "Energy left");
         for (int i = 0; i < customer.Submissions.Count; i++)
         {
             var s = customer.Submissions[i];
-            Row(panel.transform, TextKind.Body, (i + 1).ToString(), s.order, s.potionTags,
-                MinigameScore(s.minigameScoreTotal, s.minigamesPlayed), $"{s.energyLeft} / {s.energyMax}");
+            Row(panel.transform, TextKind.Body, (i + 1).ToString(), s.order, s.potionTags, $"{Mathf.RoundToInt(s.craftQuality * 100)}%",
+                s.score + (s.passed ? "" : " (failed)"), MinigameScore(s.minigameScoreTotal, s.minigamesPlayed), $"{s.energyLeft} / {s.energyMax}");
         }
         var meter = FindAnyObjectByType<EnergyMeter>();
-        Row(panel.transform, TextKind.Muted, (customer.Submissions.Count + 1).ToString(), customer.OrderText, "in progress",
+        Row(panel.transform, TextKind.Muted, (customer.Submissions.Count + 1).ToString(), customer.OrderText, "in progress", "", "",
             MinigameScore(customer.MinigameScoreTotal, customer.MinigamesPlayed), meter != null ? $"{meter.Current} / {meter.Max}" : "");
     }
 
     private static string MinigameScore(float total, int played) =>
         played > 0 ? $"{Mathf.RoundToInt(100f * total / played)}%" : "none played";
 
-    private static readonly float[] ColumnWidths = { 80f, 300f, 360f, 220f, 150f };
+    private static readonly float[] ColumnWidths = { 80f, 300f, 360f, 90f, 120f, 220f, 150f };
 
     private static void Row(Transform parent, TextKind kind, params string[] cells)
     {

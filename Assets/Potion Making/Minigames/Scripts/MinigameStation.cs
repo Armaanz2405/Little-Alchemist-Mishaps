@@ -26,6 +26,7 @@ namespace Nocturne.PotionMaking.Minigames
 
         public bool isReadyToPlay = false;
 
+        public Minigame Game => minigame;
         public float Range => range;
         public Key Key => key;
         public bool CanPlay => Ready && (energyRule != EnergyRule.Block || HasEnergy);
@@ -68,7 +69,8 @@ namespace Nocturne.PotionMaking.Minigames
 
             var held = holdPoint != null ? holdPoint.GetComponentInChildren<Ingredient>() : null;
             var data = held != null ? held.data : null;
-            if (data != null && minigame is KnifeSliceMinigame knife) knife.SetIngredientColor(data.color);
+            // the cutting board sets the knife's ingredient itself, so only override it when something is actually held
+            if (data != null && minigame is KnifeSliceMinigame knife) knife.SetIngredient(data);
 
             bool outOfEnergy = energyRule == EnergyRule.ZeroScore && !HasEnergy;
             if (playerInput != null) playerInput.DeactivateInput();
