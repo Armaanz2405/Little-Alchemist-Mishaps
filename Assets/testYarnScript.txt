@@ -1,0 +1,21 @@
+title: Start
+tags:
+---
+Narrator: meow meow meow meow
+    -> meow meow?
+        Narrator: meow meow!
+            -> option 1
+                <<jump option1>>
+            -> option 2
+                <<jump option2>>
+===
+
+title: option1
+---
+Narrator: meow meow!
+===
+
+title: option2
+---
+Narrator: meow meow :C
+===
