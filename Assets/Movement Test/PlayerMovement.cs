@@ -32,6 +32,8 @@ public class PlayerMovement : MonoBehaviour
     private bool isClimbing = false;
     [SerializeField] private bool canClimb= false;
     [SerializeField] private LayerMask climbableLayer;
+    private WeakLadder currentWeakLadder;
+    private WeakLadder currentClimbedLadder; 
 
     [SerializeField] private float holdDownDelay = 0.2f; 
     private float holdDownTimer;
@@ -189,20 +191,42 @@ public class PlayerMovement : MonoBehaviour
         isJumping = false;
         rb.gravityScale = 0f;
         rb.linearVelocity = Vector2.zero;
+        
+        currentClimbedLadder = currentWeakLadder;
+        if (currentWeakLadder != null)
+        {
+            currentWeakLadder.BeingClimbed();
+            currentWeakLadder.LossDurabilty();
+        }
     }
 
     private void StopClimbing()
     {
+        if (currentClimbedLadder != null)
+        {
+            currentClimbedLadder.StopClimbed();
+            currentClimbedLadder = null;
+        }
         isClimbing = false;
         rb.gravityScale = 4f;
     }
     
     private void CheckClimbable()
     {
-        canClimb = Physics2D.OverlapBox(col.bounds.center, col.bounds.size, 0f ,climbableLayer) != null;
+        Collider2D hit = Physics2D.OverlapBox(col.bounds.center, col.bounds.size, 0f, climbableLayer);
 
+        canClimb = hit != null;
+
+        if (canClimb && hit.TryGetComponent(out WeakLadder ladder))
+        {
+            currentWeakLadder = ladder;   
+        }
+        else currentWeakLadder = null;
+        
         if (!canClimb && isClimbing)
+        {
             StopClimbing();
+        }
     }
 
     // landing on or walking onto the floorboards from a shelf or ladder
@@ -325,31 +349,12 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(dashCooldown);
         canDash = true;
     }
-    
-    // private void OnTriggerEnter2D(Collider2D trigger)
-    // {
-    //     if (IsClimbable(trigger))
-    //     {
-    //         canClimb = true;
-    //     }
-    // }
-    // private void OnTriggerExit2D(Collider2D trigger)
-    // {
-    //     if (IsClimbable(trigger))
-    //     {
-    //         canClimb = false;
-    //         StopClimbing();
-    //     }
-    // }
+
     private bool IsGround(Collision2D collision)
     {
         return collision.gameObject.CompareTag("Ground");
     }
-    // private bool IsClimbable(Collider2D trigger)
-    // {
-    //     return trigger.gameObject.CompareTag("Climbable");
-    // }
-    
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         UpdateGroundContact(collision);
