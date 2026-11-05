@@ -1,4 +1,6 @@
 title: KnightDialogueBranch1
+position: 8,-262
+tags:
 ---
 // Determines if the dialogue for submitting a potion is available
 <<declare $isHoldingPotion = false>>
@@ -39,7 +41,7 @@ Ferdinand: "I heard that this was the finest procurer of potions in all the land
 -> [You've heard of this shop before?]{talk_cost("KnightShop")} <<if can_talk("KnightShop")>>
     <<spend_talk_amount CUSTOMER_SPRITE KnightShop>>
     <<jump KnightShop>>
--> Small talk <<if not visited("KnightSmallTalk")>>
+-> [Small talk]
     <<jump KnightSmallTalk>>
 -> [Exit]
     <<jump KnightLeaveTalk>>
@@ -51,7 +53,7 @@ position: -560,177
 Ferdinand: "Alas, I was slain in the midst of battle."
 Ferdinand: "A traveling necromancer was able to return my soul, but not my body."
 Ferdinand: "Now this flame of mine, my undying will, shall burn forevermore."
--> I see. Thank you.
+-> [I see. Thank you.]
     <<jump KnightHub>>
 ===
 
@@ -62,9 +64,9 @@ Ferdinand: "Ah, Emberseed, you say?"
 Ferdinand: "I couldn't tell you much about the seeds themselves, unfortunately."
 Ferdinand: "But I do distinctly remember coming across the Ember Flower on one of my travels."
 Ferdinand: "Had a very pungent smell. We could hardly fall asleep at night because the stench would keep us all awake!"
--> Can you tell me more about your travels?
+-> [Can you tell me more about your travels?]
     <<jump KnightTravels>>
--> I see. Thank you.
+-> [I see. Thank you.]
     <<jump KnightHub>>
 ===
 
@@ -76,7 +78,7 @@ Ferdinand: "Allow me to tell you the tale of the time a group of brigands and I 
 Ferdinand: "The beast was ferocious, and we lost a few good men."
 Ferdinand: "But alas, we managed to fell the beast, and take its claws."
 Ferdinand: "I still keep the claw in my vault as a memory of our victory, and to honor my fallen comrades."
--> I see. Thank you.
+-> [I see. Thank you.]
     <<jump KnightHub>>
 ===
 
@@ -85,7 +87,7 @@ position: 140,274
 ---
 Ferdinand: "Unfortunately not, my friend."
 Ferdinand: "I have yet to hear the name throughout my travels."
--> Do you know where they may have gone?
+-> [Do you know where they may have gone?]
     Ferdinand: "Any answer I could give you at this time would be mere speculation, young apothecary."
     Ferdinand: "My apologies."
     <<jump KnightHub>>
@@ -96,7 +98,7 @@ position: -98,261
 ---
 Ferdinand: "But of course! From land to land, people tell the tale of this very shop."
 Ferdinand: "I have known you for exactly 3 minutes, and already I trust you with my life!"
--> I see. Thank you.
+-> [I see. Thank you.]
     <<jump KnightHub>>
 ===
 
