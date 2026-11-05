@@ -14,7 +14,7 @@ namespace Nocturne.PotionMaking.Minigames
         [SerializeField] private Color scorchColor = new Color(0.55f, 0.18f, 0.12f);
 
         public override string Title => "Brew the Potion";
-        public override string Instructions => "Hold A or D (the stick on a pad) to stir the way each ingredient asks. X pumps the bellows: keep the fire in the green.";
+        public override string Instructions => "A / D (or the stick) stir the way each ingredient asks. X pumps the bellows, keep the fire in the green.";
 
         public CauldronBrewLogic Logic => logic;
 
@@ -61,25 +61,25 @@ namespace Nocturne.PotionMaking.Minigames
             logic = new CauldronBrewLogic(needs, MinigameVariants.Flameflies);
 
             // ingredient list, like the sketch: one slot per ingredient with its stir written under it
-            var list = MinigameUI.Rect(Root, "Ingredients", new Vector2(-400, -30), new Vector2(230, 500), MinigameUI.Board);
-            MinigameUI.Label(list, "<b>Ingredients</b>", new Vector2(0, 225), 24, MinigameUI.Ink, 220);
+            var list = MinigameUI.Rect(Root, "Ingredients", new Vector2(-390, -30), new Vector2(260, 500), MinigameUI.Board);
+            MinigameUI.Label(list, "<b>Ingredients</b>", new Vector2(0, 225), 24, MinigameUI.Ink, 250);
             float rowHeight = Mathf.Min(150f, 440f / Mathf.Max(1, needs.Count));
             for (int i = 0; i < needs.Count; i++)
             {
                 var need = needs[i];
                 float y = 150f - i * rowHeight;
                 var row = new Row { need = need };
-                row.frame = MinigameUI.Rect(list, "Current", new Vector2(0, y - 8), new Vector2(214, rowHeight - 6), new Color(1f, 0.85f, 0.45f, 0.14f));
-                MinigameUI.Rect(list, "Slot", new Vector2(0, y + 14), new Vector2(66, 66), need.color, MinigameUI.Circle());
-                MinigameUI.Label(list, need.name, new Vector2(0, y - 32), 18, MinigameUI.Ink, 220);
-                row.ask = MinigameUI.Label(list, AskText(need), new Vector2(0, y - 54), 17, MinigameUI.Gold, 220);
+                row.frame = MinigameUI.Rect(list, "Current", new Vector2(0, y - 24), new Vector2(244, rowHeight - 6), new Color(1f, 0.85f, 0.45f, 0.14f));
+                MinigameUI.Rect(list, "Slot", new Vector2(0, y + 18), new Vector2(60, 60), need.color, MinigameUI.Circle());
+                MinigameUI.Label(list, need.name, new Vector2(0, y - 26), 17, MinigameUI.Ink, 250);
+                row.ask = MinigameUI.Label(list, AskText(need), new Vector2(0, y - 56), 15, MinigameUI.Gold, 250);
                 for (int p = 0; p < need.turns; p++)
-                    row.pips.Add(Cross(list, new Vector2((p - (need.turns - 1) / 2f) * 26f, y - 78), 16f));
+                    row.pips.Add(Cross(list, new Vector2((p - (need.turns - 1) / 2f) * 26f, y - 88), 14f));
                 rows.Add(row);
             }
 
             // the pot, with the stir hint ring turning the way the current ingredient wants
-            hint = MinigameUI.Rect(Root, "Hint", new Vector2(PotX, 10), new Vector2(430, 430), new Color(1f, 0.85f, 0.45f, 0.22f), MinigameUI.Ring());
+            hint = MinigameUI.Rect(Root, "Hint", new Vector2(PotX, 10), new Vector2(400, 400), new Color(1f, 0.85f, 0.45f, 0.22f), MinigameUI.Ring());
             var hintImg = hint.GetComponent<Image>();
             hintImg.type = Image.Type.Filled;
             hintImg.fillMethod = Image.FillMethod.Radial360;
@@ -88,7 +88,7 @@ namespace Nocturne.PotionMaking.Minigames
             baseLiquid = needs[0].color;
             liquid = MinigameUI.Rect(pot, "Liquid", Vector2.zero, new Vector2(262, 262), baseLiquid, MinigameUI.Circle()).GetComponent<Image>();
             spoon = MinigameUI.Rect(pot, "Spoon", new Vector2(80, 0), new Vector2(30, 170), MinigameUI.Wood, MinigameUI.Circle());
-            askLabel = MinigameUI.Label(Root, "", new Vector2(PotX, 235), 24, MinigameUI.Gold, 500);
+            askLabel = MinigameUI.Label(Root, "", new Vector2(PotX, 228), 23, MinigameUI.Gold, 760);
 
             // stir speed under the pot
             MinigameUI.Label(Root, "stir speed", new Vector2(PotX - GaugeWidth / 2 - 70, -180), 17, MinigameUI.Ink, 120);
@@ -112,7 +112,7 @@ namespace Nocturne.PotionMaking.Minigames
             fuelLabel = MinigameUI.Label(Root, logic.Fuel > 0 ? $"<color=#e8c46a>{logic.Fuel} flameflies</color> in the fire" : "", new Vector2(PotX + 300, -190), 17, MinigameUI.Ink, 200);
 
             status = MinigameUI.Label(Root, "", new Vector2(PotX, -345), 22, MinigameUI.Ink, 600);
-            timer = MinigameUI.Bar(Root, "Timer", new Vector2(PotX - 20, 262), new Vector2(460, 8), MinigameUI.Dark, MinigameUI.Good);
+            timer = MinigameUI.Bar(Root, "Timer", new Vector2(PotX, 254), new Vector2(460, 6), MinigameUI.Dark, MinigameUI.Good);
             timer.localScale = Vector3.one;
             Refresh();
         }
@@ -195,7 +195,7 @@ namespace Nocturne.PotionMaking.Minigames
 
             if (need != null)
             {
-                askLabel.text = $"<b>{need.name}</b>: stir {DirectionWord(need)}, {(need.fast ? "fast" : "slowly")}";
+                askLabel.text = $"<b>{need.name}</b>: {DirectionWord(need)}, {(need.fast ? "fast" : "slowly")}";
                 float lo = logic.BandMin(need) / logic.maxSpeed, hi = logic.BandMax(need) / logic.maxSpeed;
                 speedBand.sizeDelta = new Vector2((hi - lo) * GaugeWidth, 16);
                 speedBand.anchoredPosition = new Vector2(((lo + hi) / 2f - 0.5f) * GaugeWidth, 0);
@@ -214,7 +214,7 @@ namespace Nocturne.PotionMaking.Minigames
             else status.text = "<color=#8cd973>That's it, keep going</color>";
         }
 
-        private string AskText(CauldronBrewLogic.Need need) => $"{DirectionWord(need)}, {(need.fast ? "fast" : "slow")} x{need.turns}";
+        private string AskText(CauldronBrewLogic.Need need) => $"{DirectionWord(need)}\n{(need.fast ? "fast" : "slow")}, {need.turns} turns";
 
         private static string DirectionWord(CauldronBrewLogic.Need need) =>
             need.direction == CauldronBrewLogic.Direction.Clockwise ? "clockwise (D)" : "counter-clockwise (A)";
