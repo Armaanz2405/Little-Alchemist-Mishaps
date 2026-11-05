@@ -23,11 +23,24 @@ public class DayNightVisuals : MonoBehaviour
     private void Update()
     {
         var dm = DayManager.Instance;
-        if (dm == null) return;
+        if (dm == null)
+        {
+            return;
+        }
 
-        float target = dm.Phase == DayPhase.Day
-            ? dm.DayProgress01 * duskAmount
-            : 1f;
+        float target;
+        if (dm.Phase == DayPhase.Day)
+        {
+            target = dm.DayProgress01 * duskAmount;
+        }
+        else if (dm.Phase == DayPhase.NotStarted)
+        {
+            target = 0f;
+        }
+        else
+        {
+            target = 1f;
+        }
 
         current = Mathf.MoveTowards(current, target, smoothSpeed * Time.unscaledDeltaTime);
 
