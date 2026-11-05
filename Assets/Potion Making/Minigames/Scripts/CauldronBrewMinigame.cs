@@ -14,7 +14,7 @@ namespace Nocturne.PotionMaking.Minigames
         [SerializeField] private Color scorchColor = new Color(0.55f, 0.18f, 0.12f);
 
         public override string Title => "Brew the Potion";
-        public override string Instructions => "A / D (or the stick) stir the way each ingredient asks. X pumps the bellows, keep the fire in the green.";
+        public override string Instructions => "A / D (or the stick) stir as asked. X pumps the bellows, keep the fire in the green.";
 
         public CauldronBrewLogic Logic => logic;
 
