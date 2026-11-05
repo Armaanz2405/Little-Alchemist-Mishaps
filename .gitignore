@@ -107,6 +107,7 @@ InitTestScene*.unity*
 
 # VS Code settings
 /.vscode/
+.vsconfig
 
 # macOS folder settings
 .DS_Store
