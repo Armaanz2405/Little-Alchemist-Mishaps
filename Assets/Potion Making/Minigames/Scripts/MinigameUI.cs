@@ -7,8 +7,12 @@ namespace Nocturne.PotionMaking.Minigames
 {
     public static class MinigameUI
     {
-        public static readonly Color Wood = new Color(0.55f, 0.38f, 0.24f);
+        // props and boards keep to the lab's palette: dark stone, old wood, ember light
+        public static readonly Color Wood = new Color(0.45f, 0.31f, 0.2f);
         public static readonly Color Dark = new Color(0.1f, 0.08f, 0.12f);
+        public static readonly Color Board = new Color(0.17f, 0.14f, 0.15f);
+        public static readonly Color Stone = new Color(0.24f, 0.23f, 0.26f);
+        public static readonly Color Ember = new Color(0.98f, 0.6f, 0.22f);
         public static Color Panel => UITheme.Current.panelFill;
         public static Color Good => UITheme.Current.goodText;
         public static Color Bad => UITheme.Current.badText;

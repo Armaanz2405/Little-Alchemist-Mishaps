@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Nocturne.PotionMaking.Energy;
 using UnityEngine;
 using UnityEngine.Events;
@@ -5,14 +6,19 @@ using UnityEngine.InputSystem;
 
 namespace Nocturne.PotionMaking.Minigames
 {
-    // Stand next to it and press E to play its minigame. Player input is paused while it runs.
+    // Stand next to it and press E (B on a pad) to play its minigame. Player input is paused while it runs.
     // onPlayedWithIngredient passes the ingredient you were holding (if any) so the cutting board / cauldron can use the score.
     public class MinigameStation : MonoBehaviour
     {
         // what happens when the player can't afford it
         public enum EnergyRule { Free, Block, ZeroScore }
+        // which A/B setting decides between minigame and alternate
+        public enum VariantSlot { None, Cauldron, Chop }
 
         [SerializeField] private Minigame minigame;
+        [Tooltip("Optional second version of the game. The slot's setting in MinigameVariants picks which one runs.")]
+        [SerializeField] private Minigame alternate;
+        [SerializeField] private VariantSlot slot = VariantSlot.None;
         [SerializeField] private Transform player;
         [SerializeField] private Transform holdPoint;
         [SerializeField] private float range = 1.8f;
@@ -26,12 +32,45 @@ namespace Nocturne.PotionMaking.Minigames
 
         public bool isReadyToPlay = false;
 
+        // the version that's live right now
+        public Minigame Game
+        {
+            get
+            {
+                if (alternate == null) return minigame;
+                switch (slot)
+                {
+                    case VariantSlot.Cauldron: return MinigameVariants.Cauldron == CauldronVariant.Brew ? alternate : minigame;
+                    case VariantSlot.Chop: return MinigameVariants.Chop == ChopVariant.Rhythm ? alternate : minigame;
+                    default: return minigame;
+                }
+            }
+        }
+
+        // both versions, for stations that have to hand something to whichever one ends up running
+        public IEnumerable<Minigame> AllGames
+        {
+            get
+            {
+                if (minigame != null) yield return minigame;
+                if (alternate != null && alternate != minigame) yield return alternate;
+            }
+        }
+
         public float Range => range;
         public Key Key => key;
         public bool CanPlay => Ready && (energyRule != EnergyRule.Block || HasEnergy);
         public bool BlockedByEnergy => Ready && energyRule == EnergyRule.Block && !HasEnergy;
         public bool HasEnergy => energyRule == EnergyRule.Free || energy == null || energy.CanAfford(energyAction);
-        private bool Ready => minigame != null && !minigame.Running && (!waitUntilReady || isReadyToPlay);
+        private bool Ready => Game != null && !AnyRunning && (!waitUntilReady || isReadyToPlay);
+        private bool AnyRunning
+        {
+            get
+            {
+                foreach (var g in AllGames) if (g.Running) return true;
+                return false;
+            }
+        }
 
         public UnityEvent<float> onPlayed = new UnityEvent<float>();
         public UnityEvent<IngredientData, float> onPlayedWithIngredient = new UnityEvent<IngredientData, float>();
@@ -54,30 +93,32 @@ namespace Nocturne.PotionMaking.Minigames
 
         private void Update()
         {
-            if (minigame == null || player == null) return;
+            if (Game == null || player == null) return;
             bool near = CanPlay && Vector2.Distance(player.position, transform.position) <= range;
             label.gameObject.SetActive(near && showLabel);
-            var kb = Keyboard.current;
-            if (near && kb != null && kb[key].wasPressedThisFrame) Play();
+            if (near && MinigameInput.StationPressed(key)) Play();
         }
 
         public void Play()
         {
+            var game = Game;
+            if (game == null) return;
             isReadyToPlay = false;
             label.gameObject.SetActive(false);
 
             var held = holdPoint != null ? holdPoint.GetComponentInChildren<Ingredient>() : null;
             var data = held != null ? held.data : null;
-            if (data != null && minigame is KnifeSliceMinigame knife) knife.SetIngredientColor(data.color);
+            // the cutting board sets its game's ingredient itself, so only override it when something is actually held
+            if (data != null && game is ITagChoiceMinigame choice) choice.SetIngredient(data);
 
             bool outOfEnergy = energyRule == EnergyRule.ZeroScore && !HasEnergy;
             if (playerInput != null) playerInput.DeactivateInput();
-            minigame.Begin(outOfEnergy: outOfEnergy, onDone: score =>
+            game.Begin(outOfEnergy: outOfEnergy, onDone: score =>
             {
                 if (playerInput != null) playerInput.ActivateInput();
                 onPlayed.Invoke(score);
                 onPlayedWithIngredient.Invoke(data, score);
-                Debug.Log($"[Minigame] {minigame.Title}: {Mathf.RoundToInt(score * 100)}%" + (data != null ? $" ({data.displayName})" : ""));
+                Debug.Log($"[Minigame] {game.Title}: {Mathf.RoundToInt(score * 100)}%" + (data != null ? $" ({data.displayName})" : ""));
             });
         }
 

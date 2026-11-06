@@ -68,7 +68,13 @@ public class PuzzleLogic_Cauldron : MonoBehaviour
 
         //return contents.Count >= IngredientsPerPotion ? Brew() : null;
 
-        if (contents.Count >= IngredientsPerPotion && stirMinigameStation != null) stirMinigameStation.isReadyToPlay = true;
+        if (contents.Count >= IngredientsPerPotion && stirMinigameStation != null)
+        {
+            stirMinigameStation.isReadyToPlay = true;
+            // the brew game asks for a different stir per ingredient, so it needs to know what's in the pot
+            foreach (var game in stirMinigameStation.AllGames)
+                if (game is Nocturne.PotionMaking.Minigames.CauldronBrewMinigame brew) brew.SetIngredients(contents);
+        }
         return null;
     }
 
@@ -81,6 +87,12 @@ public class PuzzleLogic_Cauldron : MonoBehaviour
     {
         if (contents.Count < IngredientsPerPotion) return null;
         PotionData result = MakePotion(contents[0], contents[1]);
+        // how well it was stirred, times how well the ingredients were refined, becomes the potion's craft quality
+        if (result != null && (recipeBook == null || result != recipeBook.failedPotion))
+        {
+            float stir = stirMinigameStation != null && stirMinigameStation.Game != null ? stirMinigameStation.Game.LastScore : 1f;
+            result.craftQuality = Nocturne.PotionMaking.Minigames.CraftQuality.Combine(stir, contents.Select(c => c.refineQuality));
+        }
         contents.Clear();
         contentsEffects.Clear();
         if (potionContentsText != null) potionContentsText.text = "";
