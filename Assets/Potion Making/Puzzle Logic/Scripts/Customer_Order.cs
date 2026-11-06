@@ -25,6 +25,7 @@ public class Customer_Order : MonoBehaviour
     [SerializeField] private VariableStorageBehaviour variableStorage;
     [SerializeField] private IngredientCatalog availableIngredients;
     [SerializeField] private CustomerEnergy customerEnergy;
+    [SerializeField] private PotionFeedback potionFeedback; 
 
     [Header("Grading")]
     [SerializeField] private int mainTagPoints = 40;
@@ -66,6 +67,11 @@ public class Customer_Order : MonoBehaviour
         }
 
         int score = Score(potion.data);
+        // Display NPC feedback based on the potion score
+        if (potionFeedback != null)
+        {
+        potionFeedback.ShowFeedback(score);
+        }
         submissions.Add(new Submission
         {
             potionName = potion.data.displayName,
