@@ -112,7 +112,7 @@ public class GrabAndThrow : MonoBehaviour
         }
     }
 
-    private void Release()
+    public void Release()
     {
         heldItem.transform.SetParent(null);
 
