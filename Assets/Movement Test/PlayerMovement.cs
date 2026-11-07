@@ -8,8 +8,8 @@ public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody2D rb;
 
-    private float moveSpeed = 5f;
-    [SerializeField]private float walkSpeed = 5f;
+    [SerializeField] float moveSpeed = 5f;
+    [SerializeField] public float walkSpeed = 5f;
     [SerializeField] private float runSpeed = 10f;
     [SerializeField]private float dashPower = 24f;
     [SerializeField]private float dashTime = 0.2f;
@@ -38,6 +38,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float holdDownDelay = 0.2f; 
     private float holdDownTimer;
     private bool isDropping;
+    
+    public bool isPushing = false;
 
     private Collider2D col;
     private readonly HashSet<Collider2D> touchingPlatforms = new HashSet<Collider2D>();
@@ -105,7 +107,7 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
         {
             if (isDashing) return;  //ignore all input while dashing
-
+            if (isPushing) return; //ignnore all input while pushing
             UpdateFloorboards();
             if (onFloorboards)
             {
@@ -124,6 +126,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 //ground movement
                 rb.linearVelocity = new Vector2(moveInput.x * moveSpeed, rb.linearVelocity.y);
+                
             }
             
             if (isJumping && jumpHoldTimer < maxJumpHoldTime)
@@ -320,6 +323,8 @@ public class PlayerMovement : MonoBehaviour
 
     public void DashInput(InputAction.CallbackContext context)
     {
+        if (isPushing) return; //don't dash while pushing a ladder
+        
         if (context.started)
         {
             if (canDash) StartCoroutine(Dash());
@@ -390,5 +395,9 @@ public class PlayerMovement : MonoBehaviour
     public Vector2 getMoveInput()
     {
         return moveInput;
+    }
+    public void SetCurrentSpeed(float speed)
+    {
+        moveSpeed = speed;
     }
 }
