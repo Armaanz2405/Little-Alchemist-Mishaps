@@ -61,6 +61,94 @@ namespace Nocturne.PotionMaking.Minigames
             return t;
         }
 
+        public static Image Picture(Transform parent, string name, Vector2 pos, Vector2 size, Sprite sprite)
+        {
+            var img = Rect(parent, name, pos, size, Color.white, sprite).GetComponent<Image>();
+            img.preserveAspect = true;
+            return img;
+        }
+
+        // a themed box that isn't the whole panel: the mortar's drawer, an ingredient slot
+        public static RectTransform Card(Transform parent, string name, Vector2 pos, Vector2 size, float scale = 1f)
+        {
+            var rt = Rect(parent, name, pos, size, Color.white);
+            UIStyle.Box(rt.GetComponent<Image>(), BoxKind.Card, scale);
+            return rt;
+        }
+
+        // children line up left to right and the row sizes itself around them
+        public static RectTransform Row(Transform parent, string name, Vector2 pos, float spacing = 10f, float pivotX = 0.5f)
+        {
+            var go = new GameObject(name, typeof(RectTransform), typeof(HorizontalLayoutGroup), typeof(ContentSizeFitter));
+            go.transform.SetParent(parent, false);
+            var rt = (RectTransform)go.transform;
+            rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
+            rt.pivot = new Vector2(pivotX, 0.5f);
+            rt.anchoredPosition = pos;
+            var layout = go.GetComponent<HorizontalLayoutGroup>();
+            layout.spacing = spacing;
+            layout.childAlignment = TextAnchor.MiddleLeft;
+            layout.childControlWidth = layout.childControlHeight = true;
+            layout.childForceExpandWidth = layout.childForceExpandHeight = false;
+            var fit = go.GetComponent<ContentSizeFitter>();
+            fit.horizontalFit = fit.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            return rt;
+        }
+
+        public static TMP_Text RowText(Transform row, string text, int size, Color color)
+        {
+            var t = UIStyle.MakeText(row, text, size, TextKind.Body, "Text");
+            t.color = color;
+            t.textWrappingMode = TextWrappingModes.NoWrap;
+            t.verticalAlignment = VerticalAlignmentOptions.Geometry;
+            return t;
+        }
+
+        // a tag as a little coloured label, for rows
+        public static RectTransform Chip(Transform row, string text, Color fill, int size = 16)
+        {
+            var go = new GameObject("Chip", typeof(RectTransform), typeof(Image), typeof(HorizontalLayoutGroup));
+            go.transform.SetParent(row, false);
+            var img = go.GetComponent<Image>();
+            img.color = fill;
+            img.raycastTarget = false;
+            var layout = go.GetComponent<HorizontalLayoutGroup>();
+            layout.padding = new RectOffset(9, 9, 3, 3);
+            layout.childAlignment = TextAnchor.MiddleCenter;
+            layout.childControlWidth = layout.childControlHeight = true;
+            layout.childForceExpandWidth = layout.childForceExpandHeight = false;
+            RowText(go.transform, text, size, Dark);
+            return (RectTransform)go.transform;
+        }
+
+        public enum Icon { Check, Cross, Pencil }
+
+        // the confirm / edit / exit boxes from the UI sketches, drawn from bars so they don't depend on a font having the glyphs
+        public static RectTransform IconBox(Transform parent, Icon icon, Vector2 pos, float size, Color color)
+        {
+            var box = Card(parent, icon + " Box", pos, new Vector2(size, size), 2f);
+            float t = size * 0.11f;
+            switch (icon)
+            {
+                case Icon.Check:
+                    Stroke(box, new Vector2(-size * 0.17f, -size * 0.08f), new Vector2(size * 0.28f, t), -45f, color);
+                    Stroke(box, new Vector2(size * 0.09f, size * 0.02f), new Vector2(size * 0.52f, t), 50f, color);
+                    break;
+                case Icon.Cross:
+                    Stroke(box, Vector2.zero, new Vector2(size * 0.58f, t), 45f, color);
+                    Stroke(box, Vector2.zero, new Vector2(size * 0.58f, t), -45f, color);
+                    break;
+                default:
+                    Stroke(box, new Vector2(size * 0.04f, size * 0.04f), new Vector2(size * 0.46f, t * 1.3f), 45f, color);
+                    Stroke(box, new Vector2(-size * 0.18f, -size * 0.18f), new Vector2(t * 1.1f, t * 1.1f), 45f, Dark);
+                    break;
+            }
+            return box;
+        }
+
+        private static void Stroke(Transform parent, Vector2 pos, Vector2 size, float angle, Color color) =>
+            Rect(parent, "Stroke", pos, size, color).localRotation = Quaternion.Euler(0f, 0f, angle);
+
         public static Sprite Circle() => circle != null ? circle : circle = MakeDisc(0f);
         public static Sprite Ring() => ring != null ? ring : ring = MakeDisc(0.78f);
 
