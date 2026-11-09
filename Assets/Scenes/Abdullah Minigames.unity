@@ -4497,13 +4497,15 @@ MonoBehaviour:
   slot: 0
   player: {fileID: 333525642}
   holdPoint: {fileID: 333525642}
-  range: 1.8
+  range: 1.2
   key: 19
   prompt: 'E: grind'
   showLabel: 0
   waitUntilReady: 1
-  energyRule: 1
+  energyRule: 0
   energyAction: 1
+  reachArea: {fileID: 422063968}
+  emptyHandsOnly: 1
   isReadyToPlay: 0
   onPlayed:
     m_PersistentCalls:
@@ -6302,13 +6304,15 @@ MonoBehaviour:
   slot: 1
   player: {fileID: 333525642}
   holdPoint: {fileID: 333525642}
-  range: 1
+  range: 1.2
   key: 19
   prompt: 'E: stir'
   showLabel: 0
   waitUntilReady: 1
   energyRule: 2
   energyAction: 2
+  reachArea: {fileID: 1296107343}
+  emptyHandsOnly: 0
   isReadyToPlay: 0
   onPlayed:
     m_PersistentCalls:
@@ -10798,6 +10802,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!61 &1296107343 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 7612705573823501707, guid: 74412f5c838544b44986283917ad4406, type: 3}
+  m_PrefabInstance: {fileID: 1296107338}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1323686002
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11747,6 +11756,8 @@ MonoBehaviour:
   waitUntilReady: 1
   energyRule: 1
   energyAction: 1
+  reachArea: {fileID: 0}
+  emptyHandsOnly: 0
   isReadyToPlay: 0
   onPlayed:
     m_PersistentCalls:

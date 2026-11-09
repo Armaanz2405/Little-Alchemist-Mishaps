@@ -91,6 +91,8 @@ namespace Nocturne.PotionMaking.Minigames.Editor
                 Set(cauldron, ("stirMinigameStation", station));
                 Set(station, ("minigame", stir), ("alternate", brew));
                 SetInt(station, "slot", (int)MinigameStation.VariantSlot.Cauldron);
+                // the cauldron sits below the walkway; from its centre the player is never close enough to start it
+                Reach(station, cauldron);
                 Listen(stir.onFinished, cauldron, cauldron.Brew_Trigger);
                 Listen(brew.onFinished, cauldron, cauldron.Brew_Trigger);
                 report += "cauldron: stir ring + brew. ";
@@ -103,6 +105,10 @@ namespace Nocturne.PotionMaking.Minigames.Editor
                 var station = Ref<MinigameStation>(mortar, "grindMinigameStation") ?? NewStation(mortar.gameObject, grind, "E: grind", MinigameStation.EnergyRule.Block, EnergyAction.Refine, 1.8f);
                 Set(mortar, ("grindMinigameStation", station));
                 Set(station, ("minigame", grind));
+                // looking in the mortar is free, the grind itself checks energy; and E while carrying something drops it in
+                SetInt(station, "energyRule", (int)MinigameStation.EnergyRule.Free);
+                SetBool(station, "emptyHandsOnly", true);
+                Reach(station, mortar);
                 var prompt = mortar.GetComponent<MortarPrompt>();
                 if (prompt != null) Set(prompt, ("station", station));
                 Listen(grind.onFinished, mortar, mortar.Grind_Trigger);
@@ -187,6 +193,29 @@ namespace Nocturne.PotionMaking.Minigames.Editor
         {
             var so = new SerializedObject(owner);
             so.FindProperty(field).intValue = value;
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        // a station is in reach when the player is next to the area ingredients get dropped into
+        private static void Reach(MinigameStation station, Component owner)
+        {
+            var area = owner.GetComponent<Collider2D>();
+            if (area == null) return;
+            Set(station, ("reachArea", area));
+            SetFloat(station, "range", 1.2f);
+        }
+
+        private static void SetFloat(UnityEngine.Object owner, string field, float value)
+        {
+            var so = new SerializedObject(owner);
+            so.FindProperty(field).floatValue = value;
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        private static void SetBool(UnityEngine.Object owner, string field, bool value)
+        {
+            var so = new SerializedObject(owner);
+            so.FindProperty(field).boolValue = value;
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
