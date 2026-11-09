@@ -29,6 +29,10 @@ namespace Nocturne.PotionMaking.Minigames
         [SerializeField] private bool waitUntilReady = false;
         [SerializeField] private EnergyRule energyRule = EnergyRule.Free;
         [SerializeField] private EnergyAction energyAction = EnergyAction.Refine;
+        [Tooltip("Optional. Measure the distance to this collider instead of the station's centre. For stations drawn away from where the player stands, like the mortar and cauldron on the floor below the walkway.")]
+        [SerializeField] private Collider2D reachArea;
+        [Tooltip("Ignore the key while the player is carrying something, so the same press drops it in instead of opening the game.")]
+        [SerializeField] private bool emptyHandsOnly = false;
 
         public bool isReadyToPlay = false;
 
@@ -58,6 +62,10 @@ namespace Nocturne.PotionMaking.Minigames
         }
 
         public float Range => range;
+
+        // how far a point is from the station, the same way the station itself decides who is close enough
+        public float DistanceFrom(Vector2 point) =>
+            reachArea != null ? Vector2.Distance(reachArea.ClosestPoint(point), point) : Vector2.Distance(transform.position, point);
         public Key Key => key;
         public bool CanPlay => Ready && (energyRule != EnergyRule.Block || HasEnergy);
         public bool BlockedByEnergy => Ready && energyRule == EnergyRule.Block && !HasEnergy;
@@ -80,6 +88,19 @@ namespace Nocturne.PotionMaking.Minigames
         private TextMesh label;
         private PlayerInput playerInput;
         private EnergyMeter energy;
+        private bool heldLastFrame;
+        private int closedFrame = -1;
+
+        // anything the player is carrying is parented to them with its physics off
+        private bool Holding
+        {
+            get
+            {
+                foreach (Transform child in player)
+                    if (child.GetComponent<Rigidbody2D>() != null) return true;
+                return false;
+            }
+        }
 
         private void Start()
         {
@@ -96,9 +117,14 @@ namespace Nocturne.PotionMaking.Minigames
         private void Update()
         {
             if (Game == null || player == null) return;
-            bool near = CanPlay && Vector2.Distance(player.position, transform.position) <= range;
+            // the press that drops or picks something up has already happened by now, so last frame's hands count too
+            bool holding = Holding;
+            bool handsBusy = emptyHandsOnly && (holding || heldLastFrame);
+            heldLastFrame = holding;
+            bool near = CanPlay && !handsBusy && DistanceFrom(player.position) <= range;
             label.gameObject.SetActive(near && showLabel);
-            if (near && MinigameInput.StationPressed(key)) Play();
+            // on a pad the button that leaves a game is the one that starts it, so the press that closed it doesn't count
+            if (near && Time.frameCount != closedFrame && MinigameInput.StationPressed(key)) Play();
         }
 
         public void Play()
@@ -117,12 +143,14 @@ namespace Nocturne.PotionMaking.Minigames
             if (playerInput != null) playerInput.DeactivateInput();
             game.Begin(outOfEnergy: outOfEnergy, onDone: score =>
             {
+                closedFrame = Time.frameCount;
                 if (playerInput != null) playerInput.ActivateInput();
                 onPlayed.Invoke(score);
                 onPlayedWithIngredient.Invoke(data, score);
                 Debug.Log($"[Minigame] {game.Title}: {Mathf.RoundToInt(score * 100)}%" + (data != null ? $" ({data.displayName})" : ""));
             }, onCancel: () =>
             {
+                closedFrame = Time.frameCount;
                 if (playerInput != null) playerInput.ActivateInput();
                 isReadyToPlay = true;
                 Cancelled?.Invoke();

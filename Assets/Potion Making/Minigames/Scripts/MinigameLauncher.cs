@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 namespace Nocturne.PotionMaking.Minigames
 {
-    // Testing shortcut on the digit keys. Esc quits a running minigame.
+    // Testing shortcut on the digit keys.
     // 1 knife swipe, 2 stir ring, 3 grind, 4 chop to the beat, 5 brew (Aliyah's cauldron), 6 catch flameflies.
     public class MinigameLauncher : MonoBehaviour
     {
@@ -20,7 +20,6 @@ namespace Nocturne.PotionMaking.Minigames
             var kb = Keyboard.current;
             if (kb == null) return;
             var games = GetComponents<Minigame>();
-            if (kb.escapeKey.wasPressedThisFrame) foreach (var game in games) game.Cancel();
             if (games.Any(game => game.Running)) return;
             if (kb.digit1Key.wasPressedThisFrame) Get(ref knife).Begin();
             if (kb.digit2Key.wasPressedThisFrame) Get(ref stir).Begin();

@@ -124,9 +124,14 @@ namespace Nocturne.PotionMaking.Minigames
         public enum Icon { Check, Cross, Pencil }
 
         // the confirm / edit / exit boxes from the UI sketches, drawn from bars so they don't depend on a font having the glyphs
-        public static RectTransform IconBox(Transform parent, Icon icon, Vector2 pos, float size, Color color)
+        public static RectTransform IconBox(Transform parent, Icon icon, Vector2 pos, float size, Color color, bool inRow = false)
         {
             var box = Card(parent, icon + " Box", pos, new Vector2(size, size), 2f);
+            if (inRow)
+            {
+                var le = box.gameObject.AddComponent<LayoutElement>();
+                le.minWidth = le.preferredWidth = le.minHeight = le.preferredHeight = size;
+            }
             float t = size * 0.11f;
             switch (icon)
             {
@@ -145,6 +150,13 @@ namespace Nocturne.PotionMaking.Minigames
             }
             return box;
         }
+
+        // is a click at this screen position on the box? The minigame canvases are screen space overlay.
+        public static bool Contains(RectTransform rt, Vector2 screen) =>
+            rt != null && rt.gameObject.activeInHierarchy && RectTransformUtility.RectangleContainsScreenPoint(rt, screen, null);
+
+        // rows size themselves a frame late unless asked, which shows as a flicker when a screen is rebuilt
+        public static void Settle(RectTransform rt) => LayoutRebuilder.ForceRebuildLayoutImmediate(rt);
 
         private static void Stroke(Transform parent, Vector2 pos, Vector2 size, float angle, Color color) =>
             Rect(parent, "Stroke", pos, size, color).localRotation = Quaternion.Euler(0f, 0f, angle);
