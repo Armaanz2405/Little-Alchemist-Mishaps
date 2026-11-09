@@ -7,6 +7,7 @@ using UnityEngine;
 public class MortarPrompt : StationPrompt
 {
     [SerializeField] private string grindText = "Grind";
+    [SerializeField] private string checkText = "Check";
 
     private MortarNPestle mortar;
 
@@ -23,7 +24,7 @@ public class MortarPrompt : StationPrompt
         if (context.holding && !mortar.IsFull)
             content.lines.Add(new PromptLine(PickKey(context, actionKey, padKey), actionText, ActionCost()));
         else if (!context.holding && station != null && (station.CanPlay || station.BlockedByEnergy))
-            content.lines.Add(new PromptLine(station.Key.ToString(), grindText, Cost(EnergyAction.Refine)));
+            content.lines.Add(new PromptLine(station.Key.ToString(), mortar.IsFull ? grindText : checkText, mortar.IsFull ? Cost(EnergyAction.Refine) : null));
         return content.lines.Count > 0 || showWhenIdle;
     }
 
