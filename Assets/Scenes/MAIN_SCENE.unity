@@ -3415,6 +3415,9 @@ MonoBehaviour:
   maxDoubleJumpHoldTime: 0.2
   doubleJumpUnlocked: 0
   canDoubleJump: 0
+  floatspeed: 4
+  floatFallspeed: 0.2
+  floatUnlocked: 0
   climbSpeed: 3
   canClimb: 0
   holdDownDelay: 0.2

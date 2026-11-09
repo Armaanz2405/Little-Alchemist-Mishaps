@@ -41,6 +41,14 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool canDoubleJump = false;
     private bool isDoubleJumping = false;
     private float doubleJumpHoldTimer = 0f;
+
+    [Header("Float")]
+    [SerializeField] private float floatspeed = 4f;
+    [SerializeField] private float floatFallspeed = 0.2f;
+    [SerializeField] private bool floatUnlocked = false;
+    private bool isFloating = false;
+    
+    
     
     [Header("Climbing")]
     [SerializeField] private float climbSpeed = 0.2f;
@@ -185,6 +193,26 @@ public class PlayerMovement : MonoBehaviour
             DoubleJump();
         }
 
+        if (!isGrounded && floatUnlocked)
+        {
+            if (context.started && !isJumping && !isDoubleJumping)
+            {
+                Debug.Log("Float start after DJ");
+                startFloat();
+            }
+            else if (context.started && !isJumping && !doubleJumpUnlocked)
+            {
+                Debug.Log("Float start no DJ");
+                startFloat();
+            }
+        }
+
+        if (context.canceled && isFloating)
+        {
+            Debug.Log("Float end");
+            endFloat();
+        }
+
         if (context.canceled && isJumping)
         {
             isJumping = false;
@@ -217,6 +245,22 @@ public class PlayerMovement : MonoBehaviour
        isDoubleJumping = true;
        canDoubleJump = false;
        doubleJumpHoldTimer = 0f;
+    }
+
+    private void startFloat()
+    {
+        if (isFloating) return;
+        rb.linearVelocityY = 0f;
+        rb.gravityScale = floatFallspeed;
+        moveSpeed = floatspeed;
+        isFloating = true;
+    }
+
+    private void endFloat()
+    {
+        rb.gravityScale = normalGravity;
+        isFloating = false;
+        moveSpeed = walkSpeed;
     }
 
     public void Movement(InputAction.CallbackContext context)
