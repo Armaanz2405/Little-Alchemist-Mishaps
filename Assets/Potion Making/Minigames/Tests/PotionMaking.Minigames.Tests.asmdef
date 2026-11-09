@@ -1,7 +1,7 @@
 {
     "name": "PotionMaking.Minigames.Tests",
     "rootNamespace": "",
-    "references": ["PotionMaking.Minigames", "UnityEngine.TestRunner", "UnityEditor.TestRunner"],
+    "references": ["PotionMaking.Minigames", "PotionMaking", "UnityEngine.TestRunner", "UnityEditor.TestRunner"],
     "includePlatforms": ["Editor"],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
