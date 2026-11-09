@@ -112,6 +112,8 @@ public class PuzzleLogic_Cauldron : MonoBehaviour
             Potion potion = Instantiate(potionPrefab, at, Quaternion.identity);
             potion.data = result;
             potion.ApplyLook();
+            // into the player's hands when they're free, so the potion can't land out of reach
+            GrabAndThrow.GiveToPlayer(potion.gameObject);
         }
         onPotionBrewed.Invoke(result);
         return result;

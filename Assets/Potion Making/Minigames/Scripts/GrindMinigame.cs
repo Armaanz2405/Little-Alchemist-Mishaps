@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nocturne.UI;
@@ -19,33 +20,43 @@ namespace Nocturne.PotionMaking.Minigames
 
         public override string Title => "Grind It Down";
         public override string Instructions =>
-            state == State.Edit ? "A / D to pick an ingredient, E to take it out of the mortar."
+            state == State.Edit ? $"{Key(MinigameInput.Hint.Left)} / {Key(MinigameInput.Hint.Right)} to pick an ingredient, {TakeOutKey} to take it out of the mortar."
             : state == State.Review ? "Check what's going in. Grinding packs it all into one paste."
-            : "Alternate A and D (or left and right) to grind before the time runs out.";
+            : $"Alternate {Key(MinigameInput.Hint.Left)} and {Key(MinigameInput.Hint.Right)} to grind before the time runs out.";
 
         public void SetPasteColor(Color color) => pasteColor = color;
         // the mortar hands itself over so the screen can show and edit what's in it
         public void SetSource(IGrindSource mortar) => source = mortar;
 
+        // once the grinding starts it gets played out
+        protected override bool CanLeave => state != State.Grind;
+
         private IGrindSource source;
         private State state = State.Grind;
         private GrindLogic logic;
-        private RectTransform left, drawer, content, bowl, paste, guy, progress, timer;
-        private TMP_Text status;
+        private RectTransform left, drawer, content, bowl, paste, guy, progress, timer, grindKeys, confirmBox;
+        private TMP_Text status, leftKey, rightKey;
         private Vector2 guyHome, pasteSmall, pasteBig;
-        private float flash;
-        private int selected;
+        private float flash, nudgeUntil;
+        private int selected, shownCount;
+        private bool shownForPad;
+        private string resting = "";
+        private readonly List<(RectTransform box, Action action)> buttons = new List<(RectTransform, Action)>();
         private readonly List<(RectTransform rt, Vector2 velocity, float life)> splashes = new List<(RectTransform, Vector2, float)>();
 
         private int Count => source != null ? source.Contents.Count : 0;
         private int Capacity => source != null ? source.Capacity : 3;
         private static Color Muted => UIStyle.TextColor(TextKind.Muted);
+        private static string Key(MinigameInput.Hint hint) => MinigameInput.Label(hint);
+        // E on the keyboard, the way the mortar sketch has it
+        private static string TakeOutKey => MinigameInput.PadActive ? "A" : "E";
 
         protected override void Build()
         {
             logic = null;
             selected = 0;
             flash = 0f;
+            nudgeUntil = 0f;
             content = null;
             splashes.Clear();
             state = source != null ? State.Review : State.Grind;
@@ -74,11 +85,12 @@ namespace Nocturne.PotionMaking.Minigames
                 guy.anchoredPosition = guyHome;
             }
             status = MinigameUI.Label(left, "", new Vector2(0, 218), 24, MinigameUI.Ink, 450);
-            var keys = MinigameUI.Row(left, "Grind", new Vector2(0, -206));
-            MinigameUI.RowText(keys, "<b>GRIND</b>", 26, MinigameUI.Gold);
-            UIStyle.Key(keys, "A", 36f);
-            MinigameUI.RowText(keys, "and", 20, MinigameUI.Ink);
-            UIStyle.Key(keys, "D", 36f);
+            grindKeys = MinigameUI.Row(left, "Grind", new Vector2(0, -206));
+            MinigameUI.RowText(grindKeys, "<b>GRIND</b>", 26, MinigameUI.Gold);
+            leftKey = UIStyle.Key(grindKeys, Key(MinigameInput.Hint.Left), 36f);
+            MinigameUI.RowText(grindKeys, "and", 20, MinigameUI.Ink);
+            rightKey = UIStyle.Key(grindKeys, Key(MinigameInput.Hint.Right), 36f);
+            MinigameUI.Settle(grindKeys);
 
             drawer = MinigameUI.Card(Root, "Drawer", new Vector2(270, -22), new Vector2(480, 490));
             SetState(state);
@@ -88,7 +100,12 @@ namespace Nocturne.PotionMaking.Minigames
         {
             state = next;
             selected = Mathf.Clamp(selected, 0, Mathf.Max(0, Count - 1));
-            if (state == State.Grind) logic = new GrindLogic();
+            if (state == State.Grind)
+            {
+                logic = new GrindLogic();
+                nudgeUntil = 0f;
+                status.text = "";
+            }
             if (InstructionLabel != null) InstructionLabel.text = Instructions;
             Refresh();
         }
@@ -98,12 +115,20 @@ namespace Nocturne.PotionMaking.Minigames
         {
             if (content != null) Destroy(content.gameObject);
             content = MinigameUI.Rect(drawer, "Content", Vector2.zero, drawer.sizeDelta, Color.clear);
+            buttons.Clear();
+            confirmBox = null;
+            shownCount = Count;
+            shownForPad = MinigameInput.PadActive;
+            UIStyle.SetKey(leftKey, Key(MinigameInput.Hint.Left));
+            UIStyle.SetKey(rightKey, Key(MinigameInput.Hint.Right));
+            MinigameUI.Settle(grindKeys);
+
             var contents = source != null ? source.Contents : null;
             var preview = MortarPreview.Of(contents);
             if (preview.outcome.Count > 0) pasteColor = preview.color;
             paste.GetComponent<Image>().color = pasteColor;
-            if (state != State.Grind)
-                status.text = Count == 0 ? "The mortar is empty" : $"Makes <b>{preview.name}</b>";
+            resting = state == State.Grind ? "" : Count == 0 ? "The mortar is empty" : $"Makes <b>{preview.name}</b>";
+            if (state != State.Grind && Time.time >= nudgeUntil) status.text = resting;
 
             MinigameUI.Label(content, state == State.Edit ? "Take something out" : "In the mortar", new Vector2(0, 222), 20, Muted, 440);
             for (int i = 0; i < Capacity; i++)
@@ -120,6 +145,11 @@ namespace Nocturne.PotionMaking.Minigames
                 var item = contents[i];
                 if (item.sprite != null) MinigameUI.Picture(slot, "Icon", new Vector2(0, 6), new Vector2(76, 76), item.sprite).color = item.color;
                 else MinigameUI.Rect(slot, "Icon", new Vector2(0, 6), new Vector2(60, 60), item.color, MinigameUI.Circle());
+                if (state == State.Edit)
+                {
+                    int index = i;
+                    buttons.Add((slot, () => { selected = index; Refresh(); }));
+                }
                 MinigameUI.Label(content, item.displayName, new Vector2(x, 84), 17, MinigameUI.Ink, 148);
                 var tags = item.ingredientEffects.Where(t => t != null && t.tag_value > 0).ToList();
                 for (int t = 0; t < tags.Count; t++)
@@ -145,16 +175,20 @@ namespace Nocturne.PotionMaking.Minigames
             }
             else if (state == State.Edit)
             {
-                Choice(MinigameUI.Icon.Cross, -75, MinigameUI.Bad, "E: take out");
-                Choice(MinigameUI.Icon.Check, 75, MinigameUI.Good, "Q: done");
+                Choice(MinigameUI.Icon.Cross, -75, MinigameUI.Bad, $"{TakeOutKey}: take out", TakeOut);
+                Choice(MinigameUI.Icon.Check, 75, MinigameUI.Good, $"{Key(MinigameInput.Hint.Edit)}: done", () => SetState(State.Review));
             }
             else
             {
                 bool full = Count >= Capacity;
-                Choice(MinigameUI.Icon.Check, -150, full ? MinigameUI.Good : Muted, full ? "Space: grind" : Count == 0 ? "add ingredients" : $"add {Capacity - Count} more");
-                Choice(MinigameUI.Icon.Pencil, 0, Count > 0 ? MinigameUI.Gold : Muted, "Q: edit");
-                Choice(MinigameUI.Icon.Cross, 150, MinigameUI.Bad, "Esc: leave");
+                bool ready = full && source.CanAffordGrind;
+                string grind = ready ? $"{Key(MinigameInput.Hint.Confirm)}: grind" : full ? "no energy" : Count == 0 ? "add ingredients" : $"add {Capacity - Count} more";
+                confirmBox = Choice(MinigameUI.Icon.Check, -150, ready ? MinigameUI.Good : Muted, grind, TryGrind);
+                if (!ready) confirmBox = null;
+                Choice(MinigameUI.Icon.Pencil, 0, Count > 0 ? MinigameUI.Gold : Muted, $"{Key(MinigameInput.Hint.Edit)}: edit", TryEdit);
+                Choice(MinigameUI.Icon.Cross, 150, MinigameUI.Bad, $"{Key(MinigameInput.Hint.Cancel)}: leave", Cancel);
             }
+            MinigameUI.Settle(content);
         }
 
         // a heading with its tags as chips, wrapping onto more lines when they don't fit. Returns where the next section starts.
@@ -187,10 +221,44 @@ namespace Nocturne.PotionMaking.Minigames
             return y - 30f;
         }
 
-        private void Choice(MinigameUI.Icon icon, float x, Color color, string label)
+        // one of the boxes along the bottom of the drawer. Its key does the same thing as clicking it.
+        private RectTransform Choice(MinigameUI.Icon icon, float x, Color color, string label, Action action)
         {
-            MinigameUI.IconBox(content, icon, new Vector2(x, -165), 44, color);
+            var box = MinigameUI.IconBox(content, icon, new Vector2(x, -165), 44, color);
             MinigameUI.Label(content, label, new Vector2(x, -212), 16, MinigameUI.Ink, 150);
+            buttons.Add((box, action));
+            return box;
+        }
+
+        private void TryGrind()
+        {
+            if (Count < Capacity) Nudge($"It takes {Capacity} ingredients to grind");
+            else if (!source.CanAffordGrind) Nudge("Not enough energy to grind");
+            else SetState(State.Grind);
+        }
+
+        private void TryEdit()
+        {
+            if (Count == 0) Nudge("Nothing in here to take out");
+            else SetState(State.Edit);
+        }
+
+        private void TakeOut()
+        {
+            if (Count == 0) return;
+            if (!source.Eject(selected))
+            {
+                Nudge("Your hands are full. Put that one down first");
+                return;
+            }
+            SetState(Count == 0 ? State.Review : State.Edit);
+        }
+
+        // says why a press did nothing, then goes back to what the mortar makes
+        private void Nudge(string message)
+        {
+            status.text = $"<color={UITheme.Hex(MinigameUI.Bad)}>{message}</color>";
+            nudgeUntil = Time.time + 1.8f;
         }
 
         protected override bool HandleCancel()
@@ -205,37 +273,57 @@ namespace Nocturne.PotionMaking.Minigames
             flash = Mathf.Max(0f, flash - dt);
             Animate(dt);
 
+            if (state == State.Grind)
+            {
+                logic.Tick(dt);
+                if (!logic.Done)
+                {
+                    if (MinigameInput.LeftPressed) Press(GrindLogic.Side.Left);
+                    if (MinigameInput.RightPressed) Press(GrindLogic.Side.Right);
+                }
+                progress.localScale = new Vector3(logic.Progress, 1f, 1f);
+                timer.localScale = new Vector3(logic.timeLimit > 0f ? logic.TimeLeft / logic.timeLimit : 0f, 1f, 1f);
+                timer.GetComponent<Image>().color = logic.TimeLeft < 2f ? MinigameUI.Bad : MinigameUI.Good;
+                if (logic.Done)
+                    Finish(logic.Score, logic.Succeeded ? "Finely ground!" : logic.Score >= 0.5f ? "Coarse, but it'll do" : "Barely ground...");
+                return;
+            }
+
+            // something landed in the mortar while it was open, or the player picked up the other controller
+            if (Count != shownCount || MinigameInput.PadActive != shownForPad)
+            {
+                selected = Mathf.Clamp(selected, 0, Mathf.Max(0, Count - 1));
+                if (state == State.Edit && Count == 0) state = State.Review;
+                if (InstructionLabel != null) InstructionLabel.text = Instructions;
+                Refresh();
+            }
+            if (nudgeUntil > 0f && Time.time >= nudgeUntil)
+            {
+                nudgeUntil = 0f;
+                status.text = resting;
+            }
+            if (confirmBox != null) confirmBox.localScale = Vector3.one * (1f + 0.07f * Mathf.Sin(Time.time * 5f));
+
+            if (MinigameInput.Clicked(out var at))
+            {
+                foreach (var (box, action) in buttons)
+                    if (MinigameUI.Contains(box, at))
+                    {
+                        action();
+                        return;
+                    }
+            }
+
             if (state == State.Review)
             {
-                if (MinigameInput.EditPressed && Count > 0) SetState(State.Edit);
-                else if (MinigameInput.ConfirmPressed && Count >= Capacity) SetState(State.Grind);
+                if (MinigameInput.EditPressed) TryEdit();
+                else if (MinigameInput.ConfirmKeyPressed) TryGrind();
                 return;
             }
-            if (state == State.Edit)
-            {
-                if (MinigameInput.LeftPressed) { selected = (selected + Count - 1) % Count; Refresh(); }
-                if (MinigameInput.RightPressed) { selected = (selected + 1) % Count; Refresh(); }
-                if (MinigameInput.EditPressed) SetState(State.Review);
-                else if (MinigameInput.ConfirmPressed)
-                {
-                    source.Eject(selected);
-                    SetState(Count == 0 ? State.Review : State.Edit);
-                }
-                return;
-            }
-
-            logic.Tick(dt);
-            if (!logic.Done)
-            {
-                if (MinigameInput.LeftPressed) Press(GrindLogic.Side.Left);
-                if (MinigameInput.RightPressed) Press(GrindLogic.Side.Right);
-            }
-            progress.localScale = new Vector3(logic.Progress, 1f, 1f);
-            timer.localScale = new Vector3(logic.timeLimit > 0f ? logic.TimeLeft / logic.timeLimit : 0f, 1f, 1f);
-            timer.GetComponent<Image>().color = logic.TimeLeft < 2f ? MinigameUI.Bad : MinigameUI.Good;
-
-            if (logic.Done)
-                Finish(logic.Score, logic.Succeeded ? "Finely ground!" : logic.Score >= 0.5f ? "Coarse, but it'll do" : "Barely ground...");
+            if (MinigameInput.LeftPressed) { selected = (selected + Count - 1) % Count; Refresh(); }
+            if (MinigameInput.RightPressed) { selected = (selected + 1) % Count; Refresh(); }
+            if (MinigameInput.EditPressed) SetState(State.Review);
+            else if (MinigameInput.ConfirmKeyPressed) TakeOut();
         }
 
         private void Animate(float dt)
@@ -263,15 +351,15 @@ namespace Nocturne.PotionMaking.Minigames
         {
             if (logic.Press(side))
             {
-                status.text = "<color=#8cd973>Grind!</color>";
+                status.text = $"<color={UITheme.Hex(MinigameUI.Good)}>Grind!</color>";
                 flash = 0.2f;
                 for (int i = 0; i < 3; i++)
                 {
-                    var drop = MinigameUI.Rect(left, "Splash", bowl.anchoredPosition + paste.anchoredPosition, Vector2.one * Random.Range(8f, 16f), pasteColor, MinigameUI.Circle());
-                    splashes.Add((drop, new Vector2(Random.Range(-170f, 170f), Random.Range(220f, 380f)), 0.55f));
+                    var drop = MinigameUI.Rect(left, "Splash", bowl.anchoredPosition + paste.anchoredPosition, Vector2.one * UnityEngine.Random.Range(8f, 16f), pasteColor, MinigameUI.Circle());
+                    splashes.Add((drop, new Vector2(UnityEngine.Random.Range(-170f, 170f), UnityEngine.Random.Range(220f, 380f)), 0.55f));
                 }
             }
-            else status.text = "<color=#f2665c>Alternate sides!</color>";
+            else status.text = $"<color={UITheme.Hex(MinigameUI.Bad)}>Alternate sides!</color>";
         }
     }
 }

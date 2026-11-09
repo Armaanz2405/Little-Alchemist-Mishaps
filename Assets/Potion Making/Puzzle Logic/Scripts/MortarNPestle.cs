@@ -25,6 +25,7 @@ public class MortarNPestle : MonoBehaviour, IGrindSource
     public bool IsFull => contents.Count >= MaxIngredientsPerCrush;
     public bool HasGrindMinigame => grindMinigameStation != null;
     int IGrindSource.Capacity => MaxIngredientsPerCrush;
+    public bool CanAffordGrind => energy == null || energy.CanAfford(EnergyAction.Refine);
     private EnergyMeter energy;
 
     private void Reset() => GetComponent<Collider2D>().isTrigger = true;
@@ -67,19 +68,22 @@ public class MortarNPestle : MonoBehaviour, IGrindSource
         return IsFull ? Pack() : null;
     }
 
-    // Takes one ingredient back out and drops it where the paste would come out.
-    public void Eject(int index)
+    // Takes one ingredient back out and hands it to the player, one at a time since they need a free hand for it.
+    public bool Eject(int index)
     {
-        if (index < 0 || index >= contents.Count) return;
+        if (index < 0 || index >= contents.Count || ingredientPrefab == null) return false;
+        var hands = FindAnyObjectByType<GrabAndThrow>();
+        if (hands != null && hands.HeldItem != null) return false;
         IngredientData data = contents[index];
         contents.RemoveAt(index);
         fillAmntText.text = $"({contents.Count}/{MaxIngredientsPerCrush})";
         Debug.Log($"[Mortar] Took out {data.displayName} ({contents.Count}/{MaxIngredientsPerCrush})");
-        if (ingredientPrefab == null) return;
         Vector3 at = ingredientSpawnPoint != null ? ingredientSpawnPoint.position : transform.position + Vector3.up;
         Ingredient ingredient = Instantiate(ingredientPrefab, at, Quaternion.identity);
         ingredient.data = data;
         ingredient.ApplyLook();
+        GrabAndThrow.GiveToPlayer(ingredient.gameObject);
+        return true;
     }
 
     public void Grind_Trigger()
@@ -109,6 +113,8 @@ public class MortarNPestle : MonoBehaviour, IGrindSource
             Ingredient ingredient = Instantiate(ingredientPrefab, at, Quaternion.identity);
             ingredient.data = packedIngredients;
             ingredient.ApplyLook();
+            // into the player's hands when they're free, so the paste can't land out of reach
+            GrabAndThrow.GiveToPlayer(ingredient.gameObject);
         }
 
         onIngredientsCrushed.Invoke(packedIngredients);

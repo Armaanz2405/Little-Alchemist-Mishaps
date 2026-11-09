@@ -9,8 +9,10 @@ namespace Nocturne.PotionMaking.Minigames
     {
         IReadOnlyList<IngredientData> Contents { get; }
         int Capacity { get; }
-        // takes one ingredient back out of the mortar
-        void Eject(int index);
+        // grinding costs energy; looking and taking things out doesn't
+        bool CanAffordGrind { get; }
+        // takes one ingredient back out of the mortar and hands it to the player. False when their hands are full.
+        bool Eject(int index);
     }
 
     // What grinding a set of ingredients together makes. The mortar packs with this too, so the screen can't drift from the result.
