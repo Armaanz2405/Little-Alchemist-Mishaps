@@ -20,8 +20,12 @@ namespace Nocturne.PotionMaking.Minigames
 
         public override string Title => "Chop to the Beat";
         public override string Instructions => choice != null && choice.Open
-            ? "Which tag do you want to cut away? A / D to pick, E to start chopping."
-            : "Chop as the knife reaches each glowing line (A on a pad). Stay on the beat!";
+            ? TagChoiceScreen.Prompt
+            : "Chop as the knife reaches each glowing line. Stay on the beat!";
+
+        // picking the tag and the count-in can be backed out of; after the first cut line it gets played out
+        protected override bool CanLeave => (choice != null && choice.Open) || logic == null
+            || (logic.NextCut == 0 && logic.Time < logic.CutTime(0) - logic.goodWindow);
 
         public RhythmChopLogic Logic => logic;
         // index into the ingredient's tag list that the player chose to cut off
@@ -45,7 +49,8 @@ namespace Nocturne.PotionMaking.Minigames
         private BeatTrack track;
         private RectTransform board, rig, knife, glow, pulse, check;
         private readonly List<RectTransform> lines = new List<RectTransform>();
-        private TMP_Text counter, countdown;
+        private TMP_Text counter, countdown, chopKey;
+        private string chopLabel;
         private AudioSource audio;
         private AudioClip tick, tock, chop;
         private int shown, lastBeat = -1;
@@ -138,11 +143,11 @@ namespace Nocturne.PotionMaking.Minigames
 
             var hint = MinigameUI.Row(Root, "Hint", new Vector2(-60, -256));
             MinigameUI.RowText(hint, "Press", 24, MinigameUI.Ink);
-            UIStyle.Key(hint, "Space", 36f);
+            chopLabel = MinigameInput.Label(MinigameInput.Hint.Confirm);
+            chopKey = UIStyle.Key(hint, chopLabel, 36f);
             MinigameUI.RowText(hint, "to chop", 24, MinigameUI.Ink);
-            check = MinigameUI.IconBox(Root, MinigameUI.Icon.Check, new Vector2(372, -256), 44, MinigameUI.Good);
-            MinigameUI.IconBox(Root, MinigameUI.Icon.Cross, new Vector2(424, -256), 44, MinigameUI.Bad);
-            UIStyle.Key(MinigameUI.Row(Root, "Exit", new Vector2(454, -256), 8f, 0f), "Esc", 30f);
+            MinigameUI.Settle(hint);
+            check = MinigameUI.IconBox(Root, MinigameUI.Icon.Check, new Vector2(424, -256), 44, MinigameUI.Good);
 
             audio = GetComponent<AudioSource>();
             if (audio == null) audio = gameObject.AddComponent<AudioSource>();
@@ -177,7 +182,22 @@ namespace Nocturne.PotionMaking.Minigames
                 return;
             }
 
-            logic.Tick(dt);
+            // with a track playing, the beat follows where the audio actually is, so a hitch can't pull the two apart
+            float now = logic.Time + dt;
+            if (track != null && audio.isPlaying && Time.captureFramerate == 0)
+            {
+                float heard = audio.timeSamples / (float)track.clip.frequency - track.offset;
+                if (Mathf.Abs(now - heard) > 0.045f) now = heard;
+            }
+            logic.Tick(Mathf.Max(0f, now - logic.Time));
+
+            string label = MinigameInput.Label(MinigameInput.Hint.Confirm);
+            if (label != chopLabel)
+            {
+                chopLabel = label;
+                UIStyle.SetKey(chopKey, label);
+                MinigameUI.Settle((RectTransform)chopKey.transform.parent.parent);
+            }
 
             if (MinigameInput.ConfirmPressed && !logic.Done)
             {
