@@ -3410,6 +3410,11 @@ MonoBehaviour:
   jumpHoldForce: 14
   maxJumpHoldTime: 0.2
   coyoteTime: 0.15
+  doubleJumpForce: 7
+  doubleJumpHoldForce: 12
+  maxDoubleJumpHoldTime: 0.2
+  doubleJumpUnlocked: 0
+  canDoubleJump: 0
   climbSpeed: 3
   canClimb: 0
   holdDownDelay: 0.2
