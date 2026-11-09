@@ -17,6 +17,15 @@ namespace Nocturne.PotionMaking.Minigames.Editor
     //   Unity -batchmode -projectPath <repo> -executeMethod Nocturne.PotionMaking.Minigames.Editor.MinigameSceneWiring.WireSceneCli -scene "Assets/Scenes/X.unity"
     public static class MinigameSceneWiring
     {
+        private const string ApprenticeSprite = "Assets/Art/Characters/PlayerHold1.png";
+        private const string MortarSprite = "Assets/Art/Lab/Mortar.png";
+        // Noah's chopping tracks: which ingredient each belongs to, tempo, and where the count-in starts in the file
+        private static readonly (string ingredient, string path, float bpm, float offset)[] ChopTracks =
+        {
+            ("Flower of Masks", "Assets/Potion Making/Minigames/Audio/Chop - Flower of Masks.mp3", 102f, 0.59f),
+            ("Petal", "Assets/Potion Making/Minigames/Audio/Chop - Petal.mp3", 102f, 0.59f),
+        };
+
         [MenuItem("Nocturne/Minigames/Wire into open scene")]
         public static void WireOpenScene()
         {
@@ -56,6 +65,10 @@ namespace Nocturne.PotionMaking.Minigames.Editor
             var brew = Ensure<CauldronBrewMinigame>(host);
             var flameflies = Ensure<SkyFishingMinigame>(host);
             Set(launcher, ("knife", knife), ("stir", stir), ("grind", grind), ("rhythm", rhythm), ("brew", brew), ("flameflies", flameflies));
+            Art(rhythm, "apprentice", ApprenticeSprite);
+            Art(grind, "apprentice", ApprenticeSprite);
+            Art(grind, "mortarSprite", MortarSprite);
+            Tracks(rhythm);
 
             var report = "";
             var board = UnityEngine.Object.FindAnyObjectByType<CuttingBoard>(FindObjectsInactive.Include);
@@ -98,6 +111,32 @@ namespace Nocturne.PotionMaking.Minigames.Editor
             else report += "no MortarNPestle in the scene. ";
 
             return report;
+        }
+
+        // fills a sprite slot that's still empty, so art someone swapped in by hand stays
+        private static void Art(UnityEngine.Object owner, string field, string path)
+        {
+            var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+            if (sprite != null && Ref<Sprite>(owner, field) == null) Set(owner, (field, sprite));
+        }
+
+        private static void Tracks(RhythmChopMinigame rhythm)
+        {
+            var so = new SerializedObject(rhythm);
+            var list = so.FindProperty("tracks");
+            if (list.arraySize > 0) return;
+            foreach (var (ingredient, path, bpm, offset) in ChopTracks)
+            {
+                var clip = AssetDatabase.LoadAssetAtPath<AudioClip>(path);
+                if (clip == null) continue;
+                list.arraySize++;
+                var entry = list.GetArrayElementAtIndex(list.arraySize - 1);
+                entry.FindPropertyRelative("ingredient").stringValue = ingredient;
+                entry.FindPropertyRelative("clip").objectReferenceValue = clip;
+                entry.FindPropertyRelative("bpm").floatValue = bpm;
+                entry.FindPropertyRelative("offset").floatValue = offset;
+            }
+            so.ApplyModifiedPropertiesWithoutUndo();
         }
 
         private static T Ensure<T>(GameObject go) where T : Component
