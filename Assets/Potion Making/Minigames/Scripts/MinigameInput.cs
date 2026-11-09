@@ -112,6 +112,28 @@ namespace Nocturne.PotionMaking.Minigames
             }
         }
 
+        // leaving a minigame without playing it out
+        public static bool CancelPressed
+        {
+            get
+            {
+                var kb = Keyboard.current;
+                var pad = Gamepad.current;
+                return (kb != null && kb.escapeKey.wasPressedThisFrame) || (pad != null && pad.buttonEast.wasPressedThisFrame);
+            }
+        }
+
+        // the mortar's edit mode
+        public static bool EditPressed
+        {
+            get
+            {
+                var kb = Keyboard.current;
+                var pad = Gamepad.current;
+                return (kb != null && kb.qKey.wasPressedThisFrame) || (pad != null && pad.buttonNorth.wasPressedThisFrame);
+            }
+        }
+
         // starting a station's minigame: its key, or the pad's east button, which is Interact in the player's controls
         public static bool StationPressed(Key key)
         {

@@ -21,14 +21,16 @@ namespace Nocturne.PotionMaking.Minigames
         protected RectTransform Root { get; private set; }
         protected TMP_Text InstructionLabel { get; private set; }
         private Action<float> callback;
+        private Action cancelCallback;
         private bool finishing;
         private bool outOfEnergy;
         private int beginFrame;
 
-        public void Begin(Action<float> onDone = null, bool outOfEnergy = false)
+        public void Begin(Action<float> onDone = null, bool outOfEnergy = false, Action onCancel = null)
         {
             if (Running) return;
             callback = onDone;
+            cancelCallback = onCancel;
             finishing = false;
             this.outOfEnergy = outOfEnergy;
             beginFrame = Time.frameCount;
@@ -42,12 +44,24 @@ namespace Nocturne.PotionMaking.Minigames
             Running = true;
         }
 
+        // leaves without a score: Esc (B on a pad) from inside the game, or whoever started it
         public void Cancel()
         {
             if (!Running) return;
             Running = false;
+            finishing = false;
+            StopAllCoroutines();
             Destroy(Root.parent.gameObject);
+            OnCancelled();
+            var onCancel = cancelCallback;
+            cancelCallback = null;
+            onCancel?.Invoke();
         }
+
+        protected virtual void OnCancelled() { }
+
+        // return true when the game used the cancel press for something else, like backing out of a sub-screen
+        protected virtual bool HandleCancel() => false;
 
         protected abstract void Build();
         protected abstract void Step(float dt);
@@ -55,7 +69,13 @@ namespace Nocturne.PotionMaking.Minigames
         private void Update()
         {
             // skip the frame the station started us on, so the key that opened the game isn't also its first input
-            if (Running && !finishing && Time.frameCount > beginFrame) Step(Time.deltaTime);
+            if (!Running || finishing || Time.frameCount <= beginFrame) return;
+            if (MinigameInput.CancelPressed && !HandleCancel())
+            {
+                Cancel();
+                return;
+            }
+            Step(Time.deltaTime);
         }
 
         protected void Finish(float score, string result)

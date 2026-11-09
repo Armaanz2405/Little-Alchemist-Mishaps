@@ -74,6 +74,8 @@ namespace Nocturne.PotionMaking.Minigames
 
         public UnityEvent<float> onPlayed = new UnityEvent<float>();
         public UnityEvent<IngredientData, float> onPlayedWithIngredient = new UnityEvent<IngredientData, float>();
+        // the player backed out of the game; the station is ready again unless a listener says otherwise
+        public event System.Action Cancelled;
 
         private TextMesh label;
         private PlayerInput playerInput;
@@ -119,6 +121,11 @@ namespace Nocturne.PotionMaking.Minigames
                 onPlayed.Invoke(score);
                 onPlayedWithIngredient.Invoke(data, score);
                 Debug.Log($"[Minigame] {game.Title}: {Mathf.RoundToInt(score * 100)}%" + (data != null ? $" ({data.displayName})" : ""));
+            }, onCancel: () =>
+            {
+                if (playerInput != null) playerInput.ActivateInput();
+                isReadyToPlay = true;
+                Cancelled?.Invoke();
             });
         }
 
