@@ -7651,9 +7651,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 942132286}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6da13444e6ed498db7d666459434ac0, type: 3}
+  m_Script: {fileID: 11500000, guid: 9ca4a4e3b9b0a6a4c881bdb438cdf261, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  canvasGroup: {fileID: 942132289}
+  mainPanel: {fileID: 1508324566}
+  fadeDuration: 0.25
+  mainMenuScene: MainMenu
 --- !u!224 &942132288
 RectTransform:
   m_ObjectHideFlags: 0
