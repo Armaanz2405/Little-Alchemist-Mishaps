@@ -12,7 +12,7 @@ public class PlayerMovement : MonoBehaviour
     
     [Header("Walking")]
     private float moveSpeed = 5f;
-    [SerializeField]private float walkSpeed = 5f;
+    public float walkSpeed = 5f;
     [SerializeField] private float runSpeed = 10f;
     
     [Header("Dashing")]
@@ -308,7 +308,7 @@ public class PlayerMovement : MonoBehaviour
         Collider2D hit = Physics2D.OverlapBox(col.bounds.center, col.bounds.size, 0f, climbableLayer);
 
         canClimb = hit != null;
-
+        Debug.Log("Climbable: " + canClimb);
         if (canClimb && hit.TryGetComponent(out WeakLadder ladder))
         {
             currentWeakLadder = ladder;   
