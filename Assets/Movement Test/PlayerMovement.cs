@@ -8,8 +8,8 @@ public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody2D rb;
 
-    private float moveSpeed = 5f;
-    [SerializeField]private float walkSpeed = 5f;
+    [SerializeField] float moveSpeed = 5f;
+    [SerializeField] public float walkSpeed = 5f;
     [SerializeField] private float runSpeed = 10f;
     [SerializeField]private float dashPower = 24f;
     [SerializeField]private float dashTime = 0.2f;
@@ -31,10 +31,15 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float climbSpeed = 0.2f;
     private bool isClimbing = false;
     [SerializeField] private bool canClimb= false;
+    [SerializeField] private LayerMask climbableLayer;
+    private WeakLadder currentWeakLadder;
+    private WeakLadder currentClimbedLadder; 
 
     [SerializeField] private float holdDownDelay = 0.2f; 
     private float holdDownTimer;
     private bool isDropping;
+    
+    public bool isPushing = false;
 
     private Collider2D col;
     private readonly HashSet<Collider2D> touchingPlatforms = new HashSet<Collider2D>();
@@ -76,6 +81,8 @@ public class PlayerMovement : MonoBehaviour
         else
             coyoteTimer -= Time.deltaTime;
         //climbing input
+        
+        CheckClimbable(); 
         if (!isClimbing && canClimb && moveInput.y > 0.1f && grabAndThrow.hasHeldItem() == false) 
         {
             StartClimbing();
@@ -100,7 +107,7 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
         {
             if (isDashing) return;  //ignore all input while dashing
-
+            if (isPushing) return; //ignnore all input while pushing
             UpdateFloorboards();
             if (onFloorboards)
             {
@@ -119,6 +126,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 //ground movement
                 rb.linearVelocity = new Vector2(moveInput.x * moveSpeed, rb.linearVelocity.y);
+                
             }
             
             if (isJumping && jumpHoldTimer < maxJumpHoldTime)
@@ -186,14 +194,43 @@ public class PlayerMovement : MonoBehaviour
         isJumping = false;
         rb.gravityScale = 0f;
         rb.linearVelocity = Vector2.zero;
+        
+        currentClimbedLadder = currentWeakLadder;
+        if (currentWeakLadder != null)
+        {
+            currentWeakLadder.BeingClimbed();
+            currentWeakLadder.LossDurabilty();
+        }
     }
 
     private void StopClimbing()
     {
+        if (currentClimbedLadder != null)
+        {
+            currentClimbedLadder.StopClimbed();
+            currentClimbedLadder = null;
+        }
         isClimbing = false;
         rb.gravityScale = 4f;
     }
+    
+    private void CheckClimbable()
+    {
+        Collider2D hit = Physics2D.OverlapBox(col.bounds.center, col.bounds.size, 0f, climbableLayer);
 
+        canClimb = hit != null;
+
+        if (canClimb && hit.TryGetComponent(out WeakLadder ladder))
+        {
+            currentWeakLadder = ladder;   
+        }
+        else currentWeakLadder = null;
+        
+        if (!canClimb && isClimbing)
+        {
+            StopClimbing();
+        }
+    }
 
     // landing on or walking onto the floorboards from a shelf or ladder
     private void UpdateFloorboards()
@@ -286,6 +323,8 @@ public class PlayerMovement : MonoBehaviour
 
     public void DashInput(InputAction.CallbackContext context)
     {
+        if (isPushing) return; //don't dash while pushing a ladder
+        
         if (context.started)
         {
             if (canDash) StartCoroutine(Dash());
@@ -315,31 +354,12 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(dashCooldown);
         canDash = true;
     }
-    
-    private void OnTriggerEnter2D(Collider2D trigger)
-    {
-        if (IsClimbable(trigger))
-        {
-            canClimb = true;
-        }
-    }
-    private void OnTriggerExit2D(Collider2D trigger)
-    {
-        if (IsClimbable(trigger))
-        {
-            canClimb = false;
-            StopClimbing();
-        }
-    }
+
     private bool IsGround(Collision2D collision)
     {
         return collision.gameObject.CompareTag("Ground");
     }
-    private bool IsClimbable(Collider2D trigger)
-    {
-        return trigger.gameObject.CompareTag("Climbable");
-    }
-    
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         UpdateGroundContact(collision);
@@ -375,5 +395,9 @@ public class PlayerMovement : MonoBehaviour
     public Vector2 getMoveInput()
     {
         return moveInput;
+    }
+    public void SetCurrentSpeed(float speed)
+    {
+        moveSpeed = speed;
     }
 }

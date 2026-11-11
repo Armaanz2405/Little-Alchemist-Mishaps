@@ -21,7 +21,7 @@ public class GrabAndThrow : MonoBehaviour
     
     private Rigidbody2D heldItem;
     private PlayerMovement playerMovement;
-
+    private moveLadder ladder = null;
     public Transform HoldPoint => holdPoint;
     public float GrabRadius => grabRadius;
     public LayerMask GrabbableLayer => grabbableLayer;
@@ -38,7 +38,7 @@ public class GrabAndThrow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Mathf.Abs(playerMovement.getMoveInput().x) > 0.1f)
+        if (Mathf.Abs(playerMovement.getMoveInput().x) > 0.1f && !playerMovement.isPushing)
         {
             facing = Mathf.Sign(playerMovement.getMoveInput().x);
             Vector3 p = holdPoint.localPosition;
@@ -75,6 +75,7 @@ public class GrabAndThrow : MonoBehaviour
             // E talks to the customer instead of dropping
             if (heldItem != null && CustomerTalk.AnyCanTalk()) return;
 
+            
             if (heldItem == null)
             {
                 TryGrab();
@@ -82,21 +83,39 @@ public class GrabAndThrow : MonoBehaviour
             else if (heldItem != null)
             {
                 Release();
+                return;
+            }
+
+            if (playerMovement.isPushing)
+            {
+                ladder.StopPush();
+                ladder = null;
+                return;
             }
             
             Collider2D hit = Physics2D.OverlapCircle(transform.position, grabRadius, interactableLayer);
 
-            if (hit != null)
+            // if (hit != null && hit.attachedRigidbody != null)
+            // {
+            //     //in theory we would want to access this object's interact method for different uses
+            //     //right now the book ui is hard coded bc that's the only interactable so far
+            //     var interactableObj = hit.gameObject;
+            //     bookUI.SetActive(true);
+            //     InputManager.instanceInput.EnableUI();
+            // }
+            
+            //start pushing ladder 
+            if  (hit != null && hit.gameObject.tag == "Push")
             {
-                //in theory we would want to access this object's interact method for different uses
-                //right now the book ui is hard coded bc that's the only interactable so far
-                var interactableObj = hit.gameObject;
-                bookUI.SetActive(true);
-                InputManager.instanceInput.EnableUI();
+                ladder = hit.gameObject.GetComponent<moveLadder>();
+                if (ladder != null)
+                {
+                    ladder.StartPush();
+                }
             }
         }
     }
-
+    
     public void Throw(InputAction.CallbackContext context)
     {
         if (heldItem != null && context.started)
