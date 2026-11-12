@@ -1808,7 +1808,7 @@ GameObject:
   - component: {fileID: 228793416}
   - component: {fileID: 228793415}
   m_Layer: 0
-  m_Name: Quit Tab
+  m_Name: Quit Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1953,7 +1953,7 @@ GameObject:
   - component: {fileID: 233002792}
   - component: {fileID: 233002791}
   m_Layer: 0
-  m_Name: Yes Tab
+  m_Name: Yes Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2876,7 +2876,7 @@ GameObject:
   - component: {fileID: 317983821}
   - component: {fileID: 317983822}
   m_Layer: 0
-  m_Name: Tabs
+  m_Name: Buttons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3126,7 +3126,7 @@ GameObject:
   - component: {fileID: 356976332}
   - component: {fileID: 356976333}
   m_Layer: 5
-  m_Name: Horizontal Tabs
+  m_Name: Horizontal Buttons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4839,7 +4839,7 @@ GameObject:
   - component: {fileID: 633251470}
   - component: {fileID: 633251471}
   m_Layer: 0
-  m_Name: Tabs
+  m_Name: Buttons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4966,7 +4966,7 @@ GameObject:
   - component: {fileID: 717485959}
   - component: {fileID: 717485961}
   m_Layer: 0
-  m_Name: Credits Tab
+  m_Name: Credits Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5432,7 +5432,7 @@ GameObject:
   - component: {fileID: 794302033}
   - component: {fileID: 794302034}
   m_Layer: 5
-  m_Name: Tabs
+  m_Name: Buttons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8462,7 +8462,7 @@ GameObject:
   - component: {fileID: 1343445333}
   - component: {fileID: 1343445332}
   m_Layer: 0
-  m_Name: No Tab
+  m_Name: No Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9623,7 +9623,7 @@ GameObject:
   - component: {fileID: 1557707898}
   - component: {fileID: 1557707900}
   m_Layer: 0
-  m_Name: Play Tab
+  m_Name: Play Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10594,7 +10594,7 @@ GameObject:
   - component: {fileID: 1663235304}
   - component: {fileID: 1663235305}
   m_Layer: 5
-  m_Name: Vertical Tabs
+  m_Name: Vertical Buttons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11851,7 +11851,7 @@ GameObject:
   - component: {fileID: 1818410152}
   - component: {fileID: 1818410154}
   m_Layer: 0
-  m_Name: Settings Tab
+  m_Name: Settings Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
