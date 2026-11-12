@@ -58,6 +58,19 @@ public class AlchemyStation : MonoBehaviour
             Debug.Log(new_tags[new_tags.Count - 1].tag_effect);
         }
 
+        bool hasTags = new_tags.Count > 0;
+        transedIngredient.displayName = $"Transfigured {content.displayName}";
+        transedIngredient.ingredientEffects = new_tags;
+        transedIngredient.color = hasTags ? IngredientTags.ColorOf(new_tags[0].tag_effect) : Color.black;
+
+        if (ingredientPrefab != null)
+        {
+            Vector3 at = ingredientSpawnPoint != null ? ingredientSpawnPoint.position : transform.position + Vector3.up;
+            Ingredient ingredient = Instantiate(ingredientPrefab, at, Quaternion.identity);
+            ingredient.data = transedIngredient;
+            ingredient.ApplyLook();
+        }
+
         content = null;
         return transedIngredient;
     }

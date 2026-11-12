@@ -1,2 +1,12 @@
 fileFormatVersion: 2
 guid: 1e93cc691f48483884cb4d3dd346b6d9
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - cost_icon_sprite_asset: {fileID: 11400000, guid: 2209e2cba2ce1f94e9febce7e890bb17, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

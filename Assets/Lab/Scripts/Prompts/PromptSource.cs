@@ -55,7 +55,7 @@ public abstract class PromptSource : MonoBehaviour
         var m = Meter();
         int cost = m != null && m.Costs != null ? m.Costs.CostOf(action) : 0;
         if (cost <= 0) return null;
-        return m.CanSpend(cost) ? $"-{cost} <sprite index=2>" : "No energy";
+        return m.CanSpend(cost) ? $"-{cost} <sprite index=2, tint=1>" : "No energy";
     }
 
     public static bool CanAfford(EnergyAction action)
