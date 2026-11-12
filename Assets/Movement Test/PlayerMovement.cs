@@ -475,9 +475,16 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!IsGround(collision)) return;
 
-        // only grounded if our feet are at or above the top of what we touch
-        bool feetAbove = col.bounds.min.y >= collision.collider.bounds.max.y - 0.05f;
-        if (feetAbove) groundContacts.Add(collision.collider);
+        // grounded only if some contact surface is facing up (we're standing on it)
+        bool standingOn = false;
+      
+        if (collision.GetContact(0).normal.y > 0.5f)
+        {
+            Debug.Log("Standing on ground object: "+ collision.gameObject.name);
+            standingOn = true;
+        }
+
+        if (standingOn) groundContacts.Add(collision.collider);
         else groundContacts.Remove(collision.collider);
     }
     
