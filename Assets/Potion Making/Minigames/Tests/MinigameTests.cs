@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Nocturne.PotionMaking.Minigames;
 using NUnit.Framework;
 using UnityEngine;
@@ -329,5 +330,87 @@ public class MinigameTests
         r.Tick(r.CutTime(1) - r.Time + 0.12f); r.Press();
         Assert.IsTrue(r.Done);
         Assert.AreEqual(0.8f, r.Score, 1e-4);
+    }
+
+    private static IngredientData Make(string name, params (IngredientTags.Effects effect, int value)[] tags)
+    {
+        var data = ScriptableObject.CreateInstance<IngredientData>();
+        data.displayName = name;
+        foreach (var (effect, value) in tags) data.ingredientEffects.Add(new IngredientTags { tag_effect = effect, tag_value = value });
+        return data;
+    }
+
+    private static IngredientData[] SunspiceMagmaHeartroot() => new[]
+    {
+        Make("Sunspice", (IngredientTags.Effects.WARMING, 1), (IngredientTags.Effects.STRENGTHENING, 1)),
+        Make("Magma Lily", (IngredientTags.Effects.WARMING, 1), (IngredientTags.Effects.GLOWING, 1)),
+        Make("Heartroot", (IngredientTags.Effects.HEALING, 1), (IngredientTags.Effects.STRENGTHENING, 1)),
+    };
+
+    [Test]
+    public void Mortar_SharedTagsStack()
+    {
+        var preview = MortarPreview.Of(SunspiceMagmaHeartroot());
+        Assert.AreEqual(4, preview.outcome.Count);
+        Assert.AreEqual(IngredientTags.Effects.WARMING, preview.outcome[0].tag_effect);
+        Assert.AreEqual(2, preview.outcome[0].tag_value);
+        Assert.AreEqual(IngredientTags.Effects.STRENGTHENING, preview.outcome[1].tag_effect);
+        Assert.AreEqual(2, preview.outcome[1].tag_value);
+        CollectionAssert.AreEqual(new[] { IngredientTags.Effects.WARMING, IngredientTags.Effects.STRENGTHENING }, preview.enhanced);
+        Assert.AreEqual("Warming Paste", preview.name);
+    }
+
+    [Test]
+    public void Mortar_EachIngredientKnowsWhatItBoosts()
+    {
+        var mix = SunspiceMagmaHeartroot();
+        CollectionAssert.AreEqual(new[] { IngredientTags.Effects.WARMING, IngredientTags.Effects.STRENGTHENING }, MortarPreview.SharedTags(mix, 0));
+        CollectionAssert.AreEqual(new[] { IngredientTags.Effects.WARMING }, MortarPreview.SharedTags(mix, 1));
+        CollectionAssert.AreEqual(new[] { IngredientTags.Effects.STRENGTHENING }, MortarPreview.SharedTags(mix, 2));
+    }
+
+    [Test]
+    public void Mortar_NothingSharedMeansNoBoost()
+    {
+        var mix = new[]
+        {
+            Make("Winter Mint", (IngredientTags.Effects.CHILLING, 1), (IngredientTags.Effects.CRYSTALLIZING, 1)),
+            Make("Widow Kiss", (IngredientTags.Effects.POISON, 1), (IngredientTags.Effects.BLINDING, 1)),
+        };
+        Assert.IsEmpty(MortarPreview.Of(mix).enhanced);
+        Assert.IsEmpty(MortarPreview.SharedTags(mix, 0));
+        Assert.AreEqual(4, MortarPreview.Of(mix).outcome.Count);
+    }
+
+    [Test]
+    public void Mortar_EmptyMakesGoop()
+    {
+        var preview = MortarPreview.Of(new IngredientData[0]);
+        Assert.IsEmpty(preview.outcome);
+        Assert.AreEqual("New Goop", preview.name);
+    }
+
+    [Test]
+    public void BeatTracks_AnIngredientGetsItsOwnTrack()
+    {
+        var tracks = new List<BeatTrack> { new BeatTrack { ingredient = "Flower of Masks" }, new BeatTrack { ingredient = "Petal" } };
+        Assert.AreEqual(1, BeatTracks.Pick(tracks, "Quality Seer's Petal"));
+        Assert.AreEqual(0, BeatTracks.Pick(tracks, "Chopped flower of masks"));
+    }
+
+    [Test]
+    public void BeatTracks_OtherIngredientsKeepTheSameStandIn()
+    {
+        var tracks = new List<BeatTrack> { new BeatTrack { ingredient = "Flower of Masks" }, new BeatTrack { ingredient = "Petal" } };
+        int pick = BeatTracks.Pick(tracks, "Heartroot");
+        Assert.That(pick, Is.InRange(0, 1));
+        Assert.AreEqual(pick, BeatTracks.Pick(tracks, "Heartroot"));
+    }
+
+    [Test]
+    public void BeatTracks_NothingToPlay()
+    {
+        Assert.AreEqual(-1, BeatTracks.Pick(null, "Heartroot"));
+        Assert.AreEqual(-1, BeatTracks.Pick(new List<BeatTrack>(), "Heartroot"));
     }
 }

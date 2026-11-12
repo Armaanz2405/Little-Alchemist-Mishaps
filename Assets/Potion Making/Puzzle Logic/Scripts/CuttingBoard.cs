@@ -91,6 +91,8 @@ public class CuttingBoard : MonoBehaviour
             Ingredient ingredient = Instantiate(ingredientPrefab, at, Quaternion.identity);
             ingredient.data = choppedIngredient;
             ingredient.ApplyLook();
+            // into the player's hands when they're free, so it can't land out of reach
+            GrabAndThrow.GiveToPlayer(ingredient.gameObject);
         }
 
         return choppedIngredient;

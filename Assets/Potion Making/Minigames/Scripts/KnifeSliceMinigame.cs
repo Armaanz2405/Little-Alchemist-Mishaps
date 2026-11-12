@@ -15,8 +15,11 @@ namespace Nocturne.PotionMaking.Minigames
 
         public override string Title => "Chop It!";
         public override string Instructions => choice != null && choice.Open
-            ? "Which tag do you want to cut away? A / D to pick, E to start chopping."
+            ? TagChoiceScreen.Prompt
             : "Hold the mouse button and swipe through the pieces. Don't cut the rotten ones!";
+
+        // picking the tag can be backed out of; the slicing gets played out
+        protected override bool CanLeave => choice != null && choice.Open;
 
         // index into the ingredient's tag list that the player chose to cut off
         public int ChosenTag { get; private set; }

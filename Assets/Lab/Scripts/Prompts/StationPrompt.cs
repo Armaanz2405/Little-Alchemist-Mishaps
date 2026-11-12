@@ -19,7 +19,7 @@ public class StationPrompt : PromptSource
     public override float Distance(Vector2 player)
     {
         if (station == null) return base.Distance(player);
-        float d = Vector2.Distance(station.transform.position, player);
+        float d = station.DistanceFrom(player);
         return d <= station.Range ? d : float.PositiveInfinity;
     }
 
@@ -30,7 +30,7 @@ public class StationPrompt : PromptSource
         content.counter = Counter();
         if (canAct)
         {
-            string key = station != null ? station.Key.ToString() : PickKey(context, actionKey, padKey);
+            string key = PickKey(context, station != null ? station.Key.ToString() : actionKey, padKey);
             content.lines.Add(new PromptLine(key, actionText, ActionCost()));
         }
         AddLines(context, content);

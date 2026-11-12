@@ -32,9 +32,9 @@ public class CauldronPrompt : StationPrompt
 
     protected override void AddLines(PromptContext context, PromptContent content)
     {
-        bool inStirRange = stirStation != null && Vector2.Distance(stirStation.transform.position, context.position) <= stirStation.Range;
+        bool inStirRange = stirStation != null && stirStation.DistanceFrom(context.position) <= stirStation.Range;
         if (!context.holding && inStirRange && stirStation.CanPlay)
-            content.lines.Add(new PromptLine(stirStation.Key.ToString(), stirText, CanAfford(EnergyAction.Bottle) ? Cost(EnergyAction.Bottle) : null));
+            content.lines.Add(new PromptLine(PickKey(context, stirStation.Key.ToString(), padKey), stirText, CanAfford(EnergyAction.Bottle) ? Cost(EnergyAction.Bottle) : null));
     }
 
     private T Nearest<T>() where T : Component

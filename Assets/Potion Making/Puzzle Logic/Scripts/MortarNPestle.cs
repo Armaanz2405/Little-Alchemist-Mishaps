@@ -7,7 +7,7 @@ using UnityEngine.Events;
 using TMPro;
 
 [RequireComponent(typeof(Collider2D))]
-public class MortarNPestle : MonoBehaviour
+public class MortarNPestle : MonoBehaviour, IGrindSource
 {
     public const int MaxIngredientsPerCrush = 3;
 
@@ -24,6 +24,8 @@ public class MortarNPestle : MonoBehaviour
     public IReadOnlyList<IngredientData> Contents => contents;
     public bool IsFull => contents.Count >= MaxIngredientsPerCrush;
     public bool HasGrindMinigame => grindMinigameStation != null;
+    int IGrindSource.Capacity => MaxIngredientsPerCrush;
+    public bool CanAffordGrind => energy == null || energy.CanAfford(EnergyAction.Refine);
     private EnergyMeter energy;
 
     private void Reset() => GetComponent<Collider2D>().isTrigger = true;
@@ -32,6 +34,11 @@ public class MortarNPestle : MonoBehaviour
     {
         energy = FindAnyObjectByType<EnergyMeter>();
         fillAmntText.text = $"({contents.Count}/{MaxIngredientsPerCrush})";
+        if (grindMinigameStation == null) return;
+        // the grind screen shows what's in here and can hand ingredients back
+        foreach (var game in grindMinigameStation.AllGames)
+            if (game is GrindMinigame grind) grind.SetSource(this);
+        grindMinigameStation.Cancelled += () => grindMinigameStation.isReadyToPlay = contents.Count > 0;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -52,13 +59,31 @@ public class MortarNPestle : MonoBehaviour
         fillAmntText.text = $"({contents.Count}/{MaxIngredientsPerCrush})";
         //onIngredientAdded.Invoke(ingredient);
 
-        if (!IsFull) return null;
+        // with a grind screen the mortar can be opened as soon as something is in it; grinding still needs it full
         if (grindMinigameStation != null)
         {
             grindMinigameStation.isReadyToPlay = true;
             return null;
         }
-        return Pack();
+        return IsFull ? Pack() : null;
+    }
+
+    // Takes one ingredient back out and hands it to the player, one at a time since they need a free hand for it.
+    public bool Eject(int index)
+    {
+        if (index < 0 || index >= contents.Count || ingredientPrefab == null) return false;
+        var hands = FindAnyObjectByType<GrabAndThrow>();
+        if (hands != null && hands.HeldItem != null) return false;
+        IngredientData data = contents[index];
+        contents.RemoveAt(index);
+        fillAmntText.text = $"({contents.Count}/{MaxIngredientsPerCrush})";
+        Debug.Log($"[Mortar] Took out {data.displayName} ({contents.Count}/{MaxIngredientsPerCrush})");
+        Vector3 at = ingredientSpawnPoint != null ? ingredientSpawnPoint.position : transform.position + Vector3.up;
+        Ingredient ingredient = Instantiate(ingredientPrefab, at, Quaternion.identity);
+        ingredient.data = data;
+        ingredient.ApplyLook();
+        GrabAndThrow.GiveToPlayer(ingredient.gameObject);
+        return true;
     }
 
     public void Grind_Trigger()
@@ -70,17 +95,11 @@ public class MortarNPestle : MonoBehaviour
     {
         IngredientData packedIngredients = ScriptableObject.CreateInstance<IngredientData>();
 
-        var all_tags = contents.SelectMany(c => c.ingredientEffects)
-            .Where(tag => tag != null && tag.tag_value > 0)
-            .GroupBy(tag => tag.tag_effect)
-            .Select(g => new IngredientTags { tag_effect = g.Key, tag_value = g.Sum(tag => tag.tag_value) })
-            .OrderByDescending(tag => tag.tag_value).ThenBy(tag => (int)tag.tag_effect)
-            .ToList();
-
-        bool hasTags = all_tags.Count > 0;
-        packedIngredients.displayName = hasTags ? $"{IngredientTags.Name(all_tags[0].tag_effect)} Paste" : "New Goop";
-        packedIngredients.ingredientEffects = all_tags;
-        packedIngredients.color = hasTags ? IngredientTags.ColorOf(all_tags[0].tag_effect) : Color.black;
+        // same sums the grind screen previews
+        var preview = MortarPreview.Of(contents);
+        packedIngredients.displayName = preview.name;
+        packedIngredients.ingredientEffects = preview.outcome;
+        packedIngredients.color = preview.color;
         float grind = grindMinigameStation != null && grindMinigameStation.Game != null ? grindMinigameStation.Game.LastScore : 1f;
         packedIngredients.refineQuality = CraftQuality.Combine(grind, contents.Select(c => c.refineQuality));
         contents.Clear();
@@ -94,6 +113,8 @@ public class MortarNPestle : MonoBehaviour
             Ingredient ingredient = Instantiate(ingredientPrefab, at, Quaternion.identity);
             ingredient.data = packedIngredients;
             ingredient.ApplyLook();
+            // into the player's hands when they're free, so the paste can't land out of reach
+            GrabAndThrow.GiveToPlayer(ingredient.gameObject);
         }
 
         onIngredientsCrushed.Invoke(packedIngredients);

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Yarn.Unity;
@@ -56,18 +57,38 @@ public class GrabAndThrow : MonoBehaviour
         {
             Debug.Log("Grabbed: " + hit.name);
             Debug.Log("HoldPoint world pos: " + holdPoint.position + " | parent: " + (holdPoint.parent ? holdPoint.parent.name : "none"));
-            heldItem = hit.attachedRigidbody;
-            
-            heldItem.linearVelocity = Vector2.zero;
-            heldItem.angularVelocity = 0f;
-            heldItem.simulated = false;          
-            heldItem.transform.SetParent(transform);
-            heldItem.freezeRotation = true;
-            float half = hit.bounds.extents.y;
-            heldItem.transform.localPosition = new Vector2(0f, 0.445f + half);
-
-            if (heldItem.GetComponent<Potion>() != null) SetHoldingPotion(true);
+            Carry(hit.attachedRigidbody, hit.bounds.extents.y);
         }
+    }
+
+    private void Carry(Rigidbody2D item, float half)
+    {
+        heldItem = item;
+
+        heldItem.linearVelocity = Vector2.zero;
+        heldItem.angularVelocity = 0f;
+        heldItem.simulated = false;
+        heldItem.transform.SetParent(transform);
+        heldItem.freezeRotation = true;
+        heldItem.transform.localPosition = new Vector2(0f, 0.445f + half);
+
+        if (heldItem.GetComponent<Potion>() != null) SetHoldingPotion(true);
+    }
+
+    // Puts an item straight into the player's hands, the same as picking it up. False if they're already carrying something.
+    public bool Hold(Rigidbody2D item)
+    {
+        if (item == null || heldItem != null) return false;
+        var col = item.GetComponent<Collider2D>();
+        Carry(item, col != null ? col.bounds.extents.y : 0f);
+        return true;
+    }
+
+    // For stations: hand over what they just made, so it can't land somewhere the player can't get to.
+    public static bool GiveToPlayer(GameObject item)
+    {
+        var grab = FindAnyObjectByType<GrabAndThrow>();
+        return grab != null && item != null && grab.Hold(item.GetComponent<Rigidbody2D>());
     }
 
     public void InteractInput(InputAction.CallbackContext context) {
@@ -137,9 +158,22 @@ public class GrabAndThrow : MonoBehaviour
 
         heldItem.simulated = true;                
         heldItem.linearVelocity = Vector2.down;
+        StartCoroutine(FallPastHolder(heldItem));
 
         if (heldItem.GetComponent<Potion>() != null) SetHoldingPotion(false);
         heldItem = null;
+    }
+
+    // A carried item sits partly inside the player's own collider. Without this, letting go can leave it resting on
+    // their head instead of falling into whatever they're standing at.
+    private IEnumerator FallPastHolder(Rigidbody2D item)
+    {
+        var mine = GetComponents<Collider2D>();
+        var theirs = item.GetComponentsInChildren<Collider2D>();
+        foreach (var a in mine) foreach (var b in theirs) Physics2D.IgnoreCollision(a, b, true);
+        yield return new WaitForSeconds(0.5f);
+        if (item == null) yield break;
+        foreach (var a in mine) foreach (var b in theirs) if (a != null && b != null) Physics2D.IgnoreCollision(a, b, false);
     }
 
     public void ConsumeHeldItem()
