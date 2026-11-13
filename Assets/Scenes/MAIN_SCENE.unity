@@ -4085,6 +4085,7 @@ GameObject:
   - component: {fileID: 422063968}
   - component: {fileID: 422063967}
   - component: {fileID: 422063966}
+  - component: {fileID: 422063969}
   m_Layer: 0
   m_Name: MortarNPestle
   m_TagString: Untagged
@@ -4131,8 +4132,9 @@ MonoBehaviour:
   padKey: B
   needsIngredient: 1
   showWhenIdle: 1
-  station: {fileID: 0}
+  station: {fileID: 422063969}
   grindText: Grind
+  checkText: Check
 --- !u!114 &422063967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4148,7 +4150,7 @@ MonoBehaviour:
   ingredientPrefab: {fileID: 7667439634201628183, guid: daef4117b831d4d18b76b31fbc940fcd, type: 3}
   ingredientSpawnPoint: {fileID: 1690186463}
   fillAmntText: {fileID: 1377262963}
-  grindMinigameStation: {fileID: 0}
+  grindMinigameStation: {fileID: 422063969}
   onIngredientsCrushed:
     m_PersistentCalls:
       m_Calls:
@@ -4210,6 +4212,39 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.1, y: 2}
   m_EdgeRadius: 0
+--- !u!114 &422063969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 422063964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d57656e066d3743119f08b5f3a111614, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PotionMaking.Minigames::Nocturne.PotionMaking.Minigames.MinigameStation
+  minigame: {fileID: 2124802971}
+  alternate: {fileID: 0}
+  slot: 0
+  player: {fileID: 333525642}
+  holdPoint: {fileID: 333525642}
+  range: 1.2
+  key: 19
+  prompt: 'E: grind'
+  showLabel: 0
+  waitUntilReady: 1
+  energyRule: 0
+  energyAction: 1
+  reachArea: {fileID: 422063968}
+  emptyHandsOnly: 1
+  isReadyToPlay: 0
+  onPlayed:
+    m_PersistentCalls:
+      m_Calls: []
+  onPlayedWithIngredient:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &434299723
 GameObject:
   m_ObjectHideFlags: 0
@@ -5875,17 +5910,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: PotionMaking.Minigames::Nocturne.PotionMaking.Minigames.MinigameStation
   minigame: {fileID: 2124802969}
-  alternate: {fileID: 0}
-  slot: 0
+  alternate: {fileID: 2124802973}
+  slot: 1
   player: {fileID: 333525642}
   holdPoint: {fileID: 333525642}
-  range: 1
+  range: 1.2
   key: 19
   prompt: 'E: stir'
   showLabel: 0
   waitUntilReady: 1
   energyRule: 2
   energyAction: 2
+  reachArea: {fileID: 1296107343}
+  emptyHandsOnly: 0
   isReadyToPlay: 0
   onPlayed:
     m_PersistentCalls:
@@ -10236,6 +10273,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!61 &1296107343 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 7612705573823501707, guid: 74412f5c838544b44986283917ad4406, type: 3}
+  m_PrefabInstance: {fileID: 1296107338}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1320625646
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11236,8 +11278,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: PotionMaking.Minigames::Nocturne.PotionMaking.Minigames.MinigameStation
   minigame: {fileID: 2124802970}
-  alternate: {fileID: 0}
-  slot: 0
+  alternate: {fileID: 2124802974}
+  slot: 2
   player: {fileID: 333525642}
   holdPoint: {fileID: 333525642}
   range: 1.8
@@ -11247,6 +11289,8 @@ MonoBehaviour:
   waitUntilReady: 1
   energyRule: 1
   energyAction: 1
+  reachArea: {fileID: 0}
+  emptyHandsOnly: 0
   isReadyToPlay: 0
   onPlayed:
     m_PersistentCalls:
@@ -18147,6 +18191,10 @@ GameObject:
   - component: {fileID: 2124802970}
   - component: {fileID: 2124802969}
   - component: {fileID: 2124802968}
+  - component: {fileID: 2124802971}
+  - component: {fileID: 2124802974}
+  - component: {fileID: 2124802973}
+  - component: {fileID: 2124802972}
   m_Layer: 0
   m_Name: Minigames
   m_TagString: Untagged
@@ -18183,10 +18231,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: PotionMaking.Minigames::Nocturne.PotionMaking.Minigames.MinigameLauncher
   knife: {fileID: 2124802970}
   stir: {fileID: 2124802969}
-  grind: {fileID: 0}
-  rhythm: {fileID: 0}
-  brew: {fileID: 0}
-  flameflies: {fileID: 0}
+  grind: {fileID: 2124802971}
+  rhythm: {fileID: 2124802974}
+  brew: {fileID: 2124802973}
+  flameflies: {fileID: 2124802972}
 --- !u!114 &2124802969
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18244,6 +18292,121 @@ MonoBehaviour:
         m_CallState: 2
   pieceColor: {r: 0.85, g: 0.45, b: 0.55, a: 1}
   rottenColor: {r: 0.25, g: 0.3, b: 0.2, a: 1}
+--- !u!114 &2124802971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124802966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd249194e91e4ef4a24420b815ef4950, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PotionMaking.Minigames::Nocturne.PotionMaking.Minigames.GrindMinigame
+  onFinished:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 422063967}
+        m_TargetAssemblyTypeName: MortarNPestle, Assembly-CSharp
+        m_MethodName: Grind_Trigger
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  pasteColor: {r: 0.6, g: 0.5, b: 0.35, a: 1}
+  mortarSprite: {fileID: 21300000, guid: 071ade7e93864e19893dbd0c33366fbc, type: 3}
+  apprentice: {fileID: 21300000, guid: 2916cb09e1faae7478f322421f013557, type: 3}
+--- !u!114 &2124802972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124802966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 993415c0c0d484b87918971ca5a1d48b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PotionMaking.Minigames::Nocturne.PotionMaking.Minigames.SkyFishingMinigame
+  onFinished:
+    m_PersistentCalls:
+      m_Calls: []
+  bugColor: {r: 1, g: 0.72, b: 0.3, a: 1}
+--- !u!114 &2124802973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124802966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb688a78c7d14471bf541921280bf00a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PotionMaking.Minigames::Nocturne.PotionMaking.Minigames.CauldronBrewMinigame
+  onFinished:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1296107342}
+        m_TargetAssemblyTypeName: PuzzleLogic_Cauldron, Assembly-CSharp
+        m_MethodName: Brew_Trigger
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  coldColor: {r: 0.3, g: 0.42, b: 0.6, a: 1}
+  scorchColor: {r: 0.55, g: 0.18, b: 0.12, a: 1}
+--- !u!114 &2124802974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124802966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3fbe4217701848b59621cd67436c96a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PotionMaking.Minigames::Nocturne.PotionMaking.Minigames.RhythmChopMinigame
+  onFinished:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1395771576}
+        m_TargetAssemblyTypeName: CuttingBoard, Assembly-CSharp
+        m_MethodName: Chop_Trigger
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  pieceColor: {r: 0.85, g: 0.45, b: 0.55, a: 1}
+  bpm: 100
+  tracks:
+  - ingredient: Flower of Masks
+    clip: {fileID: 8300000, guid: a0d6a8f4a907041f9ac4247e8fff5b1f, type: 3}
+    bpm: 102
+    offset: 0.59
+  - ingredient: Petal
+    clip: {fileID: 8300000, guid: 26ac285a96cfd46c182a2a5dff5f2810, type: 3}
+    bpm: 102
+    offset: 0.59
+  metronome: 1
+  apprentice: {fileID: 21300000, guid: 2916cb09e1faae7478f322421f013557, type: 3}
 --- !u!1 &2125007834
 GameObject:
   m_ObjectHideFlags: 0
