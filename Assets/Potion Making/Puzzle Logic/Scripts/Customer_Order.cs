@@ -36,6 +36,7 @@ public class Customer_Order : MonoBehaviour
     [Tooltip("How much of the score the station minigames can take away. 0.4 means a botched craft keeps 60%.")]
     [Range(0f, 1f)] [SerializeField] private float craftWeight = 0.4f;
     [SerializeField] private int passScore = 60;
+    private DayManager dm;
 
     private readonly List<Submission> submissions = new List<Submission>();
     private GrabAndThrow player;
@@ -50,6 +51,11 @@ public class Customer_Order : MonoBehaviour
 
     void Start()
     {
+        dm = DayManager.Instance;
+        if (dm == null)
+        {
+            return;
+        }
         if (variableStorage == null) variableStorage = FindAnyObjectByType<VariableStorageBehaviour>();
         GameObject found = GameObject.FindWithTag("Player");
         if (found != null) player = found.GetComponent<GrabAndThrow>();
@@ -92,6 +98,7 @@ public class Customer_Order : MonoBehaviour
         SetVariable("$potionScore", score);
         SetVariable("$isPotionPassable", score >= passScore);
         player.ConsumeHeldItem();
+        dm.NpcHelped();
         NewOrder();
         ResetEnergy();
         minigamesPlayed = 0;

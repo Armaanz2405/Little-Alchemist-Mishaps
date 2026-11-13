@@ -130,7 +130,6 @@ Ferdinand: "Hmmm..."
 <<else>>
     Ferdinand: "Perhaps I can fulfill my needs elsewhere."
 <<endif>>
--> [Free Play]
 ===
 
 title: KnightGradePotion
@@ -146,7 +145,6 @@ position: -1189,366
     => Ferdinand: "Perhaps I can fulfill my needs elsewhere."
     => Ferdinand: "Hmm. This is not quite what I asked for, I'm afraid."
 <<endif>>
--> [Free Play]
 ===
 
 title: KnightFreePlay
