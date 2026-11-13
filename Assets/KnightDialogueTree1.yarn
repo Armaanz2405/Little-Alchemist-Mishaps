@@ -24,22 +24,22 @@ Ferdinand: "You may call me Ferdinand, a knight of renown."
 title: KnightHub
 position: 7,-61
 ---
-
+<<set_start_node Customer "KnightHub">>
 Ferdinand: "I heard that this was the finest procurer of potions in all the land. I require a concoction that will allow me to maintain my flame. Can you conjure such a spell for me?"
 
 -> [Give Potion] <<if $isHoldingPotion is true>>
     <<jump KnightGivePotion>>
 -> [What happened to your body?]{talk_cost("KnightBody")} <<if can_talk("KnightBody")>>
-    <<spend_talk_amount CUSTOMER_SPRITE KnightBody>>
+    <<spend_talk_amount Customer KnightBody>>
     <<jump KnightBody>>
 -> [What can you tell me about Emberseed?]{talk_cost("KnightEmberseed")} <<if can_talk("KnightEmberseed")>>
-    <<spend_talk_amount CUSTOMER_SPRITE KnightEmberseed>>
+    <<spend_talk_amount Customer KnightEmberseed>>
     <<jump KnightEmberseed>>
 -> [Have you heard anything about my mentor?]{talk_cost("KnightMentor")} <<if can_talk("KnightMentor")>>
-    <<spend_talk_amount CUSTOMER_SPRITE KnightMentor>>
+    <<spend_talk_amount Customer KnightMentor>>
     <<jump KnightMentor>>
 -> [You've heard of this shop before?]{talk_cost("KnightShop")} <<if can_talk("KnightShop")>>
-    <<spend_talk_amount CUSTOMER_SPRITE KnightShop>>
+    <<spend_talk_amount Customer KnightShop>>
     <<jump KnightShop>>
 -> [Small talk]
     <<jump KnightSmallTalk>>
@@ -121,7 +121,7 @@ title: KnightGivePotion
 position: -889,366
 ---
 Ferdinand: "Hmmm..."
-<<grade_potion CUSTOMER_SPRITE>>
+<<grade_potion Customer>>
 <<if $potionsGiven > 1>>
     <<jump KnightGradePotion>>
 <<endif>>
@@ -130,6 +130,7 @@ Ferdinand: "Hmmm..."
 <<else>>
     Ferdinand: "Perhaps I can fulfill my needs elsewhere."
 <<endif>>
+<<customer_leave Customer>>
 ===
 
 title: KnightGradePotion
@@ -145,6 +146,7 @@ position: -1189,366
     => Ferdinand: "Perhaps I can fulfill my needs elsewhere."
     => Ferdinand: "Hmm. This is not quite what I asked for, I'm afraid."
 <<endif>>
+<<customer_leave Customer>>
 ===
 
 title: KnightFreePlay

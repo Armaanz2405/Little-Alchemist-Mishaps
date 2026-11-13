@@ -5140,6 +5140,8 @@ MonoBehaviour:
   waitUntilReady: 1
   energyRule: 2
   energyAction: 2
+  reachArea: {fileID: 0}
+  emptyHandsOnly: 0
   isReadyToPlay: 0
   onPlayed:
     m_PersistentCalls:
@@ -8902,6 +8904,8 @@ MonoBehaviour:
   waitUntilReady: 1
   energyRule: 1
   energyAction: 1
+  reachArea: {fileID: 0}
+  emptyHandsOnly: 0
   isReadyToPlay: 0
   onPlayed:
     m_PersistentCalls:
@@ -9740,7 +9744,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: MAIN_SCENE
+          m_StringArgument: Skylar - puzzle_rework
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &1557855453

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public enum DayPhase { NotStarted, Day, Night, GameOver }
 
@@ -9,10 +10,10 @@ public class DayManager : MonoBehaviour
     public static DayManager Instance { get; private set; }
 
     [Header("Length of the game")]
-    public int totalDays = 14;
+    public int totalDays = 7;
 
     [Header("NPCs to help each day (Element 0 = Day 1)")]
-    public int[] npcsPerDay = { 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6 };
+    public int[] npcsPerDay = { 2, 2, 3, 3, 3, 4, 4, };
     public int npcsFallback = 6;
 
     [Header("Start of the game")]
@@ -63,6 +64,7 @@ public class DayManager : MonoBehaviour
     private bool sawPause;
     private float launchTime;
     private bool endingDay;
+    private bool noMoreCustomers = false;
     private Coroutine autoRoutine;
 
     private void Awake()
@@ -87,6 +89,12 @@ public class DayManager : MonoBehaviour
 
     private void Update()
     {
+        if (Keyboard.current.mKey.wasPressedThisFrame && noMoreCustomers)
+        {
+            StartCoroutine(EndDayRoutine());
+            Debug.Log("Ending Day " + CurrentDay);
+        }
+
         if (gameBegun || !waitForStartButton)
         {
             return;
@@ -126,6 +134,7 @@ public class DayManager : MonoBehaviour
         NpcsHelpedToday = 0;
         endingDay = false;
         Phase = DayPhase.Day;
+        noMoreCustomers = false;
         OnDayStarted?.Invoke(CurrentDay);
     }
 
@@ -142,6 +151,7 @@ public class DayManager : MonoBehaviour
 
         if (NpcsHelpedToday >= NpcsRequiredToday)
         {
+            noMoreCustomers = true;
             StartCoroutine(EndDayRoutine());
         }
     }

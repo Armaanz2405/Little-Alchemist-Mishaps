@@ -1,0 +1,138 @@
+﻿title: LibrarianDialogue_01
+position: -22,-169
+tags:
+---
+<<declare $customerName = "???">>
+<<declare $hasHubQBeenStated = false>>
+{$customerName}: "..."
+{$customerName}: "..."
+
+-> [Hello?]
+-> [Can I help you?]
+
+{$customerName}: "Huh? Oh, my bad!"
+{$customerName}: "Got a bit distracted by this tome, hehe."
+<<jump LibrarianHub>>
+===
+
+title: LibrarianHub
+---
+<<set_start_node Customer "LibrarianHub">>
+<<if $hasHubQBeenStated is false>>
+    {$customerName}: "Anyway... Can I get something that'll help me keep awake at night? Gotta watch all the books and stuff like that."
+    <<set $hasHubQBeenStated = true>>
+<<else>>
+    {$customerName}: "Anything else you need to know?"
+<<endif>>
+
+-> [Give Potion] <<if $isHoldingPotion is true>>
+    <<jump LibrarGivePotion>>
+-> [What's your name?]{talk_cost("LibrarName")} <<if can_talk("LibrarName")>>
+    <<spend_talk_amount Customer LibrarName>>
+    <<jump LibrarName>>
+-> [What can you tell me about Black Shard?]{talk_cost("LibrarBlackShard")} <<if can_talk("LibrarBlackShard")>>
+    <<spend_talk_amount Customer LibrarBlackShard>>
+    <<jump LibrarBlackShard>>
+-> [What's that tome you're holding?]{talk_cost("LibrarTome")} <<if can_talk("LibrarTome")>>
+    <<spend_talk_amount Customer LibrarTome>>
+    <<jump LibrarTome>>
+-> [How "awake" do you want to be, exactly?]{talk_cost("LibrarAwake")} <<if can_talk("LibrarAwake")>>
+    <<spend_talk_amount Customer LibrarAwake>>
+    <<jump LibrarAwake>>
+-> [Small talk]
+    <<jump LibrarSmallTalk>>
+-> [Exit]
+    <<jump LibrarLeaveTalk>>
+===
+
+title: LibrarName
+---
+{$customerName}: "Oops! Completely forgot about that part, hehe..."
+<<set $customerName = "Oora">>
+{$customerName}: "I'm Oora. Oora the librarian!"
+{$customerName} : "Yep, been running the town library for three generations now. Kinda a big deal around town, y'know?"
+
+-> [Can you tell me more about the library?]
+    <<jump LibrarLibrary>>
+-> [I see. Thank you.]
+    <<jump LibrarianHub>>
+===
+
+title: LibrarLibrary
+---
+{$customerName}: "Why, we're only the finest archive of magic there is!"
+{$customerName}: "Transmutation, conjuration, revelation, elemental magic..."
+{$customerName}: "You need it, we have it!"
+{$customerName}: "Well, everything EXCEPT necromancy. Kind of a big no-no amongst the family."
+-> [I see... Thank you.]
+<<jump LibrarianHub>>
+===
+
+title: LibrarBlackShard
+---
+{$customerName}: "Ooh, yikes! Poisonous. VERY poisonous."
+{$customerName}: "Or, well... SOMETIMES it's poisonous."
+{$customerName}: "Other times, when counteracted with something light and fuzzy..."
+{$customerName}: "...It actually acts as an antidote for poison!"
+-> [I see... Thank you.]
+<<jump LibrarianHub>>
+===
+
+title: LibrarTome
+---
+{$customerName}: "Huh? Oh, this dusty old thing?"
+{$customerName}: "Bah, don't worry about it. Doubt you could help out with it much, anyway..."
+-> [Is it a necromancy tome?]
+    {$customerName}: "Nope! Good guess, though."
+-> [Is it a transfiguration tome?]
+    {$customerName}: "Actually, yes! How'd you figure that one out?"
+    {$customerName}: "Huh... Guess you know more about this stuff than I thought."
+    {$customerName}: "Better keep that in mind!"
+
+// Merge Both paths pls
+-> [I see... Thank you.]
+<<jump LibrarianHub>>
+===
+
+title: LibrarAwake
+---
+{$customerName}: "Oh, you know, just something that'll help me, like... y'know?"
+-> [No, not really]
+    {$customerName}: "Bah, you're the apothecary here! I'm sure you'll figure something out."
+-> [Help with what, exactly?]
+    {$customerName}: "Help me keep awake, silly! Must've not heard me the first time, heh..."
+-> [Any suggestions for ingredients?]
+    {$customerName}: "Oh, I don't know... Something a little spicy, maybe?"
+    {$customerName}: "Oh! And something that'll help me spot any intruders that come at night. That work for ya?"
+
+// Merge all paths pls
+-> [I see.. Thank you.]
+<<jump LibrarianHub>>
+===
+
+title: LibrarSmallTalk
+---
+{$customerName}: "ACHOO! Dearie me, it's a little dusty in here, isn't it?"
+-> [Bless you.]
+<<jump LibrarianHub>>
+===
+
+title: LibrarLeaveTalk
+---
+{$customerName}: "Don't keep me waiting too long, 'kay?"
+===
+
+title: LibrarGivePotion
+---
+{$customerName}: "Hmmm, now let's see here..."
+<<grade_potion Customer>>
+<<if $isPotionPassable is true>>
+    {$customerName}: "Ooh, very nice! I feel more alert already!"
+    {$customerName}: "Thanks, dearie~!"
+<<else>>
+    {$customerName}: "I don't know... Something about this seems... Off."
+    {$customerName}: "Like, it'll help, but it won't keep me, like... AWAKE awake, y'know?"
+    {$customerName}: "Oh well! Guess I'll take it anyway!"
+<<endif>>
+<<customer_leave Customer>>
+===

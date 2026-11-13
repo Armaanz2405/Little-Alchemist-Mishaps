@@ -29,13 +29,6 @@ public class DebugDayTester : MonoBehaviour
             dm.NpcHelped();
             Debug.Log("NPC helped! " + dm.NpcsHelpedToday + " / " + dm.NpcsRequiredToday);
         }
-
-        // M = start the next day (only works at night)
-        if (Keyboard.current.mKey.wasPressedThisFrame && dm.Phase == DayPhase.Night)
-        {
-            dm.BeginNextDay();
-            Debug.Log("Now on day " + dm.CurrentDay);
-        }
     }
 
     void OnGUI()

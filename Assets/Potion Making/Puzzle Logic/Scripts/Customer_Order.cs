@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using Nocturne.PotionMaking.Discovery;
 using Nocturne.PotionMaking.Energy;
 using Nocturne.PotionMaking.Minigames;
@@ -23,6 +24,7 @@ public class Customer_Order : MonoBehaviour
     }
 
     public List<IngredientTags> ordered_tags = new List<IngredientTags>();
+    [SerializeField] private List<IngredientTags> ooras_tags = new List<IngredientTags>();
     [SerializeField] private VariableStorageBehaviour variableStorage;
     [SerializeField] private IngredientCatalog availableIngredients;
     [SerializeField] private CustomerEnergy customerEnergy;
@@ -36,7 +38,13 @@ public class Customer_Order : MonoBehaviour
     [Tooltip("How much of the score the station minigames can take away. 0.4 means a botched craft keeps 60%.")]
     [Range(0f, 1f)] [SerializeField] private float craftWeight = 0.4f;
     [SerializeField] private int passScore = 60;
+
+    [Header("Sprite")]
+    [SerializeField] private GameObject customer_sprite;
+    [SerializeField] private Sprite oora;
+    [SerializeField] private Sprite knight;
     private DayManager dm;
+    private CustomerTalk ct;
 
     private readonly List<Submission> submissions = new List<Submission>();
     private GrabAndThrow player;
@@ -56,6 +64,8 @@ public class Customer_Order : MonoBehaviour
         {
             return;
         }
+        ct = GetComponent<CustomerTalk>();
+
         if (variableStorage == null) variableStorage = FindAnyObjectByType<VariableStorageBehaviour>();
         GameObject found = GameObject.FindWithTag("Player");
         if (found != null) player = found.GetComponent<GrabAndThrow>();
@@ -98,11 +108,67 @@ public class Customer_Order : MonoBehaviour
         SetVariable("$potionScore", score);
         SetVariable("$isPotionPassable", score >= passScore);
         player.ConsumeHeldItem();
-        dm.NpcHelped();
-        NewOrder();
+    }
+
+    [YarnCommand("set_start_node")]
+    public void SetStartingNode(string node)
+    {
+        ct.startNode = node;
+    }
+
+    public void SetupNewCustomer()
+    {
         ResetEnergy();
         minigamesPlayed = 0;
         minigameScoreTotal = 0f;
+
+        if (dm.NpcsRequiredToday - dm.NpcsHelpedToday == 1 && dm.CurrentDay == 2)
+        {
+            customer_sprite.GetComponent<SpriteRenderer>().sprite = oora;
+            ordered_tags = ooras_tags;
+            ct.startNode = "LibrarianDialogue_01";
+            SetOrderVariables();
+            return;
+        }
+        customer_sprite.GetComponent<SpriteRenderer>().sprite = knight;
+        ct.startNode = "KnightDialogueBranch1";
+        NewOrder();
+    }
+
+    [YarnCommand("customer_leave")]
+    public void CustomerLeaves()
+    {
+        Debug.Log("Leaving Now");
+        dm.NpcHelped();
+        StartCoroutine(CustomerWalks(true));
+    }
+
+    public void CustomerEnters()
+    {
+        SetupNewCustomer();
+        StartCoroutine(CustomerWalks(false));
+    }
+
+    private IEnumerator CustomerWalks(bool isLeaving)
+    {
+        var startPosition = isLeaving? customer_sprite.transform.position : customer_sprite.transform.position + new Vector3(20, 0, 0);
+        var destination = new Vector3(-10, 0, 0) + startPosition;
+        
+        float duration = 1f;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float _t = Mathf.Clamp01(elapsed / duration);
+            //float lerpVarCurve = movingTileCurve.Evaluate(_t);
+
+            customer_sprite.transform.position = Vector3.Lerp(startPosition, destination, _t);
+
+            yield return null;
+        }
+
+        if (isLeaving) CustomerEnters();
     }
 
     private void OnMinigameFinished(float score)

@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/TITLE_SCREEN.unity
     guid: 9ccc78d442fdf40649e512e159376654
   - enabled: 1
+    path: Assets/Scenes/Skylar - puzzle_rework.unity
+    guid: 104fe7f44a0dc9e48b339a446d1a427a
+  - enabled: 0
     path: Assets/Scenes/MAIN_SCENE.unity
     guid: 112bf3ece0e21154386972d033f0250d
   m_configObjects:
