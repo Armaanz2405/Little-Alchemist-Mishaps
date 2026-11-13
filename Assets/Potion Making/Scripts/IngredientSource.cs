@@ -1,13 +1,11 @@
 using UnityEngine;
 
-// A shelf spot that always has an ingredient on it: take it and a new one appears after a short delay.
+// A shelf spot that holds one ingredient at a time: the next one appears a short delay after the last is used or gone.
 public class IngredientSource : MonoBehaviour
 {
     [SerializeField] private Ingredient ingredientPrefab;
     [SerializeField] private IngredientData ingredient;
     [SerializeField] private float restockDelay = 1f;
-    [Tooltip("How far the ingredient has to move away before it counts as taken.")]
-    [SerializeField] private float takenDistance = 0.5f;
 
     private Ingredient current;
     private float timer;
@@ -16,8 +14,9 @@ public class IngredientSource : MonoBehaviour
 
     private void Update()
     {
-        bool taken = current == null || (current.transform.position - transform.position).sqrMagnitude > takenDistance * takenDistance;
-        if (!taken)
+        // carrying it around or leaving it somewhere still counts as out
+        bool gone = current == null || current.Used;
+        if (!gone)
         {
             timer = 0f;
             return;
