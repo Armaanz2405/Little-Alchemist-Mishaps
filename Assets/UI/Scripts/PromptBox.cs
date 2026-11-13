@@ -61,6 +61,8 @@ namespace Nocturne.UI
         [SerializeField] private float bobHeight = 3f;
         [SerializeField] private float bobSpeed = 2.2f;
 
+        private TMP_SpriteAsset cost_icon_sprite_asset;
+
         private RectTransform canvasRect;
         private RectTransform box;
         private CanvasGroup group;
@@ -79,6 +81,11 @@ namespace Nocturne.UI
             var box = new GameObject(name).AddComponent<PromptBox>();
             box.Build();
             return box;
+        }
+
+        public void SetSpriteAsset(TMP_SpriteAsset sprA)
+        {
+            cost_icon_sprite_asset = sprA;
         }
 
         public void Show(PromptContent content, Vector3 worldAnchor)
@@ -135,6 +142,7 @@ namespace Nocturne.UI
                 UIStyle.SetKey(rows[i].key, content.lines[i].key);
                 rows[i].label.text = content.lines[i].text;
                 rows[i].cost.text = content.lines[i].cost ?? "";
+                rows[i].cost.spriteAsset = cost_icon_sprite_asset;
                 rows[i].cost.gameObject.SetActive(!string.IsNullOrEmpty(content.lines[i].cost));
             }
             LayoutRebuilder.ForceRebuildLayoutImmediate(box);

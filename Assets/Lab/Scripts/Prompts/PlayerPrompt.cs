@@ -5,6 +5,7 @@ using Nocturne.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
+using TMPro;
 
 // shows one prompt box above the player for the closest thing they can use
 [RequireComponent(typeof(GrabAndThrow))]
@@ -16,6 +17,7 @@ public class PlayerPrompt : MonoBehaviour
     [SerializeField] private string interactPadKey = "B";
     [SerializeField] private string inspectKey = "R";
     [SerializeField] private float heightAboveHead = 0.12f;
+    [SerializeField] private TMP_SpriteAsset spriteAsset;
 
     private GrabAndThrow grab;
     private PlayerInput playerInput;
@@ -38,6 +40,7 @@ public class PlayerPrompt : MonoBehaviour
     {
         log = FindAnyObjectByType<DiscoveryLog>();
         box = PromptBox.Create("Player Prompt");
+        box.SetSpriteAsset(spriteAsset);
         deviceWatch = InputSystem.onAnyButtonPress.Call(control => gamepad = control.device is Gamepad);
     }
 

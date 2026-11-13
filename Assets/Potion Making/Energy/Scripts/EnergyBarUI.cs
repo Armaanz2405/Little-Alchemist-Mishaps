@@ -16,6 +16,7 @@ namespace Nocturne.PotionMaking.Energy
         private RectTransform pipRow;
         private TextMeshProUGUI label;
         private readonly List<Image> pips = new List<Image>();
+        [SerializeField] private RectTransform turnPipRow;
 
         private void Awake()
         {
@@ -59,10 +60,10 @@ namespace Nocturne.PotionMaking.Energy
 
         private void Show(int current, int max)
         {
-            while (pips.Count < max)
+            while (pips.Count < max + 1)
             {
                 var pip = new GameObject("Pip", typeof(RectTransform), typeof(Image));
-                pip.transform.SetParent(pipRow, false);
+                pip.transform.SetParent(turnPipRow, false);
                 ((RectTransform)pip.transform).sizeDelta = new Vector2(26, 26);
                 var image = pip.GetComponent<Image>();
                 image.sprite = UITheme.Current.pipSprite;
@@ -71,8 +72,9 @@ namespace Nocturne.PotionMaking.Energy
             }
             for (int i = 0; i < pips.Count; i++)
             {
-                pips[i].gameObject.SetActive(i < max);
-                pips[i].color = i < current ? UITheme.Current.pipFull : UITheme.Current.pipEmpty;
+                pips[i].gameObject.SetActive(i < max + 1);
+                pips[i].color = max - current == i ? UITheme.Current.pipFull : UITheme.Current.pipEmpty;
+                //turn_pips[i].color = max - current == i ? UITheme.Current.pipFull : UITheme.Current.pipEmpty;
             }
             var pipLayout = pipRow.GetComponent<HorizontalLayoutGroup>();
             pipRow.sizeDelta = new Vector2(max * 26 + Mathf.Max(0, max - 1) * pipLayout.spacing, 26);
