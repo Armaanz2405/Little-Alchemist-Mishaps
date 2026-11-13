@@ -1,0 +1,522 @@
+fileFormatVersion: 2
+guid: 9c3b639b280b31c4eb5d53e167496775
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3007281574905517726
+    second: glass_beaker_placeholder_0
+  - first:
+      213: -5206809081481232483
+    second: glass_beaker_placeholder_1
+  - first:
+      213: -3369264670369925081
+    second: glass_beaker_placeholder_2
+  - first:
+      213: -1739738754962760798
+    second: glass_beaker_placeholder_3
+  - first:
+      213: 6922189610853514586
+    second: glass_beaker_placeholder_4
+  - first:
+      213: -706662316437293793
+    second: glass_beaker_placeholder_5
+  - first:
+      213: 8492564915415524985
+    second: glass_beaker_placeholder_6
+  - first:
+      213: 1677648527090513583
+    second: glass_beaker_placeholder_7
+  - first:
+      213: 4732702225901151219
+    second: glass_beaker_placeholder_8
+  - first:
+      213: -5411459758370910602
+    second: glass_beaker_placeholder_9
+  - first:
+      213: 2693138927706682378
+    second: glass_beaker_placeholder_10
+  - first:
+      213: 6458750488283981649
+    second: glass_beaker_placeholder_11
+  - first:
+      213: -4849276584755034399
+    second: glass_beaker_placeholder_12
+  - first:
+      213: 1201105577654789175
+    second: glass_beaker_placeholder_13
+  - first:
+      213: 1956627528179004187
+    second: glass_beaker_placeholder_14
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: glass_beaker_placeholder_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 255
+        height: 350
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e9612dbb8a20cb920800000000000000
+      internalID: 3007281574905517726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glass_beaker_placeholder_1
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 6
+        width: 201
+        height: 337
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9f780d2ab2bdb7b0800000000000000
+      internalID: -5206809081481232483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glass_beaker_placeholder_2
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 221
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 728b35822a7fd31d0800000000000000
+      internalID: -3369264670369925081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glass_beaker_placeholder_3
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 199
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2abd674e1d43bd7e0800000000000000
+      internalID: -1739738754962760798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glass_beaker_placeholder_4
+      rect:
+        serializedVersion: 2
+        x: 225
+        y: 205
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5db2d696ce801060800000000000000
+      internalID: 6922189610853514586
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glass_beaker_placeholder_5
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 182
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f15b9940e5e6136f0800000000000000
+      internalID: -706662316437293793
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glass_beaker_placeholder_6
+      rect:
+        serializedVersion: 2
+        x: 228
+        y: 188
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 976a9478bc6abd570800000000000000
+      internalID: 8492564915415524985
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glass_beaker_placeholder_7
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 165
+        width: 6
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa6ff236274384710800000000000000
+      internalID: 1677648527090513583
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glass_beaker_placeholder_8
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 171
+        width: 6
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f3e98a799feda140800000000000000
+      internalID: 4732702225901151219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glass_beaker_placeholder_9
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 148
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67e0bf95502a6e4b0800000000000000
+      internalID: -5411459758370910602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glass_beaker_placeholder_10
+      rect:
+        serializedVersion: 2
+        x: 229
+        y: 154
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a04bbbcf593ff5520800000000000000
+      internalID: 2693138927706682378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glass_beaker_placeholder_11
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 131
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1572c03695712a950800000000000000
+      internalID: 6458750488283981649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glass_beaker_placeholder_12
+      rect:
+        serializedVersion: 2
+        x: 227
+        y: 137
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e68e0483a8e3bcb0800000000000000
+      internalID: -4849276584755034399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glass_beaker_placeholder_13
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 114
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 734aaddb82f2ba010800000000000000
+      internalID: 1201105577654789175
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: glass_beaker_placeholder_14
+      rect:
+        serializedVersion: 2
+        x: 223
+        y: 120
+        width: 8
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b133cd6ce56572b10800000000000000
+      internalID: 1956627528179004187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: eedfadd6afde5db458aa2b8c79a69c36
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      glass_beaker_placeholder_0: 3007281574905517726
+      glass_beaker_placeholder_1: -5206809081481232483
+      glass_beaker_placeholder_10: 2693138927706682378
+      glass_beaker_placeholder_11: 6458750488283981649
+      glass_beaker_placeholder_12: -4849276584755034399
+      glass_beaker_placeholder_13: 1201105577654789175
+      glass_beaker_placeholder_14: 1956627528179004187
+      glass_beaker_placeholder_2: -3369264670369925081
+      glass_beaker_placeholder_3: -1739738754962760798
+      glass_beaker_placeholder_4: 6922189610853514586
+      glass_beaker_placeholder_5: -706662316437293793
+      glass_beaker_placeholder_6: 8492564915415524985
+      glass_beaker_placeholder_7: 1677648527090513583
+      glass_beaker_placeholder_8: 4732702225901151219
+      glass_beaker_placeholder_9: -5411459758370910602
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
