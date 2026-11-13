@@ -1,10 +1,63 @@
+using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
 
 namespace Nocturne.PotionMaking.Minigames
 {
     // Keyboard and gamepad polling shared by the minigames so none of them need the mouse.
     public static class MinigameInput
     {
+        public enum Hint { Confirm, Cancel, Edit, Left, Right }
+
+        private static bool padActive, watching;
+
+        // whichever of keyboard / mouse or gamepad was pressed last, so the key hints can show the right buttons
+        public static bool PadActive
+        {
+            get
+            {
+                if (!watching)
+                {
+                    watching = true;
+                    InputSystem.onAnyButtonPress.Call(control => padActive = control.device is Gamepad);
+                }
+                return padActive;
+            }
+        }
+
+        // what to print on a key cap for an action, on the device the player is using
+        public static string Label(Hint hint)
+        {
+            bool pad = PadActive;
+            switch (hint)
+            {
+                case Hint.Confirm: return pad ? "A" : "Space";
+                case Hint.Cancel: return pad ? "B" : "Esc";
+                case Hint.Edit: return pad ? "Y" : "Q";
+                case Hint.Left: return pad ? "LB" : "A";
+                default: return pad ? "RB" : "D";
+            }
+        }
+
+        // confirm without the mouse, for screens where a click has to land on a button to count
+        public static bool ConfirmKeyPressed
+        {
+            get
+            {
+                var kb = Keyboard.current;
+                var pad = Gamepad.current;
+                return (kb != null && (kb.spaceKey.wasPressedThisFrame || kb.eKey.wasPressedThisFrame || kb.enterKey.wasPressedThisFrame))
+                    || (pad != null && pad.buttonSouth.wasPressedThisFrame);
+            }
+        }
+
+        public static bool Clicked(out Vector2 position)
+        {
+            var mouse = Mouse.current;
+            position = mouse != null ? mouse.position.ReadValue() : Vector2.zero;
+            return mouse != null && mouse.leftButton.wasPressedThisFrame;
+        }
+
         public static bool ConfirmPressed
         {
             get
@@ -109,6 +162,28 @@ namespace Nocturne.PotionMaking.Minigames
                 var kb = Keyboard.current;
                 var pad = Gamepad.current;
                 return (kb != null && kb.xKey.wasPressedThisFrame) || (pad != null && pad.buttonWest.wasPressedThisFrame);
+            }
+        }
+
+        // leaving a minigame without playing it out
+        public static bool CancelPressed
+        {
+            get
+            {
+                var kb = Keyboard.current;
+                var pad = Gamepad.current;
+                return (kb != null && kb.escapeKey.wasPressedThisFrame) || (pad != null && pad.buttonEast.wasPressedThisFrame);
+            }
+        }
+
+        // the mortar's edit mode
+        public static bool EditPressed
+        {
+            get
+            {
+                var kb = Keyboard.current;
+                var pad = Gamepad.current;
+                return (kb != null && kb.qKey.wasPressedThisFrame) || (pad != null && pad.buttonNorth.wasPressedThisFrame);
             }
         }
 
