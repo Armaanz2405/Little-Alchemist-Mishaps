@@ -1431,9 +1431,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomCamera
   target: {fileID: 333525642}
-  rooms:
-  - {fileID: 0}
-  - {fileID: 0}
+  rooms: []
   baseFloor: {fileID: 0}
   slideDistance: 2
   smoothTime: 0.12
