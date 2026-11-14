@@ -10,7 +10,7 @@ using Yarn.Unity;
 public class CustomerTalk : MonoBehaviour
 {
     [SerializeField] private DialogueRunner dialogueRunner;
-    [SerializeField] private string startNode = "KnightDialogueBranch1";
+    [SerializeField] public string startNode = "KnightDialogueBranch1";
     [SerializeField] private Transform player;
     [SerializeField] private float range = 3f;
     [SerializeField] private Collider2D talkZone;
@@ -82,7 +82,7 @@ public class CustomerTalk : MonoBehaviour
 
     public bool CanTalk()
     {
-        if (dialogueRunner == null || player == null || dialogueRunner.IsDialogueRunning)
+        if (dialogueRunner == null || player == null || dialogueRunner.IsDialogueRunning || DayManager.Instance.Phase != DayPhase.Day)
         {
             return false;
         }

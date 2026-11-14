@@ -15,6 +15,7 @@ public class PotionFeedback : MonoBehaviour
     private void Start()
     {
         HideFeedback();
+        
     }
 
     private void Update()
@@ -56,6 +57,7 @@ public class PotionFeedback : MonoBehaviour
         feedbackPanel.SetActive(true);
 
         Debug.Log("[PotionFeedback] Reaction displayed! Score: " + score);
+
     }
 
     public void HideFeedback()

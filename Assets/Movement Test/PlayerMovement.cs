@@ -308,7 +308,7 @@ public class PlayerMovement : MonoBehaviour
         Collider2D hit = Physics2D.OverlapBox(col.bounds.center, col.bounds.size, 0f, climbableLayer);
 
         canClimb = hit != null;
-        Debug.Log("Climbable: " + canClimb);
+        //Debug.Log("Climbable: " + canClimb);
         if (canClimb && hit.TryGetComponent(out WeakLadder ladder))
         {
             currentWeakLadder = ladder;   
